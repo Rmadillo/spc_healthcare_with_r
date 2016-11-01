@@ -1,0 +1,14 @@
+# Run charts {#runcharts}
+
+Run charts are meant to show a metric of interest over time. They do not rely on parametric statistical theory, so they cannot distinguish between common cause and special cause variation. However, improperly-constructed control charts can't either, so run charts can be more readily used where statistical knowledge is limited. So while run charts are not as always as powerful as control charts, they can still provide practical monitoring and useful insights into the process. 
+
+Run charts typically employ the median for the reference line. Run charts help you determine whether there are unusual runs in the data, which suggest non-random variation. They tend to be better than control charts in trying to detect moderate (~1.5$\sigma$) changes in process than using the control charts' typical 3$\sigma$ limits rule alone. In other words, a run chart can be more useful when trying to detect improvement while that improvement work is still going on, where a control chart may be inappropriate.        
+
+There are basically two "tests" for run charts (an astronomical data point or looking for cycles aren't tests *per se*): 
+
+- *Process shift:* A non-random run is a set of $log_2(n) + 3$ data points (rounded to the nearest integer) that are all above or all below the median line, where *n* is the number of points that do *not* fall directly on the median line. For example, if you have 34 points, and 2 fall on the median, you have 32 observations for *n*. Thus in this case, the longest run should be 8 points.  
+- *Number of crossings:* Too many or too few runs---or more simply, median line crossings---suggest a pattern inconsistent with natural variation. You can use the binomial distribution (`qbinom(0.05, n-1, 0.50)` in R for a 5% false positive rate and because we expect 50% of values to lie on each side of the median) or a table (e.g., [Table 1 in Anhoj & Olesen 2014](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0113825#pone-0113825-t001)) to find the minimum number of crossings you would expect. Using the same values as in the example introduced in [Chapter 1], we would expect the time series to cross the median at least 11 times.  
+
+```{r qichart, fig.width=8, fig.height=3.5}
+qic(point.signal, runvals=TRUE, ylab="Value", main="")
+```

@@ -1,0 +1,26 @@
+# Which should I use: a run chart or a control chart? {#which}
+
+- A run chart can monitor a metric or a process, while a control chart monitors a process.   
+- Always create a run chart. Create a control chart only if you meet the necessary conditions.  
+- In both cases, the data points must be independent, that is, the position of one point does not influence the position of another point: there is no (serious) autocorrelation. If the data are autocorrelated, the guidelines for testing run or control charts can be invalid, which can lead to poor decision-making.   
+
+
+| Use a run chart if | Use a control chart (only) if |
+| ------------------------------------ | ------------------------------------- |
+| You may or may not investigate or act when a data point crosses a reference, target, or goal level, or when guidelines suggest a non-random pattern is occurring. | You intend to investigate or act when the process moves outside of control or indicates special cause variation. | 
+|  |  | 
+| You have little control over or cannot control the metric (e.g., ED volume/acuity). | You have the potential to control the process driving the metric (e.g., ED wait times). | 
+|  |  | 
+| You want to monitor the behavior of individual or groups of data points to a reference, target, or goal level. | You want to monitor the "average" of the system's behavior (i.e., the underlying statistical process)---deviations from expectations. | 
+|  |  | 
+| You are monitoring a metric or process that is generally trending or contains seasonality or other cycles of known cause, as long as you are able to calculate an appropriate median line (e.g., via quantile regression or seasonal adjustment). | You are monitoring a *stable* statistical process (there is no trend in the time series, or you have made the appropriate corrections to account for trends or seasonality). |
+|  |  | 
+| You have no expectations that normal day-to-day operations will affect the central tendency. | You expect that normal day-to-day operations will or are meant to keep the process stable within the bounds of common-cause variation. |
+|  |  | 
+| You do not need to account for the inherent natural variation in the system. | You need to understand and account for the inherent natural variation ("noise") in the system. | 
+|  |  | 
+| You have at least 12 data points. (Fewer than 12? Just make line chart, or use an EWMA chart. Run chart guidelines may not be valid.) | You have 20 or more data points that are in a stable statistical process, or you have performed a power analysis that provides the appropriate n for the appropriate time interval. | 
+|  |  | 
+| You do not understand one or more of the statistical issues discussed in the control chart column. | You understand the practical trade-offs between the sensitivity and specificity of the control limits relative to your need to investigate or act. |
+|  |  | 
+| | You know which statistical distribution to use to calculate the control limits to ensure you have the proper mean-variance relationship. |  

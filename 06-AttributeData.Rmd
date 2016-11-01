@@ -1,0 +1,122 @@
+# Control charts for count, proportion, or rate data {#attribute}
+
+The majority of healthcare metrics of concern are rates, so the most common control chart is the u-chart.  
+
+| If your data involve... | use a ... | based on the ... distribution. | 
+| -------------------------------------- | --------- | ------------------------ | 
+| Rates  | *u* chart | Poisson | 
+| Counts (with equal opportunity) | *c* chart | Poisson |
+| Proportions  | *p* chart | binomial |
+| Proportions (with equal opportunity) | *np* chart | binomial | 
+| Rare events | *g* chart | geometric | 
+| Time between events | *t* chart | Weibull |
+
+- For count, rate, or proportion data, carefully define your numerator and denominator. Evaluate each separately over time to see whether there are any unusual features or patterns. Sometimes patterns can occur in one or the other, then disappear or are obscured when coalesced into a rate or proportion.  
+
+- For count data, prefer *u*-charts to *c*-charts. In most cases, we do not have a constant denominator, so c-charts would not be appropriate. Even when we do, using a u-chart helps reduce audience confusion because you are explicitly stating the "per *x*".    
+
+- For proportion data, prefer *p*-charts to *np*-charts. Again, we almost never have a constant denominator, so np-charts would not be appropriate. Even when we do, using a p-chart helps reduce audience confusion by explicitly stating the "per *x*".   
+
+## *u* chart example
+
+**Mean for rates (*u*):** &nbsp;&nbsp; $u = {\frac{c}{n}}$
+
+**3$\sigma$ control limits for rates (*u*):** &nbsp;&nbsp; $3\sqrt{\frac{u}{n_i}}$   
+
+<br/>  
+
+*Infections per 1000 central line days*   
+
+``` {r uex, fig.height = 3.5}
+# Generate sample data
+linedays <- sample(1000:2000,24)
+infections <- rpois(24, 4)
+dates <- seq(as.Date("2013/10/1"), by = "month", length.out = 24)
+
+# Calculate u chart inputs
+subgroup.u <- dates
+point.u <- infections / linedays * 1000
+mean.u <- sum(infections) / sum(linedays) * 1000
+sigma.u <- sqrt(mean.u / linedays * 1000)
+
+# Plot u chart
+spc.plot(subgroup.u, point.u, mean.u, sigma.u, k = 3, lcl.min  = 0,
+         label.x = "Month", label.y = "Infections per 1000 line days")
+
+```
+
+
+<br/>  
+
+## *p* chart example
+
+**Mean for proportions (*p*):** &nbsp;&nbsp; $p = {\frac{y}{n}}$
+
+**3$\sigma$ control limits for proportions (*p*):** &nbsp;&nbsp; $3\sqrt{\frac {p (1 - p)}{n_i}}$  
+
+<br/>  
+
+*Proportion of patients readmitted*  
+
+``` {r pex, fig.height = 3.5}
+# Generate sample data
+discharges <- sample(300:500, 24)
+readmits <- rbinom(24, discharges, .2)
+dates <- seq(as.Date("2013/10/1"), by = "month", length.out = 24)
+
+# Calculate p chart inputs
+subgroup.p <- dates
+point.p <- readmits / discharges
+mean.p <- sum(readmits) / sum(discharges)
+sigma.p <- sqrt(mean.p*(1 - mean.p) / discharges)
+
+# Plot p chart
+spc.plot(subgroup.p, point.p, mean.p, sigma.p,
+         label.x = "Month", label.y = "Proportion readmitted")
+
+```
+
+
+<br/>  
+
+## *g* chart example
+
+**Mean for infrequent counts (*g*):** &nbsp;&nbsp; $g = {\frac{\Sigma{t}}{n}}$
+
+**3$\sigma$ limits for infrequent counts (*g*):** &nbsp;&nbsp; $3\sqrt{g (g + 1)}$    
+
+<br/>  
+
+*Days between infections*    
+ 
+``` {r gex, fig.height = 3.5}
+# Generate sample data
+dates <- sort(as.Date('2013/01/01') + sort(sample(1:1000, 24)))
+
+# Calculate g chart inputs
+subgroup.g <- seq(1, length(dates) - 1)
+point.g <- as.double(dates[-1] - head(dates, -1))
+mean.g <- mean(point.g)
+sigma.g <- rep(sqrt(mean.g*(mean.g+1)), length(point.g))
+
+# Plot g chart
+spc.plot(subgroup.g, point.g, mean.g, sigma.g, lcl.show = FALSE, lcl.min  = 0, k = 3,
+         label.x = "Infection number", label.y = "Days between infections")
+
+```
+
+<br/>   
+
+## Means and control limits for *c* and *t* charts  
+
+**Mean for counts (*c*)(not shown):** &nbsp;&nbsp; $c$
+
+**3$\sigma$ control limits for counts (*c*)(not shown):** &nbsp;&nbsp; $3\sqrt{c}$   
+
+**Control limits for time between events (*t*)(not shown):** &nbsp;&nbsp; 2.66$MR_{bar}$    
+&nbsp;&nbsp;&nbsp;&nbsp; *where*  
+&nbsp;&nbsp;&nbsp;&nbsp; $t$ = time between events, where *t* is always > 0    
+&nbsp;&nbsp;&nbsp;&nbsp; $y = t^{0.2777}$  
+&nbsp;&nbsp;&nbsp;&nbsp; $MR_{bar}$ = average moving range of *y*s, excluding those > 3.27$MR_{bar}$   
+    
+Note: *t* chart mean and limits can be transformed back to the original scale by raising those values to the 3.6 power. In addition, the y axis can be plotted on a log scale to make the display more symmetrical (which can be easier than explaining how the distribution works to a decision maker).   

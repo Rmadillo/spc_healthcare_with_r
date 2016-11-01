@@ -1,0 +1,78 @@
+# Testing assumptions {#testassumptions}
+
+## Trending
+
+You can test whether a process is trending first by eye: does it look like it's trending over a large span of the time series? Then it probably is. More technically, you can run a simple linear regression---if the coefficient of the slope is significant, your data is trending.  
+
+Because trends can sometimes be an indication of special cause variation in a stable process, control limits don't make sense around long-trending data, and calculation of center lines and control limits will be incorrect. Thus, tests for special causes other than trending will also be invalid. 
+
+Use a run chart with an appropriate median instead (e.g., via quantile regression), or evaluate it as you would any regression, via residual diagnostics.  
+
+Non-linear change is a special case of trending data, and isn't necessarily autocorrelated, though it can be in cases like seasonality. When it *isn't* autocorrelated, advanced techniques like Generalized Additive Models (GAM) can be used in place of a control chart to provide limits that can assist decision-making. If you were using a control chart when the data began to show trending, restart control limits after the trend has stabilized or switch to using a GAM.    
+
+
+## Independence
+
+For either run or control charts, the data points must be independent for the guidelines to be effective. The first test of that is conceptual---do you expect that one value in this series will influence a subsequent value? For example, the incidence of some hospital-acquired infections can be the result of previous infections---say, one happens at the end of March, and another happens at the start of April, and were caused by the same organism, you might suspect that the monthly values would not be independent. 
+
+A second test is by calculating the autocorrelation function for the time series. Autocorrelation values over 0.50 generally indicate problems. However, any significant autocorrelation should be considered carefully relative to the cost of potential false positive or false negative signals.   
+
+When data are autocorrelated, control limits from the above chart types will be *too small*---and thus an increase in *false* signals of special causes should be expected. In addition, none of the tests for special causes remain valid.    
+
+Sometimes, autocorrelation can be removed by changing the sampling or metric's time step: for example, you generally wouldn't expect hospital acquired infection rates in one quarter to influence those in the subsequent quarter.   
+
+If you can't change the sampling rate or time step, you shouldn't use either run or control charts, and instead use a standard line chart. If you must have limits to help guide decision-making, you'll need a more advanced technique, such as a Generalized Additive Mixed Model (GAMM) or time series models such as ARIMA.  
+
+## What happens when you get the mean-variance relationship wrong
+
+Although control charts can sometimes work when you misspecify the mean-variance relationship (they are "robust" to some assumption violations), you won't know unless you explore the differences in implications between the data as-is and that same data transformed to become more in line with the appropriate or expected distribution. 
+
+For example, if you use standard normal control limits and sd values an *I* chart on exponentially-distributed data, you get something like this:
+
+```{r skewy, fig.height=3.5}
+set.seed(290)
+df2 = data.frame(x = seq(1:120), y = 17+rexp(120))
+
+# df_sum = data.frame(ymean=mean(df2$y), lcl=mean(df2$y)-(3*sd(df2$y)), ucl=mean(df2$y)+(3*sd(df2$y)), l1sd=mean(df2$y)-(sd(df2$y)), l2sd=mean(df2$y)-(2*sd(df2$y)), u1sd=mean(df2$y)+(sd(df2$y)), u2sd=mean(df2$y)+(2*sd(df2$y)))
+
+exp_nat_var_cc_plot = ggplot(df2, aes(x, y)) + 
+  ylim(14.75, 24.75) +
+  geom_hline(aes(yintercept=17.88), color="gray", size=1) +
+  geom_hline(aes(yintercept=20.87), color="red") +
+  geom_hline(aes(yintercept=14.88), color="red") +
+  geom_ribbon(aes(ymin = 18.87, ymax = 19.87), alpha = 0.2) +
+  geom_ribbon(aes(ymin = 15.88, ymax = 16.88), alpha = 0.2) +
+  xlab("Subgroup") + 
+  ylab("Value") +
+  geom_line() + 
+  theme_bw()
+
+ggMarginal(exp_nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.25)
+
+# Transformation and adjustment for plotting easier
+bob = data.frame(MASS::boxcox(df2$y ~ 1, lambda=seq(-20, 5, 0.5), plotit=F))
+bobmax = bob[which.max(bob[,2]),1]
+df2$y2 = (df2$y ^ bobmax) * 10^19
+
+# df_sum = data.frame(ymean=mean(df2$y2), lcl=mean(df2$y2)-(3*sd(df2$y2)), ucl=mean(df2$y2)+(3*sd(df2$y2)), l1sd=mean(df2$y2)-(sd(df2$y2)), l2sd=mean(df2$y2)-(2*sd(df2$y2)), u1sd=mean(df2$y2)+(sd(df2$y2)), u2sd=mean(df2$y)+(2*sd(df2$y)))
+
+exp_xform_nat_var_cc_plot = ggplot(df2, aes(x, y2)) + 
+  ylim(-0.06, 0.31) +
+  geom_hline(aes(yintercept=0.128), color="gray", size=1) +
+  geom_hline(aes(yintercept=0.302), color="red") +
+  geom_hline(aes(yintercept=-0.046), color="red") +
+  geom_ribbon(aes(ymin = 0.186, ymax = 0.244), alpha = 0.2) +
+  geom_ribbon(aes(ymin = 0.012, ymax = 0.070), alpha = 0.2) +
+  xlab("Subgroup") + 
+  ylab("Transformed Value") +
+  geom_line() + 
+  theme_bw()
+```
+
+Clearly something is weird when no points even go below 1 standard deviation. But more importantly, do the points above the upper control limit represent *real* anomalous data points, or are they the result of an improper mean-variance relationship? 
+
+Using a Box-Cox transformation (not shown) to make the distribution more symmetrical, we can see that those seemingly out-of-control points are actually well within both control limits, and the variation we see is more in line with (statistical) expectation. 
+
+```{r unskewy, fig.height=3.5}
+ggMarginal(exp_xform_nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.025)
+```

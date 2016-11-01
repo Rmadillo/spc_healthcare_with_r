@@ -1,0 +1,13 @@
+# Signal, noise, and statisical process control {#SPC}
+
+People are really good at finding patterns that aren't real.  
+
+Every process has natural variation---*noise*---included as an inherent part of that process. True signals emerge only when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help you characterize and identify non-random patterns that suggest your process has changed.   
+
+Control charts are meant to help you identify departures from a **stable** process. Run charts help you monitor any sort of metric, process, or time series data. Each uses a set of guidelines to help you make decisions on whether a process has changed or not.    
+
+In many cases, a run chart may be all you need. In *all* cases, you should start with a run chart. If---and only if---you need to characterize the limits of natural variation in a stable process, you can move on to using a control chart.      
+
+In addition, *never* rely on a table or year-to-date (YTD) comparisons to evaluate process performance. These approaches ignore the foundational concept of process control: that natural, "common-cause" variation is an essential part of the process, and you can't see natural variation in a table or in YTD comparisons. Tables or YTD values can supplement run or control charts, but should never be used without them.   
+
+Above all, remember that the decisions you make in constructing SPC charts *will* impact the interpretation of the results. Bad charts can make for bad decisions.    

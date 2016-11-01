@@ -1,0 +1,198 @@
+# Control charts for numeric, normally-distributed data {#numeric}
+
+
+| If your data involve... | use a ... | based on the ... distribution. | 
+| --------------------------------- | --------- | ----------------------------- | 
+| Individual points | *I* chart | normal | 
+| Subgroup average | $\bar{x}$ and *s* chart | normal |
+| Exponentially weighted moving average (RENAME) | EWMA chart | normal |
+| Cumulative sum (RENAME) | CUSUM chart | normal |
+
+
+- For continuous data, the definition of the control limits will depend on your question and the data at hand. To detect small shifts in the mean quickly, an EWMA is probably best, while to understand natural variation and try to detect special cause variation, an $\bar{x}$ and *s* chart will be more useful.
+
+- In the rare cases you may need an individual chart, do *not* use 3$\sigma$ for the control limits; you must use 2.66$MR_{bar}$ instead to ensure the limits are presented correctly.  
+
+- Note: EWMA and CUSUM charts aren't "standard" control charts in that the only guideline for detecting special cause variation is a point outside the limits. So while they can't detect special cause variation like control charts, they *can* detect shifts in mean with fewer points than a standard control chart.  
+
+<br/>  
+
+## *I-MR* chart
+
+**Mean($\bar{x}$):** &nbsp;&nbsp; $\bar{x} = \frac{\sum_{x_{i}}}{n}$
+
+**Control limits for normal data (*I*):** 2.66$MR_{bar}$  
+&nbsp;&nbsp;&nbsp;&nbsp; *where*  
+&nbsp;&nbsp;&nbsp;&nbsp; $MR_{bar}$ = average moving range of *x*s, excluding those > 3.27$MR_{bar}$   
+
+<br/>  
+    
+*Lab results turnaround time*
+    
+```{r imrex, fig.height = 3.5}
+
+# Generate sample data
+arrival <- cumsum(rexp(24, 1/10))
+process <- rnorm(24,5)
+exit <- matrix( , length(arrival))
+exit[1] <- arrival[1] + process[1]
+
+for (i in 1:length(arrival)) {
+    exit[i] <- max(arrival[i], exit[i-1]) + process[i]
+}
+
+# Calculate control chart inputs
+subgroup.i <- seq(1,length(exit))
+subgroup.mr <- seq(1,length(exit)-1)
+
+point.i <- exit - arrival
+point.mr <- matrix(, length(point.i) - 1)
+for (i in 1:length(point.i) - 1) {
+    point.mr[i] <- abs(point.i[i+1] - point.i[i])
+}
+
+mean.i <- mean(point.i)
+mean.mr <- mean(point.mr)
+sigma.i <- rep(mean.mr, length(subgroup.i))
+sigma.mr <- rep(mean.mr, length(subgroup.mr))
+
+# Plot MR chart
+spc.plot(subgroup.mr, point.mr, mean.mr, sigma.mr, k = 3.27, 
+         lcl.show = FALSE, band.show = FALSE, 
+         label.x = "Test number", label.y = "Turnaround time (moving range)")
+
+# Plot I chart
+spc.plot(subgroup.i, point.i, mean.i, sigma.i, k = 2.66,
+         lcl.min = 0, band.show = FALSE, 
+         label.x = "Test number", label.y = "Turnaround time")
+
+```
+
+<br/>
+
+## $\bar{x}$ and *s* chart
+
+Control limits (3&sigma;) are calculated as follows:  
+ 		  
+**Variable averages ($\bar{x}$):** &nbsp;&nbsp; $3\frac{\bar{s}}{\sqrt{n_i}}$
+ 		  
+**Variable standard deviation (*s*):** &nbsp;&nbsp; $3\bar{s}\sqrt{1-c_4^2}$  
+&nbsp;&nbsp;&nbsp;&nbsp; *where* $c_4 = \sqrt{\frac{2}{n-1}}\frac{\Gamma(\frac{n}{2})}{\Gamma(\frac{n-1}{2})}$  
+
+<br/>  
+
+*Patient wait times*   
+
+``` {r xex, fig.height = 3.5}
+
+set.seed(777)
+
+# Generate sample data
+waits <- c(rnorm(1700, 30, 5), rnorm(650, 29.5, 5))
+months <- strftime(sort(as.Date('2013-10-01') + sample(0:729, length(waits), TRUE)), "%Y-%m-01")
+sample.n <- as.numeric(table(months))
+dfw <- data.frame(months, waits)
+
+# Calculate control chart inputs
+subgroup.x <- as.Date(unique(months))
+subgroup.s <- subgroup.x
+point.x <- aggregate(dfw$waits, by = list(months), FUN=mean, na.rm = TRUE)$x
+point.s <- aggregate(dfw$waits, by = list(months), FUN=sd, na.rm = TRUE)$x
+mean.x <- mean(waits)
+mean.s <- sqrt(sum((sample.n - 1)*point.s^2) / (sum(sample.n) - length(sample.n)))
+sigma.x <- mean.s / sqrt(sample.n)
+c4 <- sqrt(2 / (sample.n - 1)) * gamma(sample.n / 2) / gamma((sample.n - 1)/2)
+sigma.s <- mean.s * sqrt(1 - c4^2)
+
+# Plot s chart
+spc.plot(subgroup.s, point.s, mean.s, sigma.s, k = 3,
+         label.x = "Month", label.y = "Wait times standard deviation (s)")
+
+# Plot xbar chart
+spc.plot(subgroup.x, point.x, mean.x, sigma.x, k = 3,
+         label.x = "Month", label.y = "Wait times average (x)")
+```
+
+ 
+<br/>  
+
+## EWMA chart
+
+**Control limits for exponentially weighted moving average (EWMA):**  $3\frac{\bar{s}}{\sqrt{n_i}}\sqrt{\frac{\lambda}{2-\lambda}[1 - (1 - \lambda)^{2i}]}$   
+&nbsp;&nbsp;&nbsp;&nbsp; *where* $\lambda$ is a weight that determines the influence of past observations. If unsure choose $\lambda = 0.2$, but $0.05 \leq \lambda \leq 0.3$ is acceptable (where larger values give stronger weights to past observations).
+
+<br/>  
+
+*Patient wait times (continued)*  
+ 
+``` {r ewmaex, fig.height = 3.5}
+ 
+# Use generated sample data from xbar chart example
+ 
+# Calculate control chart inputs
+subgroup.z <- subgroup.x
+lambda = 0.2
+point.z <- matrix( , length(point.x))
+point.z[1] <- mean.x
+for (i in 2:length(point.z)) {
+     point.z[i] = lambda * point.x[i] + (1 - lambda) * point.z[i-1]
+     }
+mean.z <- mean.x
+sigma.z <- (mean.s / sqrt(sample.n)) * 
+     sqrt(lambda/(2-lambda) * (1 - (1-lambda)^(seq(1:length(point.z)))))
+ 
+# Plot EWMA chart
+spc.plot(subgroup.z, point.z, mean.z, sigma.z, k = 3, band.show = FALSE, rule.show = FALSE,
+          label.x = "Month", label.y = "Wait times moving average")
+ 
+```
+
+<br/>  
+
+## CUSUM
+
+Lower and upper cumulative sums are calculated as follows:
+
+$S_{l,i} = -\max{[0, -z_i -k + S_{l,i-1}]},$  
+$S_{h,i} = \max{[0, z_i -k + S_{h,i-1}]}$  
+&nbsp;&nbsp;&nbsp;&nbsp; *where* $z_i$ is the standardized normal score for subgroup $i$ and $0.5 \leq k \leq 1$ is a slack value.   
+
+It is common to choose "decision limits" of $\pm 4$ or $\pm 5$.  
+
+<br/>  
+
+
+``` {r cusumex, fig.height = 3.5}
+
+# Use generated sample data from xbar chart example
+
+# Calculate control chart inputs
+subgroup.cusum <- subgroup.x
+slack = 0.5
+
+zscore <- (point.x - mean.x)/sigma.x
+point.cusuml <- matrix(, length(zscore))
+point.cusuml[1] <- -max(0, -zscore[1] - slack)
+
+for (i in 2:length(point.cusuml)) {
+    point.cusuml[i] <- -max(0, -zscore[i] - slack - point.cusuml[i-1])
+}
+
+point.cusumh <- matrix(, length(zscore))
+point.cusumh[1] <- max(0, zscore[1] - slack)
+
+for (i in 2:length(point.cusuml)) {
+    point.cusumh[i] <- max(0, zscore[i] - slack - point.cusumh[i-1])
+}
+
+mean.cusum <- 0
+sigma.cusum <- rep(1, length(subgroup.cusum))
+
+# Plot CUSUM chart
+lower.plot <- spc.plot(subgroup.cusum, point.cusuml, mean.cusum, sigma.cusum, k = 5, 
+         band.show = FALSE, rule.show = FALSE, label.y = "Cumulative sum")
+
+lower.plot + geom_line(aes(y = point.cusumh), col = "royalblue3") +
+    geom_point(aes(y = point.cusumh), col = "royalblue3")
+
+```

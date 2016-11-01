@@ -1,0 +1,9 @@
+# Advances {#advanced}
+
+## Prime charts
+
+## GAMs and GAMMs
+
+## Is there a difference? <> SPC
+
+## Changepoint analysis
