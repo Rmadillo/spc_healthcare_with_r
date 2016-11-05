@@ -1,0 +1,25 @@
+# Start with simple time series analysis {#ts}
+
+Portions of this chapter are adapted from [@barry2016]. 
+
+The first thing is look at the damn data and do shit to it. 
+
+Plot ts
+
+UK_births_ts = ts(UK_births$values, start=c(2003, 1), frequency=12)
+plot()
+
+seasonplot
+
+yearplot
+
+cycles
+
+decomp
+
+look for trend
+
+look for acf
+
+remove trend for stability
+

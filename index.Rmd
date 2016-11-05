@@ -1,6 +1,6 @@
 --- 
 title: "Statistical Process Control in Healthcare with R"
-author: "Brendan Bettinger, Dwight Barry, and Andrew Cooper"
+author: "Dwight Barry, Brendan Bettinger, and Andrew Cooper"
 date: "`r format(Sys.Date(), '%B %Y')`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
