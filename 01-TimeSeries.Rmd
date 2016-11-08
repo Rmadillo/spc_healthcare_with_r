@@ -1,25 +1,108 @@
-# Start with simple time series analysis {#ts}
+# Where to start
 
-Portions of this chapter are adapted from [@barry2016]. 
+*Portions of this chapter are adapted from [@barry2016].*   
 
-The first thing is look at the damn data and do shit to it. 
+## R libraries
 
-Plot ts
+```{r loadpackages, message=FALSE, warning=FALSE, echo=TRUE}
+library(ggplot2)   # for plotting
+library(lubridate) # for easier date/time casting
+library(forecast)  # for seasonplots and forecasts
+library(qicharts)  # for simple run and control charts
+library(ggseas)    # for seasonal plotting
+```
 
-UK_births_ts = ts(UK_births$values, start=c(2003, 1), frequency=12)
-plot()
+## Start with a line chart
 
-seasonplot
+Before anything else, just plot your data as...  
 
-yearplot
+...a line chart...
 
-cycles
+```{r plot_it_first_line, echo=TRUE}
+# Create data
+set.seed(250)
+df = data.frame(x = seq(as.Date("2006-01-01"), by = "month", length.out = 120),
+                y = 18 + rnorm(120))
 
-decomp
+# Line plot
+ggplot(df, aes(x, y)) + 
+  geom_line()
+```
 
-look for trend
+...and as a histogram that includes a density overlay for a more "objective" sense of the distribution.
 
-look for acf
+```{r plot_it_first_hist, echo=TRUE}
+# Histogram with density overlay
+ggplot(df, aes(y)) + 
+  geom_histogram(aes(y = ..density..), binwidth = 0.5) +
+  geom_density(color="blue")
+```
 
-remove trend for stability
+In these plots, consider:  
+
+- The shape of the distribution: symmetrical/skewed, uniform/peaked, whether changes in binwidth show patterning, etc.  
+- Whether you see any trending, cycles, or suggestions of autocorrelation.  
+- Whether there are any obvious outliers or inliers.  
+
+Understanding your data at this stage is a fundamental prerequisite of SPC work.  
+
+## Then do some simple time series analysis
+
+Create a time series (`ts`) object from your data:
+
+```{r make_ts, echo=TRUE}
+df_ts = ts(df$y, start = c(2006,01), frequency = 12)
+```
+
+With that, you can create a variety of exploratory and diagnotic plots that help you understand the data more thoroughly.
+
+### Seasonplot
+```{r seasonplot, echo=TRUE}
+seasonplot(df_ts, col=rainbow(10), year.labels = TRUE, year.labels.left = TRUE, cex=0.7, cex.axis = 0.7)
+```
+
+### Monthplot
+```{r monthplot, echo=TRUE}
+monthplot(df_ts, lty.base=3)
+```
+
+### Autocorrelation
+```{r acf, echo=TRUE}
+acf(df_ts)
+```
+
+### Cycles
+```{r periodicity}
+TSA::periodogram(df_ts, echo=TRUE)
+```
+
+### Decomposition
+```{r decomp, echo=TRUE}
+plot(decompose(df_ts))
+decompose((df_ts))
+```
+
+### Overall trend (if any)
+```{r loess_trend, echo=TRUE}
+ggplot(df, aes(x, y)) + 
+  geom_line() +
+  geom_smooth()
+```
+
+### Seasonal adjustment
+```{r seasonal, echo=TRUE}
+# Convert ts to data frame
+df_ts_df = tsdf(df_ts)
+
+# Plot original qnd seasonally adjusted data
+ggplot(df_ts_df, aes(x, y)) + 
+  geom_line(color="gray70") +
+  stat_seas(color="darkblue")
+```
+
+### Residuals 
+```{r residuals, echo=TRUE}
+plot(decompose(df_ts)$random, type="p")
+```
+
 
