@@ -47,7 +47,7 @@ In these plots, consider:
 |  |  
 
 
-| ![](images/tipicon.png)  **Understanding your data at this stage is a fundamental prerequisite of SPC work.**
+![](images/tipicon.png)  **Understanding your data at this stage is a fundamental prerequisite of SPC work.**
 
 
 ## Then do exploratory time-series analysis
@@ -81,8 +81,8 @@ TSA::periodogram(df_ts)
 ```
 
 ### Decomposition
-```{r decomp, echo = TRUE}
-autoplot(decompose((df_ts)))
+```{r decomp, echo=TRUE}
+autoplot(decompose(df_ts))
 ```
 
 ### Overall trend (if any)
@@ -130,12 +130,18 @@ ggplot(df_ts_df_rand, aes(x, y)) +
 
 ### What does it look like when there are time-dependent patterns?
 
-```{r patterns}
+```{r patterns, echo=TRUE}
+# Use Australian beer data
 data(ausbeer, package="fpp")
 beer = window(ausbeer, start=1992)
+
+# Summary plots
 ggtsdisplay(beer, plot.type="spectrum")
 
+# Seasonplot
 ggseasonplot(beer)
+
+# Monthplot
 ggmonthplot(beer)
 
 # Convert ts to data frame
