@@ -12,9 +12,9 @@ library(qicharts)  # for simple run and control charts
 library(ggseas)    # for seasonal plotting
 ```
 
-## Start with a line chart
+## Start with a line chart and a histogram
 
-Before anything else, just plot your data as...  
+**Before anything else**, plot your data as...  
 
 ...a line chart...
 
@@ -44,9 +44,13 @@ In these plots, consider:
 - Whether you see any trending, cycles, or suggestions of autocorrelation.  
 - Whether there are any obvious outliers or inliers.  
 
-Understanding your data at this stage is a fundamental prerequisite of SPC work.  
+|  |  
 
-## Then do some simple time series analysis
+
+| ![](images/tipicon.png)  **Understanding your data at this stage is a fundamental prerequisite of SPC work.**
+
+
+## Then do exploratory time-series analysis
 
 Create a time series (`ts`) object from your data:
 
@@ -54,38 +58,36 @@ Create a time series (`ts`) object from your data:
 df_ts = ts(df$y, start = c(2006,01), frequency = 12)
 ```
 
-With that, you can create a variety of exploratory and diagnotic plots that help you understand the data more thoroughly.
+With that, you can create a variety of exploratory and diagnotic plots that help you understand the data more thoroughly.  
 
 ### Seasonplot
 ```{r seasonplot, echo=TRUE}
-seasonplot(df_ts, col=rainbow(10), year.labels = TRUE, year.labels.left = TRUE, cex=0.7, cex.axis = 0.7)
+ggseasonplot(df_ts)
 ```
 
 ### Monthplot
 ```{r monthplot, echo=TRUE}
-monthplot(df_ts, lty.base=3)
+ggmonthplot(df_ts)
 ```
 
 ### Autocorrelation
 ```{r acf, echo=TRUE}
-acf(df_ts)
+autoplot(acf(df_ts, plot = FALSE))
 ```
 
 ### Cycles
-```{r periodicity}
-TSA::periodogram(df_ts, echo=TRUE)
+```{r periodicity, echo = TRUE}
+TSA::periodogram(df_ts)
 ```
 
 ### Decomposition
-```{r decomp, echo=TRUE}
-plot(decompose(df_ts))
-decompose((df_ts))
+```{r decomp, echo = TRUE}
+autoplot(decompose((df_ts)))
 ```
 
 ### Overall trend (if any)
 ```{r loess_trend, echo=TRUE}
-ggplot(df, aes(x, y)) + 
-  geom_line() +
+autoplot(df_ts) + 
   geom_smooth()
 ```
 
@@ -102,7 +104,56 @@ ggplot(df_ts_df, aes(x, y)) +
 
 ### Residuals 
 ```{r residuals, echo=TRUE}
-plot(decompose(df_ts)$random, type="p")
+# Convert ts residuals to data frame
+df_ts_df_rand = tsdf(decompose(df_ts)$random)
+
+# Add month as a factor
+df_ts_df_rand$mnth = factor(rep(month.abb, 10), levels = month.abb)
+
+# Plot residuals
+# No apparent patterns
+ggplot(df_ts_df_rand, aes(x, y)) + 
+  geom_hline(yintercept=0, linetype="dotted") +
+  geom_smooth(color = "gray70", alpha = 0.2) +
+  geom_point(aes(color = mnth)) 
+
+# Residuals faceted by month
+# Is December weird? Rest seem ok
+ggplot(df_ts_df_rand, aes(x, y)) + 
+  geom_hline(yintercept=0, linetype="dotted") +
+  geom_smooth(color = "gray70", alpha = 0.2) +
+  facet_wrap(~ mnth) +
+  geom_point(aes(color = mnth)) 
+
 ```
 
 
+### What does it look like when there are time-dependent patterns?
+
+```{r patterns}
+data(ausbeer, package="fpp")
+beer = window(ausbeer, start=1992)
+ggtsdisplay(beer, plot.type="spectrum")
+
+ggseasonplot(beer)
+ggmonthplot(beer)
+
+# Convert ts to data frame
+df_ts_df_rand = tsdf(decompose(beer)$random)
+df_ts_df_rand$qtr = factor(quarter(date_decimal(df_ts_df_rand$x)))
+
+# All together residuals
+ggplot(df_ts_df_rand, aes(x, y)) + 
+  geom_hline(yintercept=0, linetype="dotted") +
+  geom_smooth(color = "gray70", alpha = 0.2) +
+  geom_point(aes(color = qtr)) +
+  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73", "#000000"))
+
+# Residuals faceted by quarter
+ggplot(df_ts_df_rand, aes(x, y)) + 
+  geom_hline(yintercept=0, linetype="dotted") +
+  geom_smooth(color = "gray70", alpha = 0.2) +
+  facet_wrap(~ qtr) +
+  geom_point(aes(color = qtr)) +
+  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73", "#000000"))
+```
