@@ -16,18 +16,23 @@ description: "Using SPC methods in healthcare can be tricky. We show you how to 
 
 Statistical process control (SPC) was a triumph of manufacturing analytics, and its success spread across a variety of industries---most improbably, in healthcare. 
 
-
-You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].
+Healthcare is rarely compatible with the idea of an assembly line, but Lean thinking has taken over healthcare management around the world, and SPC methods are common tools in  Lean. This has led to much *misuse* of these methods, with predictably poor results in cases where the intent did not match the application, and bad methods lead to bad inferences. This book aims to help analysts apply SPC methods correctly, using R [@R2016]. 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+# Global options
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
+# Load libraries
+library(dplyr)
+library(scales)
+library(lubridate)
+library(forecast) 
+library(ggseas)
 library(qicharts)
 library(bookdown)
 library(knitr)
 library(ggplot2)
 library(ggExtra)
-
 ```
 
 
@@ -40,7 +45,7 @@ knitr::write_bib(c(
 
 ``` {r spccode, echo = FALSE, fig.height = 3.5}
 
-spc.plot <- function(subgroup, point, mean, sigma, k = 3,
+spc.plot = function(subgroup, point, mean, sigma, k = 3,
                      ucl.show = TRUE, lcl.show = TRUE, 
                      band.show = TRUE, rule.show = TRUE,
                      ucl.max = Inf, lcl.min = -Inf,
@@ -65,37 +70,37 @@ spc.plot <- function(subgroup, point, mean, sigma, k = 3,
     #   label.y: Specify y-axis label.
     
     
-    df <- data.frame(subgroup, point)
-    df$ucl <- pmin(ucl.max, mean + k*sigma)
-    df$lcl <- pmax(lcl.min, mean - k*sigma)
+    df = data.frame(subgroup, point)
+    df$ucl = pmin(ucl.max, mean + k*sigma)
+    df$lcl = pmax(lcl.min, mean - k*sigma)
     
-    warn.points <- function(rule, num, den) {
-        sets <- mapply(seq, 1:(length(subgroup) - (den - 1)), 
+    warn.points = function(rule, num, den) {
+        sets = mapply(seq, 1:(length(subgroup) - (den - 1)), 
                        den:length(subgroup))
-        hits <- apply(sets, 2, function(x) sum(rule[x])) >= num
+        hits = apply(sets, 2, function(x) sum(rule[x])) >= num
         intersect(c(sets[,hits]), which(rule))
     }
-    orange.sigma <- numeric()
+    orange.sigma = numeric()
     
-    p <- ggplot(data = df, aes(x = subgroup)) +
+    p = ggplot(data = df, aes(x = subgroup)) +
         geom_hline(yintercept = mean, col = "gray", size = 1)
     
     if (ucl.show) {
-        p <- p + geom_line(aes(y = ucl), col = "gray", size = 1)
+        p = p + geom_line(aes(y = ucl), col = "gray", size = 1)
     }
     
     if (lcl.show) {
-        p <- p + geom_line(aes(y = lcl), col = "gray", size = 1)
+        p = p + geom_line(aes(y = lcl), col = "gray", size = 1)
     }
     
     if (band.show) {
-        p <- p + 
+        p = p + 
             geom_ribbon(aes(ymin = mean + sigma, 
                             ymax = mean + 2*sigma), alpha = 0.1) +
             geom_ribbon(aes(ymin = pmax(lcl.min, mean - 2*sigma),  
                             ymax = mean - sigma), alpha = 0.1)
         
-        orange.sigma <- unique(c(
+        orange.sigma = unique(c(
             warn.points(point > mean + sigma, 4, 5),
             warn.points(point < mean - sigma, 4, 5),
             warn.points(point > mean + 2*sigma, 2, 3),
@@ -103,16 +108,16 @@ spc.plot <- function(subgroup, point, mean, sigma, k = 3,
         ))
     }
 
-    df$warn <- "blue"
+    df$warn = "blue"
     if (rule.show) {
-        shift.n <- round(log(sum(point!=mean), 2) + 3)
-        orange <- unique(c(orange.sigma,
+        shift.n = round(log(sum(point!=mean), 2) + 3)
+        orange = unique(c(orange.sigma,
         warn.points(point > mean - sigma & point < mean + sigma, 15, 15),
         warn.points(point > mean, shift.n, shift.n),
         warn.points(point < mean, shift.n, shift.n)))
-        df$warn[orange] <- "orange"
+        df$warn[orange] = "orange"
     }
-    df$warn[point > df$ucl | point < df$lcl] <- "red"
+    df$warn[point > df$ucl | point < df$lcl] = "red"
     
     p + 
         geom_line(aes(y = point), col = "royalblue3") +
@@ -121,5 +126,4 @@ spc.plot <- function(subgroup, point, mean, sigma, k = 3,
         labs(x = label.x, y = label.y) +
         theme_bw()
 }
-
 ```

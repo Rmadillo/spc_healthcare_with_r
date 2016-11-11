@@ -29,20 +29,19 @@ The majority of healthcare metrics of concern are rates, so the most common cont
 
 ``` {r uex, fig.height = 3.5}
 # Generate sample data
-linedays <- sample(1000:2000,24)
-infections <- rpois(24, 4)
-dates <- seq(as.Date("2013/10/1"), by = "month", length.out = 24)
+linedays = sample(1000:2000,24)
+infections = rpois(24, 4)
+dates = seq(as.Date("2013/10/1"), by = "month", length.out = 24)
 
 # Calculate u chart inputs
-subgroup.u <- dates
-point.u <- infections / linedays * 1000
-mean.u <- sum(infections) / sum(linedays) * 1000
-sigma.u <- sqrt(mean.u / linedays * 1000)
+subgroup.u = dates
+point.u = infections / linedays * 1000
+mean.u = sum(infections) / sum(linedays) * 1000
+sigma.u = sqrt(mean.u / linedays * 1000)
 
 # Plot u chart
 spc.plot(subgroup.u, point.u, mean.u, sigma.u, k = 3, lcl.min  = 0,
          label.x = "Month", label.y = "Infections per 1000 line days")
-
 ```
 
 
@@ -60,20 +59,19 @@ spc.plot(subgroup.u, point.u, mean.u, sigma.u, k = 3, lcl.min  = 0,
 
 ``` {r pex, fig.height = 3.5}
 # Generate sample data
-discharges <- sample(300:500, 24)
-readmits <- rbinom(24, discharges, .2)
-dates <- seq(as.Date("2013/10/1"), by = "month", length.out = 24)
+discharges = sample(300:500, 24)
+readmits = rbinom(24, discharges, .2)
+dates = seq(as.Date("2013/10/1"), by = "month", length.out = 24)
 
 # Calculate p chart inputs
-subgroup.p <- dates
-point.p <- readmits / discharges
-mean.p <- sum(readmits) / sum(discharges)
-sigma.p <- sqrt(mean.p*(1 - mean.p) / discharges)
+subgroup.p = dates
+point.p = readmits / discharges
+mean.p = sum(readmits) / sum(discharges)
+sigma.p = sqrt(mean.p*(1 - mean.p) / discharges)
 
 # Plot p chart
 spc.plot(subgroup.p, point.p, mean.p, sigma.p,
          label.x = "Month", label.y = "Proportion readmitted")
-
 ```
 
 
@@ -91,18 +89,18 @@ spc.plot(subgroup.p, point.p, mean.p, sigma.p,
  
 ``` {r gex, fig.height = 3.5}
 # Generate sample data
-dates <- sort(as.Date('2013/01/01') + sort(sample(1:1000, 24)))
+dates = sort(as.Date('2013/01/01') + sort(sample(1:1000, 24)))
 
 # Calculate g chart inputs
-subgroup.g <- seq(1, length(dates) - 1)
-point.g <- as.double(dates[-1] - head(dates, -1))
-mean.g <- mean(point.g)
-sigma.g <- rep(sqrt(mean.g*(mean.g+1)), length(point.g))
+subgroup.g = seq(1, length(dates) - 1)
+point.g = as.double(dates[-1] - head(dates, -1))
+mean.g = mean(point.g)
+sigma.g = rep(sqrt(mean.g*(mean.g+1)), length(point.g))
 
 # Plot g chart
-spc.plot(subgroup.g, point.g, mean.g, sigma.g, lcl.show = FALSE, lcl.min  = 0, k = 3,
-         label.x = "Infection number", label.y = "Days between infections")
-
+spc.plot(subgroup.g, point.g, mean.g, sigma.g, lcl.show = FALSE, 
+         lcl.min  = 0, k = 3, label.x = "Infection number", 
+         label.y = "Days between infections")
 ```
 
 <br/>   

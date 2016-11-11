@@ -1,0 +1,26 @@
+# Useful References {#useful}
+
+- For more information, a good overview of run charts can be found in Perla et al. 2011, [*The run chart: a simple analytical tool for learning from variation in healthcare processes*](http://www.med.unc.edu/cce/files/education-training/The%20run%20chart%20a%20simple%20analytical%20tool.pdf), BMJ Quality & Safety 20:46-51.  
+
+- A straight-to-the-point reference/tool for doing run charts in R is Anhøj 2016, [*Run charts with R*](https://cran.r-project.org/web/packages/qicharts/vignettes/runcharts.html).
+
+- Some good overview papers on control charts include Benneyan et al. 2003, [*Statistical process control as a tool for research and healthcare improvement*](http://qualitysafety.bmj.com/content/12/6/458.full.pdf), BMJ Quality & Safety 12:458-464, and Mohammed et al. 2008, [*Plotting basic control charts: tutorial notes for healthcare practitioners*](https://www.researchgate.net/profile/William_Woodall/publication/5468089_Plotting_control_charts_Tutorial_notes_for_healthcare_practitioners/links/00b49521d1165f1f49000000.pdf), BMJ Quality & Safety 17:137-145. [Wheeler 2010](http://www.qualitydigest.com/inside/quality-insider-column/individual-charts-done-right-and-wrong.html) covers why you shouldn't use 3$\sigma$ for control limits in *I* charts.    
+
+- A straight-to-the-point reference/tool for doing control charts in R is Anhøj 2016, [*Control Charts with qicharts for R*](https://cran.r-project.org/web/packages/qicharts/vignettes/controlcharts.html).
+
+- A good basic overview book is Carey and Lloyd 2001, [*Measuring Quality Improvement in Healthcare*](https://www.amazon.com/Measuring-Quality-Improvement-Healthcare-Applications/dp/0527762938/), American Society for Quality.  
+
+- A good book that covers both basic and advanced topics is Provost and Murray 2011, [*The Health Care Data Guide*](https://www.amazon.com/Health-Care-Data-Guide-Improvement/dp/0470902582/), Jossey-Bass.  
+
+- The papers that discuss the uselessness of the trend test in run and control charts include Davis & Woodall 1988, [*Performance of the control chart trend rule under linear shift*](http://asq.org/qic/display-item/index.pl?item=5597), Journal of Quality Technology 20:260-262, and Anhøj & Olesen 2014, [*Run charts revisited: A simulation study of run chart rules for detection of non-random variation in health care processes*](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0113825), PLOS One 9(11): e113825.
+
+- Finally, some important warnings about when control charts fail (and a useful alternative, GAMs) can be found in Morton et al. 2009, [*Hospital adverse events and control charts: the need for a new paradigm*](http://www.journalofhospitalinfection.com/article/S0195-6701(09)00340-5/abstract), Journal of Hospital Infection 73(3):225–231, as well as in Morton et al. 2007, [*New control chart methods for monitoring MROs in Hospitals*](https://www.researchgate.net/profile/Edward_Tong2/publication/43477704_New_control_chart_methods_for_monitoring_MROs_in_hospitals/links/5600d22e08aec948c4fa93cd.pdf), Australian Infection Control 12(1):14-18.    
+
+- Wikipedia is a good place to start learning about probability distributions and their mean-variance relationships, e.g., 
+    - [Poisson](https://en.wikipedia.org/wiki/Poisson_distribution)
+    - [binomial](https://en.wikipedia.org/wiki/Binomial_distribution)
+    - [normal](https://en.wikipedia.org/wiki/Normal_distribution)
+    - [geometric](https://en.wikipedia.org/wiki/Geometric_distribution)
+    - [Weibull](https://en.wikipedia.org/wiki/Weibull_distribution)
+    - [A gallery of distributions (NIST)](http://www.itl.nist.gov/div898/handbook/eda/section3/eda366.htm)
+    - [Common probability distributions: the data scientist’s crib sheet (Cloudera)](http://blog.cloudera.com/blog/2015/12/common-probability-distributions-the-data-scientists-crib-sheet/)  

@@ -1,22 +1,22 @@
 # Guidelines for interpreting SPC charts {#guidelines}
 
-``` {r sgnlex, echo = FALSE, fig.height = 3.5}
+``` {r sgnlex, echo = FALSE}
 
 # Example points for signal rules of thumb
-point.signal <- c(0.36, -0.25, 1.07, 0.67, -1.07, 0, 0.72, 1.82, -1.50, -0.99)
-point.signal[11] <- 3.4
-point.signal[12:14] <- c(-2.3, -1.5, -2.5)
-point.signal[15:19] <- c(1.4, 1.8, 1.3, 0.2, 1.6)
-point.signal[20:27] <- c(-0.8, -0.9, -0.2, -1.5, -1.2, -0.3, -1.1, -.5)
-point.signal[28:34] <- c(-.3, 0, 0.3, 0.4, 1.1, 1.9, 2.2)
+point.signal = c(0.36, -0.25, 1.07, 0.67, -1.07, 0, 0.72, 1.82, -1.50, -0.99)
+point.signal[11] = 3.4
+point.signal[12:14] = c(-2.3, -1.5, -2.5)
+point.signal[15:19] = c(1.4, 1.8, 1.3, 0.2, 1.6)
+point.signal[20:27] = c(-0.8, -0.9, -0.2, -1.5, -1.2, -0.3, -1.1, -.5)
+point.signal[28:34] = c(-.3, 0, 0.3, 0.4, 1.1, 1.9, 2.2)
 
-subgroup.signal <- 1:34
-mean.signal <- 0
-median.signal <- median(point.signal)
-sigma.signal <- rep(1,34)
+subgroup.signal = 1:34
+mean.signal = 0
+median.signal = median(point.signal)
+sigma.signal = rep(1,34)
 
-sig1 <- as.character(expression(1~sigma~signal))
-sig2 <- as.character(expression(2~sigma~signal))
+sig1 = as.character(expression(1~sigma~signal))
+sig2 = as.character(expression(2~sigma~signal))
 
 example_cc = spc.plot(subgroup.signal, point.signal, mean.signal, sigma.signal) +
     geom_curve(x = 0.5, xend = 10.5, y = -0.5, yend = -1.5, linetype = 2) +

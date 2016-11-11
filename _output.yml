@@ -9,6 +9,7 @@ bookdown::epub_book: default
 
 bookdown::gitbook:
   config:
+    split_by: section
     toc:
       collapse: subsection
       before: |

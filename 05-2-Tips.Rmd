@@ -1,0 +1,17 @@
+# Tips and tricks for successful control chart use
+
+- The definition of your control limits depends on the trade-off between sensitivity and specificity for the question at hand. Typical control charts are built on 3$\sigma$ limits, which provides the optimal trade-off between sensitivity and specificity, that is, between under- and over-alerting to an indication of special cause variation. When you need to err on the side of caution---for example, in patient safety applications---2$\sigma$ limits may be more appropriate, while understanding that false positives will be higher. If you need to err on the side of certainty, 4-6$\sigma$ limits may be more useful.   
+
+- With fewer than 20 observations, there is an increased chance of missing special cause variation. With more than 30 observations, there's an increased chance of detecting special cause variation that is really just chance. Knowing these outcomes are possible is useful to help facilitate careful thinking when control charts indicate special cause variation.       
+
+- Ensure your data values and control limits make sense. For example, if you have proportion data and your control limits fall above 100 or below 0, there's clearly an error somewhere. Ditto with negative counts.    
+
+- For raw ordinal data (such as likert scores), do not use means or control limits. Just. Don't. If you must plot a single value, convert to a proportion (e.g., "top box scores") first. However, stacked bar or mosaic charts help visualize this kind of data much better, and can be done in the same amount of space.      
+
+- Control charts don't measure "statistical significance"---they are meant to reduce the chances of incorrectly deciding whether a process is in (statistical) control or not. Control limits are *not* confidence limits.       
+
+- YTD comparisons don't work because they encourage naive, point-to-point comparisons and ignore natural variation---and can encourage inappropriate knee-jerk reactions. There is never useful information about a process in only one or two data points.    
+
+- A control chart should measure one defined process, so you may need to create multiple charts stratified by patient population, unit, medical service, time of day etc. to avoid mixture.     
+
+- With very large sample or subgroup sizes, control limits will be too small, and the false positive rate will skyrocket. Use [prime charts](#prime) instead.       

@@ -1,25 +1,25 @@
-# Where to start
+# Where to start {#where}
 
 *Portions of this chapter are adapted from [@barry2016].*   
 
 ## R libraries
 
-```{r loadpackages, message=FALSE, warning=FALSE, echo=TRUE}
-library(ggplot2)   # for plotting
+```{r loadpackages, message=FALSE, warning=FALSE, eval=FALSE}
+library(ggplot2)   # for general plotting
 library(lubridate) # for easier date/time casting
-library(forecast)  # for seasonplots and forecasts
+library(forecast)  # for plotting and forecasts
 library(qicharts)  # for simple run and control charts
-library(ggseas)    # for seasonal plotting
+library(ggseas)    # for on-the-fly seasonal adjustment plotting
 ```
 
-## Start with a line chart and a histogram
+## Start with basic EDA
 
-**Before anything else**, plot your data as...  
+***Before anything else***, plot your data as...  
 
 ...a line chart...
 
-```{r plot_it_first_line, echo=TRUE}
-# Create data
+```{r plot_it_first_line, fig.height=3}
+# Create fake process data
 set.seed(250)
 df = data.frame(x = seq(as.Date("2006-01-01"), by = "month", length.out = 120),
                 y = 18 + rnorm(120))
@@ -31,7 +31,7 @@ ggplot(df, aes(x, y)) +
 
 ...and as a histogram that includes a density overlay for a more "objective" sense of the distribution.
 
-```{r plot_it_first_hist, echo=TRUE}
+```{r plot_it_first_hist, fig.height=3}
 # Histogram with density overlay
 ggplot(df, aes(y)) + 
   geom_histogram(aes(y = ..density..), binwidth = 0.5) +
@@ -40,70 +40,71 @@ ggplot(df, aes(y)) +
 
 In these plots, consider:  
 
-- The shape of the distribution: symmetrical/skewed, uniform/peaked, whether changes in binwidth show patterning, etc.  
-- Whether you see any trending, cycles, or suggestions of autocorrelation.  
-- Whether there are any obvious outliers or inliers.  
-
-|  |  
+- The shape of the distribution: symmetrical/skewed, uniform/peaked, whether changes in binwidth show patterning, etc.     
+- Whether you see any trending, cycles, or suggestions of autocorrelation.     
+- Whether there are any obvious outliers or inliers.     
 
 
-![](images/tipicon.png)  **Understanding your data at this stage is a fundamental prerequisite of SPC work.**
-
-
-## Then do exploratory time-series analysis
+## Then do time-series EDA
 
 Create a time series (`ts`) object from your data:
 
-```{r make_ts, echo=TRUE}
+```{r make_ts}
 df_ts = ts(df$y, start = c(2006,01), frequency = 12)
 ```
 
-With that, you can create a variety of exploratory and diagnotic plots that help you understand the data more thoroughly.  
+With that, you can create a variety of exploratory and diagnostic plots that help you understand the data more thoroughly.  
 
 ### Seasonplot
-```{r seasonplot, echo=TRUE}
+```{r seasonplot, fig.height=3}
 ggseasonplot(df_ts)
 ```
 
 ### Monthplot
-```{r monthplot, echo=TRUE}
+```{r monthplot, fig.height=3}
 ggmonthplot(df_ts)
 ```
 
 ### Autocorrelation
-```{r acf, echo=TRUE}
+```{r acf, fig.height=3}
+# acf plot using the autoplot function instead of base
 autoplot(acf(df_ts, plot = FALSE))
 ```
 
+```{r lagplot}
+# Scatterplot of autocorrelation through first 12 lags
+lag.plot(df_ts, lags = 12, do.lines = FALSE)
+```
+
 ### Cycles
-```{r periodicity, echo = TRUE}
+```{r periodicity, fig.height=3}
 TSA::periodogram(df_ts)
 ```
 
 ### Decomposition
-```{r decomp, echo=TRUE}
+```{r decomp}
 autoplot(decompose(df_ts))
 ```
 
 ### Overall trend (if any)
-```{r loess_trend, echo=TRUE}
+```{r loess_trend, fig.height=3}
 autoplot(df_ts) + 
   geom_smooth()
 ```
 
 ### Seasonal adjustment
-```{r seasonal, echo=TRUE}
+```{r seasonal, fig.height=3}
 # Convert ts to data frame
 df_ts_df = tsdf(df_ts)
 
 # Plot original qnd seasonally adjusted data
 ggplot(df_ts_df, aes(x, y)) + 
-  geom_line(color="gray70") +
-  stat_seas(color="darkblue")
+  geom_line() +
+  stat_seas(color="blue")
 ```
 
 ### Residuals 
-```{r residuals, echo=TRUE}
+```{r residuals}
 # Convert ts residuals to data frame
 df_ts_df_rand = tsdf(decompose(df_ts)$random)
 
@@ -113,30 +114,43 @@ df_ts_df_rand$mnth = factor(rep(month.abb, 10), levels = month.abb)
 # Plot residuals
 # No apparent patterns
 ggplot(df_ts_df_rand, aes(x, y)) + 
-  geom_hline(yintercept=0, linetype="dotted") +
+  geom_hline(yintercept = 0, linetype = "dotted") +
   geom_smooth(color = "gray70", alpha = 0.2) +
-  geom_point(aes(color = mnth)) 
+  geom_point(aes(color = mnth))
+```
 
+```{r residuals_faceted}
 # Residuals faceted by month
 # Is December weird? Rest seem ok
 ggplot(df_ts_df_rand, aes(x, y)) + 
-  geom_hline(yintercept=0, linetype="dotted") +
+  geom_hline(yintercept = 0, linetype = "dotted") +
   geom_smooth(color = "gray70", alpha = 0.2) +
   facet_wrap(~ mnth) +
-  geom_point(aes(color = mnth)) 
-
+  geom_point(aes(color = mnth))
 ```
 
 
-### What does it look like when there are time-dependent patterns?
+## What does it look like when there are time-dependent patterns? {#timedep}
 
-```{r patterns, echo=TRUE}
+Compare the results above, where there were no time-dependent patterns, to those here, where there is clear quarterly seasonality, with a declining trend in the fourth quarter over the time period.   
+
+
+```{r patterns, fig.height=3}
 # Use Australian beer data
-data(ausbeer, package="fpp")
-beer = window(ausbeer, start=1992)
+data(ausbeer, package = "fpp")
+beer = window(ausbeer, start = 1990.00, end = 2005.75)
 
-# Summary plots
-ggtsdisplay(beer, plot.type="spectrum")
+# Summary plots: data, autocorrelation, and spectral density
+ggtsdisplay(beer, plot.type = "spectrum")
+
+# Scatterplot of autocorrelation through first 8 lags
+lag.plot(beer, lags = 8, layout = c(2, 4), do.lines = FALSE)
+
+# Full periodogram
+TSA::periodogram(beer)
+
+# Decomposition
+autoplot(decompose(beer))
 
 # Seasonplot
 ggseasonplot(beer)
@@ -147,6 +161,11 @@ ggmonthplot(beer)
 # Convert ts to data frame
 df_ts_df_rand = tsdf(decompose(beer)$random)
 df_ts_df_rand$qtr = factor(quarter(date_decimal(df_ts_df_rand$x)))
+
+# Plot original qnd seasonally adjusted data
+ggplot(df_ts_df_rand, aes(x, y)) + 
+  geom_line() +
+  stat_seas(color="blue")
 
 # All together residuals
 ggplot(df_ts_df_rand, aes(x, y)) + 
@@ -163,3 +182,9 @@ ggplot(df_ts_df_rand, aes(x, y)) +
   geom_point(aes(color = qtr)) +
   scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73", "#000000"))
 ```
+
+<br/>
+
+![](images/tipicon.png)  
+
+**Understanding your data is a fundamental prerequisite of SPC work. Do *not* move on into SPC work until you have explored your data using the techniques demonstrated above.**
