@@ -1,5 +1,7 @@
 # Tips and tricks for successful control chart use
 
+## READ ME (or else)
+
 - The definition of your control limits depends on the trade-off between sensitivity and specificity for the question at hand. Typical control charts are built on 3$\sigma$ limits, which provides the optimal trade-off between sensitivity and specificity, that is, between under- and over-alerting to an indication of special cause variation. When you need to err on the side of caution---for example, in patient safety applications---2$\sigma$ limits may be more appropriate, while understanding that false positives will be higher. If you need to err on the side of certainty, 4-6$\sigma$ limits may be more useful.   
 
 - With fewer than 20 observations, there is an increased chance of missing special cause variation. With more than 30 observations, there's an increased chance of detecting special cause variation that is really just chance. Knowing these outcomes are possible is useful to help facilitate careful thinking when control charts indicate special cause variation.       
@@ -12,6 +14,29 @@
 
 - YTD comparisons don't work because they encourage naive, point-to-point comparisons and ignore natural variation---and can encourage inappropriate knee-jerk reactions. There is never useful information about a process in only one or two data points.    
 
-- A control chart should measure one defined process, so you may need to create multiple charts stratified by patient population, unit, medical service, time of day etc. to avoid mixture.     
+- A control chart should measure one defined process, so you may need to create multiple charts stratified by patient population, unit, medical service, time of day, etc. to avoid mixtures of processes.       
 
-- With very large sample or subgroup sizes, control limits will be too small, and the false positive rate will skyrocket. Use [prime charts](#prime) instead.       
+- With very large sample or subgroup sizes, control limits will be too small, and the false positive rate will skyrocket. Use [prime charts](#prime) instead.      
+
+
+## When to revise control limits
+
+If you need to determine whether an intervention might have worked soon after or even during the improvement process, you shouldn't be using a standard control chart at all. Use a run chart or an EWMA or CUSUM chart to try to detect early shifts.
+
+When you have enough data points after the intervention (about 12-20), with no other changes to the process, you can "freeze" the median, and/or mean+control limits at the intervention point and recalculate the median and/or mean+limits on the subsequent data. However, by doing so you are *already assuming* that the intervention changed the process. Sometimes that evidence will be there, such as through a variety of signals of special cause variation; other times, that evidence will not be there. If there is no evidence of special cause variation for a while after the intervention, you shouldn't freeze/restart the SPC chart values. 
+
+SPC charts are blunt instruments, and are meant to try to detect changes in a process as simply as possible. When there is no clear evidence in SPC charts for a change, more advanced techniques---such as ARIMA models or [intervention/changepoint analysis](#changepoint)---can be used to assess whether there was a change in the statistical process at or near the intervention point.  
+
+
+```{r cc_trend, fig.height=3.5}
+qic(point.signal, chart="i", runvals=TRUE, ylab="Value", main="", breaks=22)
+```
+
+Of course, the change point can be placed arbitrarily---with corresponding changes in control limits and what might constitute special cause variation. For example, using the same data as above, compare those results with those when the change point is moved ahead by 6 time steps:
+
+```{r cc_trend_2, fig.height=3.5}
+qic(point.signal, chart="i", runvals=TRUE, ylab="Value", main="", breaks=28)
+```
+
+
+Use common sense and avoid the urge to change medians or means and control limits for every intervention unless evidence is clear that it worked.   

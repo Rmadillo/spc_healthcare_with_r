@@ -1,41 +1,56 @@
 # Where to start {#where}
 
-*Portions of this chapter are adapted from [@barry2016].*   
+R has been used by statisticians and data scientists for years, but it is rapidly becoming the *lingua franca* of business intelligence. Creating SPC charts can take hours in Excel or Tableau, but can be done in seconds with a line or two of R code.  
 
 ## R libraries
 
 ```{r loadpackages, message=FALSE, warning=FALSE, eval=FALSE}
-library(ggplot2)   # for general plotting
-library(lubridate) # for easier date/time casting
-library(forecast)  # for plotting and forecasts
-library(qicharts)  # for simple run and control charts
-library(ggseas)    # for on-the-fly seasonal adjustment plotting
+library(ggplot2)     # for general plotting
+library(lubridate)   # for easier date/time casting
+library(forecast)    # for plotting and forecasts
+library(qicharts)    # for simple run and control charts
+library(ggseas)      # for on-the-fly seasonal adjustment plotting
+library(gridExtra)   # for creating multi-graph plots
 ```
 
-## Start with basic EDA
+Some fake data:
 
-***Before anything else***, plot your data as...  
-
-...a line chart...
-
-```{r plot_it_first_line, fig.height=3}
+```{r make_data}
 # Create fake process data
 set.seed(250)
-df = data.frame(x = seq(as.Date("2006-01-01"), by = "month", length.out = 120),
-                y = 18 + rnorm(120))
+df = data.frame(Subgroup = seq(as.Date("2006-01-01"), by = "month", length.out = 120),
+                Value = 18 + rnorm(120))
 
-# Line plot
-ggplot(df, aes(x, y)) + 
-  geom_line()
+# Create a time series (`ts`) object from the df data
+df_ts = ts(df$Value, start = c(2006,01), frequency = 12)
+
+# Create fake process data with an upward trend
+set.seed(81)
+n = 36
+x = seq(1:n)
+mb = data.frame(Subgroup = x, Value = 10000 + (x * 1.25) + (rnorm(n, 0, 5)))
+
+# Create a time series object from the mb data
+mb_ts = ts(mb$Value, start = c(2006,01), frequency = 12)
 ```
 
-...and as a histogram that includes a density overlay for a more "objective" sense of the distribution.
 
-```{r plot_it_first_hist, fig.height=3}
+## Start with basic EDA {#histoline}
+
+***Before anything else***, plot your data as a line chart and a histogram (adding a density overlay provides a more "objective" sense of the distribution).  
+
+```{r plot_it_first_line, fig.height=3}
+# Line plot with loess smoother for assessing trend
+p1 = ggplot(df, aes(x = Subgroup, y = Value)) + 
+  geom_smooth() + 
+  geom_line() 
+
 # Histogram with density overlay
-ggplot(df, aes(y)) + 
+p2 = ggplot(df, aes(Value)) + 
   geom_histogram(aes(y = ..density..), binwidth = 0.5) +
   geom_density(color="blue")
+
+grid.arrange(p1, p2, widths = c(0.65, 0.35))
 ```
 
 In these plots, consider:  
@@ -44,147 +59,52 @@ In these plots, consider:
 - Whether you see any trending, cycles, or suggestions of autocorrelation.     
 - Whether there are any obvious outliers or inliers.     
 
+## Testing assumptions {#testassumptions}
 
-## Then do time-series EDA
+### Trending
 
-Create a time series (`ts`) object from your data:
+You can test whether a process is trending first by eye: does it look like it's trending over a large span of the time series? Then it probably is.  
 
-```{r make_ts}
-df_ts = ts(df$y, start = c(2006,01), frequency = 12)
+We don't see that above, in fact, it's really close to entirely flat: a very stable process in spite of the noise. For comparison, here's an example of assessing the trend on data that is actually trending.  
+
+```{r trendtest}
+# Plot trending data
+ggplot(mb, aes(x = Subgroup, y = Value)) + 
+  geom_smooth() + 
+  geom_line(color="gray70") +
+  geom_point() 
 ```
 
-With that, you can create a variety of exploratory and diagnostic plots that help you understand the data more thoroughly.  
+The Mann-Kendall trend test is often used as well, a non-parametric test that can determine whether the series contains a monotonic trend, whether linear or not.    
 
-### Seasonplot
-```{r seasonplot, fig.height=3}
-ggseasonplot(df_ts)
+```{r mktest}
+# Use the trend package's Mann-Kendall trend test
+trend::mk.test(mb_ts)
 ```
 
-### Monthplot
-```{r monthplot, fig.height=3}
-ggmonthplot(df_ts)
+Because trends can sometimes be an indication of special cause variation in a stable process, standard control limits don't make sense around long-trending data, and calculation of center lines and control limits will be incorrect. **Thus, tests for special causes other than trending will also be invalid over long-trending data.** Use a run chart with an appropriate median instead, e.g., via quantile regression (as seen in [Chapter 6](#runtrend)).  
+
+### Independence and autocorrelation
+
+For either run or control charts, the data points must be independent for the guidelines to be effective. The first test of that is conceptual---do you expect that one value in this series will influence a subsequent value? For example, the incidence of some hospital-acquired infections can be the result of previous infections---say, one happens at the end of March, and another happens at the start of April in the same unit, and were caused by the same organism, you might suspect that the monthly values would not be independent. 
+
+After considering the context, second way to assess independence is by calculating the autocorrelation function (acf) for the time series. Autocorrelation values over 0.50 generally indicate problems, as do patterns in the autocorrelation function, as seen in [Chapter 1](#timedep). However, *any* significant autocorrelation should be considered carefully relative to the cost of potential false positive or false negative signals. Autocorrelation renders the run and control chart guidelines suspect.   
+
+For control charts, this means that data that are autocorrelated will have control limits that are too small. Data with seasonality (predictable up-and-down patterns) or cycles (irregular up-and-down patterns) with have control limits that are too large. There are diagnostic plots and patterns that help identify each, but the best test is what does it look like? If the trend seems to be going up and down, and the control limits don't, it's probably wrong.  
+
+Using the `forecast` package's `ggtsdisplay` provides a view of the time series along with the acf and spectral frequency (where frequency is the reciprocal of the time period). Significant autocorrelation is present if there are bars that transgress the blue line. Cycles or seasonality are present if you see a clear peak (or peaks) in the spectrum.  
+
+```{r ts_eda}
+# Plot series, acf plot, and spectal plot
+ggtsdisplay(df_ts, plot.type = "spectrum") 
 ```
 
-### Autocorrelation
-```{r acf, fig.height=3}
-# acf plot using the autoplot function instead of base
-autoplot(acf(df_ts, plot = FALSE))
-```
-
-```{r lagplot}
-# Scatterplot of autocorrelation through first 12 lags
-lag.plot(df_ts, lags = 12, do.lines = FALSE)
-```
-
-### Cycles
-```{r periodicity, fig.height=3}
-TSA::periodogram(df_ts)
-```
-
-### Decomposition
-```{r decomp}
-autoplot(decompose(df_ts))
-```
-
-### Overall trend (if any)
-```{r loess_trend, fig.height=3}
-autoplot(df_ts) + 
-  geom_smooth()
-```
-
-### Seasonal adjustment
-```{r seasonal, fig.height=3}
-# Convert ts to data frame
-df_ts_df = tsdf(df_ts)
-
-# Plot original qnd seasonally adjusted data
-ggplot(df_ts_df, aes(x, y)) + 
-  geom_line() +
-  stat_seas(color="blue")
-```
-
-### Residuals 
-```{r residuals}
-# Convert ts residuals to data frame
-df_ts_df_rand = tsdf(decompose(df_ts)$random)
-
-# Add month as a factor
-df_ts_df_rand$mnth = factor(rep(month.abb, 10), levels = month.abb)
-
-# Plot residuals
-# No apparent patterns
-ggplot(df_ts_df_rand, aes(x, y)) + 
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  geom_smooth(color = "gray70", alpha = 0.2) +
-  geom_point(aes(color = mnth))
-```
-
-```{r residuals_faceted}
-# Residuals faceted by month
-# Is December weird? Rest seem ok
-ggplot(df_ts_df_rand, aes(x, y)) + 
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  geom_smooth(color = "gray70", alpha = 0.2) +
-  facet_wrap(~ mnth) +
-  geom_point(aes(color = mnth))
-```
-
-
-## What does it look like when there are time-dependent patterns? {#timedep}
-
-Compare the results above, where there were no time-dependent patterns, to those here, where there is clear quarterly seasonality, with a declining trend in the fourth quarter over the time period.   
-
-
-```{r patterns, fig.height=3}
-# Use Australian beer data
-data(ausbeer, package = "fpp")
-beer = window(ausbeer, start = 1990.00, end = 2005.75)
-
-# Summary plots: data, autocorrelation, and spectral density
-ggtsdisplay(beer, plot.type = "spectrum")
-
-# Scatterplot of autocorrelation through first 8 lags
-lag.plot(beer, lags = 8, layout = c(2, 4), do.lines = FALSE)
-
-# Full periodogram
-TSA::periodogram(beer)
-
-# Decomposition
-autoplot(decompose(beer))
-
-# Seasonplot
-ggseasonplot(beer)
-
-# Monthplot
-ggmonthplot(beer)
-
-# Convert ts to data frame
-df_ts_df_rand = tsdf(decompose(beer)$random)
-df_ts_df_rand$qtr = factor(quarter(date_decimal(df_ts_df_rand$x)))
-
-# Plot original qnd seasonally adjusted data
-ggplot(df_ts_df_rand, aes(x, y)) + 
-  geom_line() +
-  stat_seas(color="blue")
-
-# All together residuals
-ggplot(df_ts_df_rand, aes(x, y)) + 
-  geom_hline(yintercept=0, linetype="dotted") +
-  geom_smooth(color = "gray70", alpha = 0.2) +
-  geom_point(aes(color = qtr)) +
-  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73", "#000000"))
-
-# Residuals faceted by quarter
-ggplot(df_ts_df_rand, aes(x, y)) + 
-  geom_hline(yintercept=0, linetype="dotted") +
-  geom_smooth(color = "gray70", alpha = 0.2) +
-  facet_wrap(~ qtr) +
-  geom_point(aes(color = qtr)) +
-  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73", "#000000"))
-```
+These plots show that there is no autocorrelation or seasonality/cyclical patterns in the data. See [Chapter 8](#timedep) for what these plots can look like when you do have time-dependent data.  
 
 <br/>
 
-![](images/tipicon.png)  
+```{r warn_pic}
+knitr::include_graphics("images/tipicon.png")
+```
 
-**Understanding your data is a fundamental prerequisite of SPC work. Do *not* move on into SPC work until you have explored your data using the techniques demonstrated above.**
+**Understanding your data is a fundamental prerequisite of SPC work. Do *not* move on into SPC work until you have explored your data using the techniques demonstrated above and fully understand whether the data are suitable for SPC tools.**

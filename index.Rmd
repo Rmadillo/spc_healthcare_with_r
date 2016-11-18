@@ -12,12 +12,6 @@ github-repo: Rmadillo/spc_healthcare
 description: "Using SPC methods in healthcare can be tricky. We show you how to do it correctly, using R."
 ---
 
-# Overview  {#overview}
-
-Statistical process control (SPC) was a triumph of manufacturing analytics, and its success spread across a variety of industries---most improbably, in healthcare. 
-
-Healthcare is rarely compatible with the idea of an assembly line, but Lean thinking has taken over healthcare management around the world, and SPC methods are common tools in  Lean. This has led to much *misuse* of these methods, with predictably poor results in cases where the intent did not match the application, and bad methods lead to bad inferences. This book aims to help analysts apply SPC methods correctly, using R [@R2016]. 
-
 ```{r setup, include=FALSE}
 # Global options
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
@@ -33,7 +27,48 @@ library(bookdown)
 library(knitr)
 library(ggplot2)
 library(ggExtra)
+library(gridExtra)
 ```
+
+# Overview  {#overview}
+
+Statistical process control (SPC) was a triumph of manufacturing analytics, and its success spread across a variety of industries---most improbably, into healthcare. 
+
+Healthcare is rarely compatible with the idea of an assembly line, but lean manufacturing thinking ("lean") has taken over healthcare management around the world, and SPC methods are common tools in lean. Unlike in manufacturing, stability is an inherently tricky concept in healthcare, so this has led to much *misuse* of these methods. Bad methods lead to bad inferences, and bad inferences can lead to poor decisions. This book aims to help analysts apply SPC methods more accurately in healthcare, using the statistical software *R* [@R2016].  
+
+## What you need
+
+This book was created using R version 3.3.1 and RStudio 1.0.44. Code was tested on Mac OS 10.10.5 (aka Yosemite), Ubuntu 14.04 (aka Trusty Tahr), and Windows Server 2008 R2 (aka piece of shit that crashes RStudio when you try to use the Save button).    
+
+- You can download R from [https://cran.r-project.org/](https://cran.r-project.org/).  
+
+- You can download RStudio from [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/).  
+
+Once both are installed on your system, open RStudio and install the packages used in this book by copying and pasting this code into the **Console**:
+
+```{r install_packs, eval=FALSE}
+install.packages("forecast", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
+                 "qcc", "qicharts", "scales", dependencies = TRUE)
+```
+
+
+## If you've never used R
+
+Some BI analysts are apprehensive about getting into R, but if you've ever written a line of SQL or created a formula in an Excel cell, this is no different in concept. Yes, the R language is full of idiosyncracies and outright annoyances, but when you need to accomplish particular goals, it can be fairly easy. 
+
+For example, you can create a *u*-chart with only three lines of code, start to finish:
+
+```{r intro_example, fig.height=3, fig.width=6}
+# Load the qicharts package, a simple interface to SPC charts
+library(qicharts)
+
+# Load some example data from another R package as an example
+data(pcmanufact, package = "qcc")
+
+# Create the u-chart
+qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u")
+```
+
 
 
 ```{r include=FALSE}
@@ -127,3 +162,8 @@ spc.plot = function(subgroup, point, mean, sigma, k = 3,
         theme_bw()
 }
 ```
+
+## Acknows
+
+*Portions of this book are adapted from Business Intelligence with R [@barry2016].*   
+

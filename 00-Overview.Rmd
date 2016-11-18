@@ -6,9 +6,54 @@ People are really good at finding patterns that aren't real.
 
 Every process has natural variation---*noise*---included as an inherent part of that process. True signals emerge only when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help you characterize and identify non-random patterns that suggest your process has changed. 
 
-Control charts are meant to help you identify departures from a **stable** process. Run charts help you monitor any sort of metric, process, or time series data. Each uses a set of guidelines to help you make decisions on whether a process has changed or not. 
+Statistical theory provides the basis by which we can evaluate processes to more confidently detect changes in process amongst the noise of natural variation.   
 
-In many cases, a run chart may be all you need. In *all* cases, you should start with a run chart. If---and only if---you need to characterize the limits of natural variation in a stable process, you can move on to using a control chart.  
+Understanding natural variation in time series or sequential data is the essential point of quality assurance or process improvement efforts. It's a rookie mistake to use SPC tools to focus solely on the values themselves or their central tendency. You need to look at all of the elements of a run or control chart to understand what it's telling you.    
+
+This graph shows a process created using random numbers based on a known normal distribution, where the overall distribution is shown in a histogram to the right of the run chart.  
+
+```{r ggmarg, fig.height=4, echo=FALSE}
+set.seed(250)
+df = data.frame(x = seq(1:120), y = 18+rnorm(120))
+
+nat_var_run_plot = ggplot(df, aes(x, y)) + 
+  ylim(14.75, 21.25) +
+  geom_hline(aes(yintercept=18), color="gray", size=1) +
+  xlab("Subgroup") + 
+  ylab("Value") +
+  geom_line() + 
+  theme_bw()
+
+ggMarginal(nat_var_run_plot, margins="y", type = "histogram", binwidth=0.5)
+```
+
+
+The next plot shows control limits and 1-2$\sigma$ bands for comparison. Note that some of the control chart [guidelines](#guidelines) for detecting special causes suggest that some special cause variation has occurred in this data. Since this data was generated using random numbers from a known normal distribution, these are false positives. It's important to remember that control charts are meant to strike a balance true and false positives, but can never entirely eliminate the false signals.      
+
+```{r ggmarg_cc, fig.height=4, echo=FALSE}
+nat_var_cc_plot = ggplot(df, aes(x, y)) + 
+  ylim(14.75, 21.25) +
+  geom_hline(aes(yintercept=18), color="gray", size=1) +
+  geom_hline(aes(yintercept=20.96), color="red") +
+  geom_hline(aes(yintercept=15.1), color="red") +
+  geom_ribbon(aes(ymin = 18.98, ymax = 19.96), alpha = 0.2) +
+  geom_ribbon(aes(ymin = 16.04, ymax = 17.02), alpha = 0.2) +
+  xlab("Subgroup") + 
+  ylab("Value") +
+  geom_line() + 
+  theme_bw()
+
+ggMarginal(nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.5)
+```
+
+
+## SPC tools
+
+Run and control charts are the basic tools of SPC analysis. Other basical statistical graphs---particularly line charts and histograms---are equally important to SPC work.    
+
+Line charts help you monitor any sort of metric, process, or time series data. Run and control charts are meant to help you identify departures from a **stable** process. Each uses a set of guidelines to help you make decisions on whether a process has changed or not. 
+
+In many cases, a run chart may be all you need. In *all* cases, you should [start with a line chart and histogram](#histoline). If---and only if---you need to characterize the limits of natural variation in a stable process, you can move on to using a control chart.  
 
 In addition, *never* rely on a table or year-to-date (YTD) comparisons to evaluate process performance. These approaches ignore the foundational concept of process control: that natural, "common-cause" variation is an essential part of the process, and you can't see natural variation in a table or in YTD comparisons. Tables or YTD values can supplement run or control charts, but should never be used without them. 
 

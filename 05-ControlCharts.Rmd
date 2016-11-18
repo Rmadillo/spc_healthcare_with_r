@@ -1,73 +1,80 @@
 # Control charts {#controlcharts}
 
-## Natural variation and control charts
+## Statistical distributions
 
-Statistical theory provides the basis by which we can evaluate processes to more confidently detect changes in process amongst the noise of natural variation.   
+The primary distinction between run and control charts is that the latter uses parametric statistics to increase the number of properties of a data-defined process that you can monitor. If a particular statistical distribution---such as normal, binomial, or Poisson---match the process you wish to measure, you gain a great deal more power to find insights and monitor change than with a line or run chart. 
 
-Understanding natural variation in time series or sequential data is the essential point of quality assurance or process improvement efforts. It's a rookie mistake to use control charts to focus solely on the values themselves or their central tendency. You need to look at all of the elements of a control chart to understand what it's telling you.    
+### Common distributions and their ranges
 
-This graph shows a process created using random numbers based on a known normal distribution, where the overall distribution is shown in a histogram to the right of the run chart.  
+Table here.  
 
-```{r ggmarg, fig.height=4, echo=FALSE}
-set.seed(250)
-df = data.frame(x = seq(1:120), y = 18+rnorm(120))
+### Mean and variance
 
-nat_var_run_plot = ggplot(df, aes(x, y)) + 
-  ylim(14.75, 21.25) +
-  geom_hline(aes(yintercept=18), color="gray", size=1) +
+Variance is mean.  
+
+### What happens when you get the mean-variance relationship wrong
+
+Although control charts can sometimes work when you misspecify the mean-variance relationship (they are "robust" to some assumption violations), you won't know unless you explore the differences in implications between the data as-is and that same data transformed to become more in line with the appropriate or expected distribution. 
+
+For example, if you use the usual normal distribution control limits an *I* chart on exponentially-distributed data, you get something like this:
+
+```{r skewy, fig.height=3.5}
+# Create some fake exponentially-distributed process data
+set.seed(290)
+df2 = data.frame(x = seq(1:120), y = 17+rexp(120))
+
+# Create plot object
+exp_nat_var_cc_plot = ggplot(df2, aes(x, y)) + 
+  ylim(14.75, 24.75) +
+  geom_hline(aes(yintercept=17.88), color="gray", size=1) +
+  geom_hline(aes(yintercept=20.87), color="red") +
+  geom_hline(aes(yintercept=14.88), color="red") +
+  geom_ribbon(aes(ymin = 18.87, ymax = 19.87), alpha = 0.2) +
+  geom_ribbon(aes(ymin = 15.88, ymax = 16.88), alpha = 0.2) +
   xlab("Subgroup") + 
   ylab("Value") +
   geom_line() + 
   theme_bw()
 
-ggMarginal(nat_var_run_plot, margins="y", type = "histogram", binwidth=0.5)
+# Marginal plot
+ggMarginal(exp_nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.25)
 ```
 
+Clearly something is weird when no points even go below 1 standard deviation. But more importantly, do the points above the upper control limit represent *real* anomalous data points, or are they the result of an improper mean-variance relationship? 
 
-The next plot shows control limits and 1-2$\sigma$ bands for comparison. Note that some of the control chart guidelines for detecting special causes suggest that some special cause variation has occurred in this data. Since this data was generated using random numbers from a known normal distribution, these are false positives. It's important to remember that control charts are meant to balance true and false negatives, but can never entirely eliminate either.    
+Using a Box-Cox transformation to make the distribution more symmetrical, we can see that those seemingly out-of-control points are actually well within both control limits, and the variation we see is more in line with (statistical) expectation. 
 
-```{r ggmarg_cc, fig.height=4, echo=FALSE}
-nat_var_cc_plot = ggplot(df, aes(x, y)) + 
-  ylim(14.75, 21.25) +
-  geom_hline(aes(yintercept=18), color="gray", size=1) +
-  geom_hline(aes(yintercept=20.96), color="red") +
-  geom_hline(aes(yintercept=15.1), color="red") +
-  geom_ribbon(aes(ymin = 18.98, ymax = 19.96), alpha = 0.2) +
-  geom_ribbon(aes(ymin = 16.04, ymax = 17.02), alpha = 0.2) +
+```{r unskewy, fig.height=3.5}
+# Box-Cox tansformation 
+bob = data.frame(MASS::boxcox(df2$y ~ 1, lambda=seq(-20, 5, 0.5), plotit=F))
+bobmax = bob[which.max(bob[,2]),1]
+
+# Adjustment to make plotting cleaner
+df2$y2 = (df2$y ^ bobmax) * 10^19
+
+# Create plot object
+exp_xform_nat_var_cc_plot = ggplot(df2, aes(x, y2)) + 
+  ylim(-0.06, 0.31) +
+  geom_hline(aes(yintercept=0.128), color="gray", size=1) +
+  geom_hline(aes(yintercept=0.302), color="red") +
+  geom_hline(aes(yintercept=-0.046), color="red") +
+  geom_ribbon(aes(ymin = 0.186, ymax = 0.244), alpha = 0.2) +
+  geom_ribbon(aes(ymin = 0.012, ymax = 0.070), alpha = 0.2) +
   xlab("Subgroup") + 
-  ylab("Value") +
+  ylab("Transformed Value") +
   geom_line() + 
   theme_bw()
 
-ggMarginal(nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.5)
+# Marginal plot
+ggMarginal(exp_xform_nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.025)
 ```
 
+The main drawback is that you now have a chart of essentially uninterptable values---but that's better than assuming a normal distribution will be just fine and being unnecessarily alarmed by false positive signals, wasting time and resources searching for a special cause that doesn't exist.    
 
 
 ## Which control chart should I use? {#whichcontrolchart}
 
-The following flow chart can help you determine which kind of control chart you might want to use. More details and formulas for each control chart type are provided in the [Control Chart Creation Details] section.   
+The following flow chart can help you determine which kind of control chart you might want to use. More details and formulas for each control chart type are provided in the next few chapters.   
 
 ![](images/control_chart_flowchart.png)
 
-
-## When to revise control limits
-
-If you need to determine whether an intervention might have worked soon after or even during the improvement process, you shouldn't be using a standard control chart at all. Use a run chart or an EWMA or CUSUM chart to try to detect early shifts.
-
-When you have enough data points after the intervention (about 12-20), with no other changes to the process, you can "freeze" the median, and/or mean+control limits at the intervention point and recalculate the median and/or mean+limits on the subsequent data. However, by doing so you are *already assuming* that the intervention changed the process. Sometimes that evidence will be there, such as through a variety of signals of special cause variation; other times, that evidence will not be there. If there is no evidence of special cause variation for a while after the intervention, you shouldn't freeze/restart the SPC chart values. 
-
-SPC charts are blunt instruments, and are meant to try to detect changes in a process as simply as possible. Where there is no evidence in SPC charts for a change, more advanced techniques---such as ARIMA models or [intervention/changepoint analysis](#changepoint)---can be used to assess whether there was a change in the statistical process at or near the intervention point.  
-
-
-```{r cc_trend, fig.height=3.5}
-qic(point.signal, chart="i", runvals=TRUE, ylab="Value", main="", breaks=22)
-```
-
-Of course, the change point can be placed arbitrarily---with corresponding changes in control limits and what might constitute special cause variation. For example, using the same data as above, compare those results with those when the change point is moved ahead by 6 time steps:
-
-```{r cc_trend_2, fig.height=3.5}
-qic(point.signal, chart="i", runvals=TRUE, ylab="Value", main="", breaks=28)
-```
-
-Use common sense and avoid the urge to change medians or means and control limits for every intervention unless evidence is clear that it worked.   
