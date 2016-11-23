@@ -4,15 +4,17 @@
 
 People are really good at finding patterns that aren't real.  
 
-Every process has natural variation---*noise*---included as an inherent part of that process. True signals emerge only when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help you characterize and identify non-random patterns that suggest your process has changed.  
+Every process has natural variation---*noise*---included as an inherent part of that process. True signals only emerge when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help you characterize and identify non-ranom patterns that suggest your process has changed. 
 
 Statistical theory provides the basis by which we can evaluate processes to more confidently detect changes in process amongst the noise of natural variation.  
 
-Understanding natural variation in time series or sequential data is the essential point of quality assurance or process improvement efforts. It's a rookie mistake to use SPC tools to focus solely on the values themselves or their central tendency. You need to look at all of the elements of a run or control chart to understand what it's telling you.  
+Understanding natural variation in time series or sequential data is the essential point of quality assurance or process improvement efforts. It's a rookie mistake to use SPC tools to focus solely on the values themselves or their central tendency. You need to look at [all the elements](#guidelines) of a run or control chart to understand what it's telling you.  
 
 This graph shows a process created using random numbers based on a known normal distribution, where the overall distribution is shown in a histogram to the right of the run chart.  
 
-```{r ggmarg, fig.height=4, echo=FALSE}
+<br>  
+
+```{r ggmarg, fig.height=3, echo=FALSE}
 set.seed(250)
 df = data.frame(x = seq(1:120), y = 18+rnorm(120))
 
@@ -27,10 +29,13 @@ nat_var_run_plot = ggplot(df, aes(x, y)) +
 ggMarginal(nat_var_run_plot, margins="y", type = "histogram", binwidth=0.5)
 ```
 
+<br>  
 
 The next plot shows control limits and 1-2$\sigma$ bands for comparison. Note that some of the control chart [guidelines](#guidelines) for detecting special causes suggest that some special cause variation has occurred in this data. Since this data was generated using random numbers from a known normal distribution, these are false positives. It's important to remember that control charts are meant to strike a balance true and false positives, but can never entirely eliminate the false signals.      
 
-```{r ggmarg_cc, fig.height=4, echo=FALSE}
+<br>  
+
+```{r ggmarg_cc, fig.height=3, echo=FALSE}
 nat_var_cc_plot = ggplot(df, aes(x, y)) + 
   ylim(14.75, 21.25) +
   geom_hline(aes(yintercept=18), color="gray", size=1) +
@@ -46,6 +51,7 @@ nat_var_cc_plot = ggplot(df, aes(x, y)) +
 ggMarginal(nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.5)
 ```
 
+<br>  
 
 ## SPC tools
 

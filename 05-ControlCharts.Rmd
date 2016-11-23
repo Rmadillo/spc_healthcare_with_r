@@ -2,7 +2,9 @@
 
 ## Statistical distributions
 
-The primary distinction between run and control charts is that the latter uses parametric statistics to increase the number of properties of a data-defined process that you can monitor. If a particular statistical distribution---such as normal, binomial, or Poisson---match the process you wish to measure, you gain a great deal more power to find insights and monitor change than with a line or run chart. 
+The primary distinction between run and control charts is that the latter uses parametric statistics to increase the number of properties of a data-defined process that you can monitor. If a particular statistical distribution---such as normal, binomial, or Poisson---match the process you wish to measure, you gain a great deal more power to find insights and monitor change than with a line or run chart.  
+
+Parametric distributions are a *useful fiction*---no data will follow an idealized distribution, but as long as it's close, it provides some useful shortcuts that allow SPC charts to work *in practice*.  
 
 ### Common distributions and their ranges
 
@@ -76,16 +78,35 @@ So should you always transform when your data doesn't meet the usual distributio
 
 ### What *is* the distribution?
 
-Use R function to compare data against common distributions. 
+There are R packages and functions to evaluate your data and show what distribution(s) are most consistent with it. This does *not* tell you that your data does follow a given distribution, only that it's consistent with it. Further analysis is usually required; consult a statistician when you're uncertain.  
+
+As an example, we can use the expoentially-distrubted data created above to show how it works.  
 
 ```{r fitdist}
-# fitdist
+library(fitdistrplus)
+expo_dist = descdist(df2$y, boot = 1000)
 ```
 
+<br>  
+
+This chart shows us that data are consistent with a gamma distribution and an exponential distribution. Using `qqPlot` lets us evaluate them both directly:    
+
+```{r qqplot, fig.width=3, fig.height=3}
+# Create objects of the two most-likely distributions
+expo = fitdistr(df2$y, "exponential")
+gammo = fitdistr(df2$y, "gamma")
+
+# The car package has a good quantile-quantile plot function
+library(car)
+qqPlot(df2$y, "exp", rate = expo$estimate); qqPlot(df2$y, "gamma", shape = gammo$estimate[1], rate = gammo$estimate[2])
+```
 
 ## Which control chart should I use? {#whichcontrolchart}
 
 The following flow chart can help you determine which kind of control chart you might want to use. More details and formulas for each control chart type are provided in the next few chapters.   
 
-![](images/control_chart_flowchart.png)
+```{r which_flow, echo = FALSE, fig.align = "center"}
+knitr::include_graphics("images/control_chart_flowchart.png")
+```
+
 

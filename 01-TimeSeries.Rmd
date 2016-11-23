@@ -2,7 +2,11 @@
 
 R has been used by statisticians and data scientists for years, but it is rapidly becoming an essential tool in business intelligence as well. Creating SPC charts can take hours in Excel or Tableau (and can be error-prone), but they can be created in seconds with a line or two of R code.   
 
-## R libraries
+## R packages
+
+This book uses the following R packages:  
+
+<br>  
 
 ```{r loadpackages, message=FALSE, warning=FALSE, eval=FALSE}
 library(ggplot2)     # for general plotting
@@ -13,7 +17,9 @@ library(ggseas)      # for on-the-fly seasonal adjustment plotting
 library(gridExtra)   # for creating multi-graph plots
 ```
 
-Some fake data:
+We'll use fake data throughout this book; below are some data sets that we'll use in this chapter and in a few places later:  
+
+<br>  
 
 ```{r make_data}
 # Create fake process data
@@ -38,6 +44,8 @@ mb_ts = ts(mb$Value, start = c(2006,01), frequency = 12)
 ## Start with basic EDA {#histoline}
 
 ***Before anything else***, plot your data as a line chart and a histogram (adding a density overlay provides a more "objective" sense of the distribution).  
+
+<br>  
 
 ```{r plot_it_first_line, fig.height=3}
 # Line plot with loess smoother for assessing trend
@@ -67,6 +75,8 @@ You can test whether a process is trending first by eye: does it look like it's 
 
 We don't see that above, in fact, it's really close to entirely flat: a very stable process in spite of the noise. For comparison, here's an example of assessing the trend on data that is actually trending.  
 
+<br>  
+
 ```{r trendtest}
 # Plot trending data
 ggplot(mb, aes(x = Subgroup, y = Value)) + 
@@ -76,6 +86,8 @@ ggplot(mb, aes(x = Subgroup, y = Value)) +
 ```
 
 The Mann-Kendall trend test is often used as well, a non-parametric test that can determine whether the series contains a monotonic trend, whether linear or not.    
+
+<br>  
 
 ```{r mktest}
 # Use the trend package's Mann-Kendall trend test
@@ -94,6 +106,8 @@ For control charts, this means that data that are autocorrelated will have contr
 
 Using the `forecast` package's `ggtsdisplay` provides a view of the time series along with the acf and spectral frequency (where frequency is the reciprocal of the time period). Significant autocorrelation is present if there are bars that transgress the blue line. Cycles or seasonality are present if you see a clear peak (or peaks) in the spectrum.  
 
+<br>  
+
 ```{r ts_eda}
 # Plot series, acf plot, and spectal plot
 ggtsdisplay(df_ts, plot.type = "spectrum") 
@@ -101,9 +115,9 @@ ggtsdisplay(df_ts, plot.type = "spectrum")
 
 These plots show that there is no autocorrelation or seasonality/cyclical patterns in the data. See [Chapter 8](#timedep) for what these plots can look like when you do have time-dependent data.  
 
-<br/>
+<br>
 
-```{r warn_pic}
+```{r warn_pic, echo=FALSE, fig.align="center"}
 knitr::include_graphics("images/tipicon.png")
 ```
 

@@ -14,7 +14,7 @@ description: "Using SPC methods in healthcare can be tricky. We show you how to 
 
 ```{r setup, include=FALSE}
 # Global options
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, comment = NA)
 
 # Load libraries
 library(dplyr)
@@ -36,27 +36,14 @@ Statistical process control (SPC) was a triumph of manufacturing analytics, and 
 
 Healthcare is rarely compatible with the idea of an assembly line, but lean manufacturing thinking ("lean") has taken over healthcare management around the world, and SPC methods are common tools in lean. Unlike in manufacturing, stability is an inherently tricky concept in healthcare, so this has led to much *misuse* of these methods. Bad methods lead to bad inferences, and bad inferences can lead to poor decisions. This book aims to help analysts apply SPC methods more accurately in healthcare, using the statistical software *R* [@R2016].  
 
-## What you need
-
-This book was created using R version 3.3.1 and RStudio 1.0.44. Code was tested on Mac OS 10.10.5 (aka Yosemite), Ubuntu 14.04 (aka Trusty Tahr), and Windows Server 2008 R2 (aka piece of shit OS that crashes RStudio when you try to use the Save button).    
-
-- You can download R from [https://cran.r-project.org/](https://cran.r-project.org/).  
-
-- You can download RStudio from [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/).  
-
-Once both are installed on your system, open RStudio and install the packages used in this book by copying and pasting this code into the **Console**:
-
-```{r install_packs, eval=FALSE}
-install.packages("forecast", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
-                 "qcc", "qicharts", "scales", dependencies = TRUE)
-```
-
-
 ## If you've never used R
 
-Some BI analysts are apprehensive about getting into R, but if you've ever written a line of SQL or created a formula in an Excel cell, this is no different in concept. Yes, the R language is full of idiosyncracies and outright annoyances, but when you need to accomplish particular goals, it can be fairly easy. 
+Some BI analysts are apprehensive about getting into R, but if you've ever written a line of SQL or created a formula in an Excel cell, this is no different in concept. Yes, the R language is full of idiosyncracies and outright annoyances, but when you need to accomplish particular goals, it can be fairly easy.   
 
-For example, you can create a *u*-chart with only three lines of code, start to finish:
+
+For example, you can create a *u*-chart with only three lines of code, start to finish:  
+
+<br>  
 
 ```{r intro_example, fig.height=3, fig.width=6}
 # Load the qicharts package, a simple interface to SPC charts
@@ -66,15 +53,49 @@ library(qicharts)
 data(pcmanufact, package = "qcc")
 
 # Create the u-chart
-qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u")
+qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u", main="Easy u-chart")
+```
+
+<br>  
+
+You can find help using `?`, followed by the function name, e.g.,  
+
+```{r help, eval=FALSE}
+?qic
+```
+
+- You can download R from [https://cran.r-project.org/](https://cran.r-project.org/).  
+
+- You can download RStudio from [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/).  
+
+
+## What you need
+
+This book was created using R version 3.3.1 and RStudio 1.0.44. Code was tested on Mac OS 10.10.5 (aka Yosemite), Ubuntu 14.04 (aka Trusty Tahr), and Windows Server 2008 R2 (aka piece of shit OS that crashes RStudio when you try to use the Save button).    
+
+Open RStudio and install the packages used in this book by copying and pasting this code into the **Console**:  
+
+```{r install_packs, eval=FALSE}
+install.packages("forecast", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
+                 "qcc", "qicharts", "scales", dependencies = TRUE)
 ```
 
 
+## Book repo
 
-```{r include=FALSE}
+You can submit pull requests for any errors or typos at https://github.com/Rmadillo/spc_healthcare_with_r.  
+
+## Acknows
+
+Portions of this book are adapted from *Business Intelligence with R* [@barry2016].     
+
+
+
+
+```{r include = FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), 'ggplot2', 'knitr', 'rmarkdown'
+  .packages(), 'ggplot2', 'knitr', 'qcc', 'qic', 'rmarkdown'
 ), 'packages.bib')
 ```
 
@@ -162,8 +183,3 @@ spc.plot = function(subgroup, point, mean, sigma, k = 3,
         theme_bw()
 }
 ```
-
-## Acknows
-
-*Portions of this book are adapted from Business Intelligence with R [@barry2016].*   
-
