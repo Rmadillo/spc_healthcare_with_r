@@ -1,23 +1,25 @@
 # Control charts for numeric, normally-distributed data {#numeric}
 
 
-| If your data involve... | use a ... | based on the ... distribution. | 
+| If your data involve... | use a/an ... | based on the ... distribution. | 
 | --------------------------------- | --------- | ----------------------------- | 
 | Individual points | *I* chart | normal | 
 | Subgroup average | $\bar{x}$ and *s* chart | normal |
-| Exponentially weighted moving average (RENAME) | EWMA chart | normal |
-| Cumulative sum (RENAME) | CUSUM chart | normal |
+| Exponentially weighted moving average | EWMA chart | normal |
+| Cumulative sum | CUSUM chart | normal |
 
 
 - For continuous data, the definition of the control limits will depend on your question and the data at hand. To detect small shifts in the mean quickly, an EWMA is probably best, while to understand natural variation and try to detect special cause variation, an $\bar{x}$ and *s* chart will be more useful.
 
 - In the rare cases you may need an individual chart, do *not* use 3$\sigma$ for the control limits; you must use 2.66$MR_{bar}$ instead to ensure the limits are presented correctly.  
 
-- Note: EWMA and CUSUM charts aren't "standard" control charts in that the only guideline for detecting special cause variation is a point outside the limits. So while they can't detect special cause variation like control charts, they *can* detect shifts in mean with fewer points than a standard control chart.  
+- Note: EWMA and CUSUM charts aren't "standard" control charts in that the only guideline for detecting special cause variation is a point outside the limits. So while they can't detect special cause variation like control charts, they *can* detect shifts in mean with fewer points than a standard control chart. ***WHICH TO PREFER AND WHY?***    
 
 <br/>  
 
 ## *I-MR* chart
+
+When you have a single measurement per subgroup, the *I-MR* combination chart is appropriate. They should always be used together.  
 
 **Mean($\bar{x}$):** &nbsp;&nbsp; $\bar{x} = \frac{\sum_{x_{i}}}{n}$
 
@@ -70,6 +72,8 @@ spc.plot(subgroup.i, point.i, mean.i, sigma.i, k = 2.66,
 <br/>
 
 ## $\bar{x}$ and *s* chart
+
+When you have a sample or multiple measurements per subgroup, the $\bar{x}$ and *s* chart combination is the appropriate choice. As with the *I-MR* chart, they should always be used together.  
 
 Control limits (3&sigma;) are calculated as follows:  
  		  

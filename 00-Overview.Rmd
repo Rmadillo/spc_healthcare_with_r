@@ -2,13 +2,13 @@
 
 ## Signal and noise
 
-People are really good at finding patterns that aren't real. 
+People are really good at finding patterns that aren't real.  
 
-Every process has natural variation---*noise*---included as an inherent part of that process. True signals emerge only when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help you characterize and identify non-random patterns that suggest your process has changed. 
+Every process has natural variation---*noise*---included as an inherent part of that process. True signals emerge only when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help you characterize and identify non-random patterns that suggest your process has changed.  
 
-Statistical theory provides the basis by which we can evaluate processes to more confidently detect changes in process amongst the noise of natural variation.   
+Statistical theory provides the basis by which we can evaluate processes to more confidently detect changes in process amongst the noise of natural variation.  
 
-Understanding natural variation in time series or sequential data is the essential point of quality assurance or process improvement efforts. It's a rookie mistake to use SPC tools to focus solely on the values themselves or their central tendency. You need to look at all of the elements of a run or control chart to understand what it's telling you.    
+Understanding natural variation in time series or sequential data is the essential point of quality assurance or process improvement efforts. It's a rookie mistake to use SPC tools to focus solely on the values themselves or their central tendency. You need to look at all of the elements of a run or control chart to understand what it's telling you.  
 
 This graph shows a process created using random numbers based on a known normal distribution, where the overall distribution is shown in a histogram to the right of the run chart.  
 

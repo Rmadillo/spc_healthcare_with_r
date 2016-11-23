@@ -38,7 +38,7 @@ Healthcare is rarely compatible with the idea of an assembly line, but lean manu
 
 ## What you need
 
-This book was created using R version 3.3.1 and RStudio 1.0.44. Code was tested on Mac OS 10.10.5 (aka Yosemite), Ubuntu 14.04 (aka Trusty Tahr), and Windows Server 2008 R2 (aka piece of shit that crashes RStudio when you try to use the Save button).    
+This book was created using R version 3.3.1 and RStudio 1.0.44. Code was tested on Mac OS 10.10.5 (aka Yosemite), Ubuntu 14.04 (aka Trusty Tahr), and Windows Server 2008 R2 (aka piece of shit OS that crashes RStudio when you try to use the Save button).    
 
 - You can download R from [https://cran.r-project.org/](https://cran.r-project.org/).  
 

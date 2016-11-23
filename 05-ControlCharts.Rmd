@@ -12,6 +12,7 @@ Table here.
 
 Variance is mean.  
 
+
 ### What happens when you get the mean-variance relationship wrong
 
 Although control charts can sometimes work when you misspecify the mean-variance relationship (they are "robust" to some assumption violations), you won't know unless you explore the differences in implications between the data as-is and that same data transformed to become more in line with the appropriate or expected distribution. 
@@ -70,6 +71,16 @@ ggMarginal(exp_xform_nat_var_cc_plot, margins="y", type = "histogram", binwidth=
 ```
 
 The main drawback is that you now have a chart of essentially uninterptable values---but that's better than assuming a normal distribution will be just fine and being unnecessarily alarmed by false positive signals, wasting time and resources searching for a special cause that doesn't exist.    
+
+So should you always transform when your data doesn't meet the usual distributions common in control charts? Not necessarily. For more information, see, for example, *The arcsine is asinine* [@WartonHui2016] and *Do not log-transform count data* [@OharaKotze2010]. Consult a statistician if you aren't sure how to proceed.  
+
+### What *is* the distribution?
+
+Use R function to compare data against common distributions. 
+
+```{r fitdist}
+# fitdist
+```
 
 
 ## Which control chart should I use? {#whichcontrolchart}

@@ -43,8 +43,8 @@ autoplot(df_ts) +
   geom_smooth()
 ```
 
-### Seasonal adjustment
-```{r seasonal, fig.height=3}
+### Seasonal adjustment (THIS IS BROKEN RIGHT NOW BECAUSE OF NEW GGPLOT)
+```{r seasonal, fig.height=3, eval=FALSE}
 # Convert ts to data frame
 df_ts_df = tsdf(df_ts)
 
@@ -123,9 +123,9 @@ df_ts_df_rand = tsdf(decompose(beer)$random)
 df_ts_df_rand$qtr = factor(quarter(date_decimal(df_ts_df_rand$x)))
 
 # Plot original qnd seasonally adjusted data
-ggplot(df_ts_df_rand, aes(x, y)) + 
-  geom_line() +
-  stat_seas(color="blue")
+#ggplot(df_ts_df_rand, aes(x, y)) + 
+#  geom_line() +
+#  stat_seas(color="blue")
 
 # All together residuals
 ggplot(df_ts_df_rand, aes(x, y)) + 

@@ -1,6 +1,6 @@
 # Where to start {#where}
 
-R has been used by statisticians and data scientists for years, but it is rapidly becoming the *lingua franca* of business intelligence. Creating SPC charts can take hours in Excel or Tableau, but can be done in seconds with a line or two of R code.  
+R has been used by statisticians and data scientists for years, but it is rapidly becoming an essential tool in business intelligence as well. Creating SPC charts can take hours in Excel or Tableau (and can be error-prone), but they can be created in seconds with a line or two of R code.   
 
 ## R libraries
 

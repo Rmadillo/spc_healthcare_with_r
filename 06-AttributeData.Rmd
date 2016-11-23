@@ -1,7 +1,5 @@
 # Control charts for count, proportion, or rate data {#attribute}
 
-The majority of healthcare metrics of concern are rates, so the most common control chart is the u-chart.  
-
 | If your data involve... | use a ... | based on the ... distribution. | 
 | -------------------------------------- | --------- | ------------------------ | 
 | Rates  | *u* chart | Poisson | 
@@ -17,7 +15,11 @@ The majority of healthcare metrics of concern are rates, so the most common cont
 
 - For proportion data, prefer *p*-charts to *np*-charts. Again, we almost never have a constant denominator, so np-charts would not be appropriate. Even when we do, using a p-chart helps reduce audience confusion by explicitly stating the "per *x*".   
 
-## *u* chart example
+## *u*-chart example
+
+The majority of healthcare metrics of concern are rates, so the most common control chart is the *u*-chart.  
+
+Sometimes, a KPI is based on counts. This is obviously problematic for process monitoring in most healthcare situations because it ignores the risk exposure. When KPIs are measuring counts with a denominator that is *truly fixed*, technically a *c*-chart can be used. This makes sense in manufacturing, but not so much in healthcare, where the definition of the denominator can be very important. You should always use a context-relevant denominator, so in basically all cases a *u*-chart should be preferred to a *c*-chart.    
 
 **Mean for rates (*u*):** &nbsp;&nbsp; $u = {\frac{c}{n}}$
 
@@ -47,7 +49,9 @@ spc.plot(subgroup.u, point.u, mean.u, sigma.u, k = 3, lcl.min  = 0,
 
 <br/>  
 
-## *p* chart example
+## *p*-chart example
+
+When your metric is a true proportion (and not a rate, e.g., a count per 100), a *p*-chart is the appropriate control chart to use.  
 
 **Mean for proportions (*p*):** &nbsp;&nbsp; $p = {\frac{y}{n}}$
 
@@ -74,10 +78,15 @@ spc.plot(subgroup.p, point.p, mean.p, sigma.p,
          label.x = "Month", label.y = "Proportion readmitted")
 ```
 
-
 <br/>  
 
-## *g* chart example
+## Rare events (*g*- and *t*-charts)
+
+There are some important KPIs in healthcare related to rare events, such as is common in patient safety and infection control. These commonly have 0 values for several subgroups within the process time-period. In these cases, you need to use *g*-charts (discrete time scale, e.g., days between events) or *t*-charts (continuous time scale, e.g., time between events) to evaluate the time between events.  
+
+**WHICH TO PREFER AND WHY?**
+
+### *g*-chart example
 
 **Mean for infrequent counts (*g*):** &nbsp;&nbsp; $g = {\frac{\Sigma{t}}{n}}$
 
@@ -105,11 +114,9 @@ spc.plot(subgroup.g, point.g, mean.g, sigma.g, lcl.show = FALSE,
 
 <br/>   
 
-## Means and control limits for *c* and *t* charts  
+### *t*-chart example
 
-**Mean for counts (*c*)(not shown):** &nbsp;&nbsp; $c$
-
-**3$\sigma$ control limits for counts (*c*)(not shown):** &nbsp;&nbsp; $3\sqrt{c}$   
+**BRENDAN: NEED EXAMPLE HERE**  
 
 **Control limits for time between events (*t*)(not shown):** &nbsp;&nbsp; 2.66$MR_{bar}$    
 &nbsp;&nbsp;&nbsp;&nbsp; *where*  
@@ -118,3 +125,21 @@ spc.plot(subgroup.g, point.g, mean.g, sigma.g, lcl.show = FALSE,
 &nbsp;&nbsp;&nbsp;&nbsp; $MR_{bar}$ = average moving range of *y*s, excluding those > 3.27$MR_{bar}$   
     
 Note: *t* chart mean and limits can be transformed back to the original scale by raising those values to the 3.6 power. In addition, the y axis can be plotted on a log scale to make the display more symmetrical (which can be easier than explaining how the distribution works to a decision maker).   
+
+<br/>   
+
+## *c*- and *np*-chart details  
+
+Simply for completeness, means and control limits for *c*- and *np*-charts are presented here. To emphasize that *u*- and *p*-charts should be preferred (respectively), no examples are given.    
+
+**Mean for counts (*c*):** &nbsp;&nbsp; $c$
+
+**3$\sigma$ control limits for counts (*c*)(not shown):** &nbsp;&nbsp; $3\sqrt{c}$   
+
+**Mean for equal-opporuntity proportions (*np*):** &nbsp;&nbsp; $np = {\frac{y}{n}}$  
+&nbsp;&nbsp;&nbsp;&nbsp; *where*  
+&nbsp;&nbsp;&nbsp;&nbsp; $n$ is a constant  
+
+**3$\sigma$ control limits for equal-opporuntity proportions (*np*):** &nbsp;&nbsp; $3\sqrt{np (1 - p)}$  
+&nbsp;&nbsp;&nbsp;&nbsp; *where*  
+&nbsp;&nbsp;&nbsp;&nbsp; $n$ is a constant  
