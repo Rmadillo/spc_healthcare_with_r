@@ -34,7 +34,7 @@ library(gridExtra)
 
 Statistical process control (SPC) was a triumph of manufacturing analytics, and its success spread across a variety of industries---most improbably, into healthcare. 
 
-Healthcare is rarely compatible with the idea of an assembly line, but lean manufacturing thinking ("lean") has taken over healthcare management around the world, and SPC methods are common tools in lean. Unlike in manufacturing, stability is an inherently tricky concept in healthcare, so this has led to much *misuse* of these methods. Bad methods lead to bad inferences, and bad inferences can lead to poor decisions. This book aims to help analysts apply SPC methods more accurately in healthcare, using the statistical software *R* [@R2016].  
+Healthcare is rarely compatible with the idea of an assembly line, but lean manufacturing thinking ("Lean") has taken over healthcare management around the world, and SPC methods are common tools in Lean. Unlike in manufacturing, stability is an inherently tricky concept in healthcare, so this has led to much *misuse* of these methods. Bad methods lead to bad inferences, and bad inferences can lead to poor decisions. This book aims to help analysts apply SPC methods more accurately in healthcare, using the statistical software *R* [@R2016].  
 
 ## If you've never used R
 
@@ -71,7 +71,7 @@ You can find help using `?`, followed by the function name, e.g.,
 
 ## What you need
 
-This book was created using R version 3.3.1 and RStudio 1.0.44. Code was tested on Mac OS 10.10.5 (aka Yosemite), Ubuntu 14.04 (aka Trusty Tahr), and Windows Server 2008 R2 (aka piece of shit OS that crashes RStudio when you try to use the Save button).    
+This book was created using R version 3.3.2 and RStudio 1.0.44. Code was tested on Mac OS 10.10.5 (aka Yosemite), Ubuntu 14.04 (aka Trusty Tahr), and Windows Server 2008 R2 (aka piece of shit OS that crashes RStudio when you try to use the Save button).    
 
 Open RStudio and install the packages used in this book by copying and pasting this code into the **Console**:  
 
