@@ -1,4 +1,4 @@
-# Signal, noise, and statisical process control {#SPC}
+# Signal, noise, and statistical process control {#SPC}
 
 ## Signal and noise
 
@@ -31,7 +31,7 @@ ggMarginal(nat_var_run_plot, margins="y", type = "histogram", binwidth=0.5)
 
 <br>  
 
-The next plot shows control limits and 1-2$\sigma$ bands for reference, which are important pieces of SPC control charts. Alongside an understanding of the metric and its measurement and operational context, we can use [guidelines](#guidelines) developed from statistics and probability to evalaute the statistical process of a metric in more detail. This ultimately helps us determine whether we should investigate the process for special cause variation.      
+The next plot shows control limits and 1-2$\sigma$ bands for reference, which are important pieces of SPC control charts. Alongside an understanding of the metric and its measurement and operational context, we can use [guidelines](#guidelines) developed from statistics and probability to evaluate the statistical process of a metric in more detail. This ultimately helps us determine whether we should investigate the process for special cause variation.      
 
 <br>  
 
@@ -59,7 +59,7 @@ Note that some of the control chart [guidelines](#guidelines) for detecting spec
 
 ## SPC tools
 
-Run and control charts are the basic tools of SPC analysis. Other basical statistical graphs---particularly line charts and histograms---are equally important to SPC work.    
+Run and control charts are the basic tools of SPC analysis. Other basic statistical graphs---particularly line charts and histograms---are equally important to SPC work.    
 
 Line charts help you monitor any sort of metric, process, or time series data. Run and control charts are meant to help you identify departures from a **stable** process. Each uses a set of guidelines to help you make decisions on whether a process has changed or not. 
 

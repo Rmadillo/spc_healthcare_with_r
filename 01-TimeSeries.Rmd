@@ -115,6 +115,8 @@ ggtsdisplay(df_ts, plot.type = "spectrum")
 
 These plots show that there is no autocorrelation or seasonality/cyclical patterns in the data. See [Chapter 8](#timedep) for what these plots can look like when you do have time-dependent data.  
 
+When you do have such data, you cannot use standard SPC tools. Generalized additive models (GAMs or GAMMs) can be useful alternatives.  
+
 <br>
 
 ```{r warn_pic, echo=FALSE, fig.align="center"}
