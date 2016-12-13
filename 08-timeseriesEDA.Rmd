@@ -1,5 +1,4 @@
-# More stuff
-
+# Time series EDA
 
 ## Time series exploration
 
@@ -163,22 +162,5 @@ autoplot(acf(beer_diff, plot = FALSE))
 ```
 
 If have autocorrelated data, and you aren't willing to difference the data or can't change the sampling rate or time step, you shouldn't use either run or control charts, and instead use a standard line chart. If you must have limits to help guide decision-making, you'll need a more advanced technique, such as a Generalized Additive Mixed Model (GAMM) or time series models such as ARIMA. It's probably best to work with a statistician if you need to do this.   
-
-
-
-## Prime charts
-
-
-
-## GAM {#GAM}
-
-*Stuff based on Morton et al. book here*  
-
-
-## OC Curves
-
-
-
-## Pareto charts
 
 

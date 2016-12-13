@@ -12,8 +12,7 @@ Table here.
 
 ### Mean and variance
 
-Variance is mean.  
-
+When control charts use the mean to create the center line, they use the arithmetic mean. Rather than using the $\bar{x}$ abbreviation, these mean values are usually named for the type of chart (*u*, *p*, etc.) to emphasize the use of control limits that are not based on the normal distribution. The variance used to calculate the control limits differs by distribution.   
 
 ### What happens when you get the mean-variance relationship wrong
 

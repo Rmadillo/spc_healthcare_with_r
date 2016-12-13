@@ -1,3 +1,35 @@
+
+# Ch 8 
+
+## Prime charts
+
+
+
+## GAM {#GAM}
+
+*Stuff based on Morton et al. book here*  
+
+
+## OC Curves
+
+**Not a great example but it works.**  
+
+```{r ocs}
+dfw_sampled = dfw %>% group_by(months) %>% sample_n(size = 10)
+dfw_groups = qcc.groups(dfw_sampled$waits, as.numeric(dfw_sampled$months))
+dfw_oc = oc.curves(qcc(dfw_groups, type="xbar"))
+ARL = 1/( 1 - dfw_oc[rownames(dfw_oc) == "1", 1])
+```
+
+Average run length (ARL) is `r ARL`.  
+
+
+
+## Pareto charts
+
+
+# Ch 9
+
 # Is there a difference? {#advanced}
 
 Too many leaders and clinicians got only one or two stats classes in their background, and as a result are tediously tied to the ritual of Statistical Hypothesis Inference Testing (more commonly known as frequentism, but this has a better acronym).  
