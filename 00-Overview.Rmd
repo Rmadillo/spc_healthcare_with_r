@@ -53,7 +53,7 @@ ggMarginal(nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.5)
 
 <br>  
 
-Note that some of the control chart [guidelines](#guidelines) for detecting special causes suggest that some special cause variation has occurred in this data. Since this dataset was generated using random numbers from a known normal distribution, these are false positives. It's important to remember that control charts are meant to strike a balance true and false positives, but can never entirely eliminate the false signals. 
+Note that some of the control chart [guidelines](#guidelines) for detecting special causes suggest that some special cause variation has occurred in this data. Since this dataset was generated using random numbers from a known normal distribution, these are false positives. It's important to remember that control charts are meant to strike a balance bewtween true and false positives, but can never entirely eliminate false signals. 
 
 <br>  
 
@@ -67,7 +67,7 @@ In many cases, a run chart may be all you need. In *all* cases, you should [star
 
 In addition, *never* rely on a table or year-to-date (YTD) comparisons to evaluate process performance. These approaches ignore the foundational concept of process control: that natural, "common-cause" variation is an essential part of the process, and you can't see natural variation in a table or in YTD comparisons. Tables or YTD values can supplement run or control charts, but should never be used without them. 
 
-Above all, remember that the decisions you make in constructing SPC charts and associated data points such as YTD figures *will* impact the interpretation of the results. Bad charts can make for bad decisions. 
+Above all, remember that the decisions you make in constructing SPC charts and associated data points (such as YTD figures) *will* impact the interpretation of the results. Bad charts can make for bad decisions. 
 
 <br>  
 
