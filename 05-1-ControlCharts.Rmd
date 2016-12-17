@@ -8,7 +8,23 @@ Parametric distributions are a *useful fiction*---no data will follow an idealiz
 
 ### Common distributions and their ranges
 
-Table here.  
+
+
+| Data Type | Distribution | Range | Skew | Examples |
+| --------- | ------------ | ----- | ---- | -------- |
+| Discrete | Binomial | 0, $N$ | Any | SOMETHING | 
+| | Poisson | 0, $\infty$ | Right | SOMETHING | 
+| | Negative binomial | 0, $\infty$ | Right | SOMETHING | 
+| | Geometric | 0, $\infty$ | Right | SOMETHING | 
+| | Beta-binomial | 0, $N$ | Any | SOMETHING | 
+| Continuous | Uniform | 0, 1 | None | SOMETHING |
+| | Normal | $-\infty$, $\infty$ | None | SOMETHING | 
+| | Gamma | 0, $\infty$ | Right | SOMETHING | 
+| | Beta | 0, 1 | Any | SOMETHING | 
+| | Expoential | 0, $\infty$ | Right | SOMETHING | 
+| | Lognormal | 0, $\infty$ | Right | SOMETHING | 
+| | Weibull | 0, $\infty$ | Right | SOMETHING | 
+
 
 ### Mean and variance
 
