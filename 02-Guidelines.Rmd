@@ -61,7 +61,7 @@ ggsave("images/example_run_chart.png")
 |  |  | 
 | *Number of crossings:* Too many or too few median line crossings suggest a pattern inconsistent with natural variation. | *Number of crossings:* Too many or too few center line crossings suggest a pattern inconsistent with natural variation. | 
 |  |  | 
-| *Trend:* Seven or more consecutive points all increasing or all decreasing (though this is usually ineffective\*). | *Trend:* Seven or more consecutive points all increasing or all decreasing (though this is usually ineffective\*).  | 
+| *Trend:* Seven or more consecutive points all increasing or all decreasing (though this can be an ineffective indicator [[@AnhøjOlesen2014]]). | *Trend:* Seven or more consecutive points all increasing or all decreasing (though this can be an ineffective indicator [[@AnhøjOlesen2014]]).  | 
 |  |  | 
 | *Cycles:* There are obvious cycles that are not linked to known causes such as seasonality. | *Cycles:* There are obvious cycles of any sort. | 
 |  |  | 

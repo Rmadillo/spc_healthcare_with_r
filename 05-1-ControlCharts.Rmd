@@ -4,11 +4,11 @@
 
 The primary distinction between run and control charts is that the latter uses parametric statistics to increase the number of properties of a data-defined process that you can monitor. If a particular statistical distribution---such as normal, binomial, or Poisson---match the process you wish to measure, you gain a great deal more power to find insights and monitor change than with a line or run chart.  
 
-Parametric distributions are a *useful fiction*---no data will follow an idealized distribution, but as long as it's close, it provides some useful shortcuts that allow SPC charts to work *in practice*.  
+Parametric distributions are a *useful fiction*---no data will follow an idealized distribution, but as long as it's close, it provides some useful shortcuts that allow SPC charts to work *in practice*.   
 
 ### Common distributions and their ranges
 
-
+There are [hundreds of statistical distributions](), but only a handful are used in SPC work:  
 
 | Data Type | Distribution | Range | Skew | Examples |
 | --------- | ------------ | ----- | ---- | -------- |
@@ -32,9 +32,9 @@ When control charts use the mean to create the center line, they use the arithme
 
 ### What happens when you get the mean-variance relationship wrong
 
-Although control charts can sometimes work when you misspecify the mean-variance relationship (they are "robust" to some assumption violations), you won't know unless you explore the differences in implications between the data as-is and that same data transformed to become more in line with the appropriate or expected distribution. 
+Although control charts can sometimes work when you misspecify the mean-variance relationship (they are "robust" to some assumption violations), you won't know unless you explore the differences in implications between the data as-is and that same data transformed to become more in line with the appropriate or expected distribution.  
 
-For example, if you use the usual normal distribution control limits an *I* chart on exponentially-distributed data, you get something like this:
+For example, if you use the usual normal distribution control limits an *I* chart on exponentially-distributed data, you get something like this:  
 
 ```{r skewy, fig.height=3.5}
 # Create some fake exponentially-distributed process data
