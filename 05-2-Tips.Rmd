@@ -6,7 +6,7 @@
 
 - With fewer than 20 observations, there is an increased chance of missing special cause variation. With more than 30 observations, there's an increased chance of detecting special cause variation that is really just chance. Knowing these outcomes are possible is useful to help facilitate careful thinking when control charts indicate special cause variation.       
 
-- Ensure your data values and control limits make sense. For example, if you have proportion data and your control limits fall above 100 or below 0, there's clearly an error somewhere. Ditto with negative counts.    
+- Ensure your data values and control limits make sense. For example, if you have proportion data and your control limits fall above 1 (or above 100%) or below 0, there's clearly an error somewhere. Ditto with negative counts.    
 
 - For raw ordinal data (such as likert scores), do not use means or control limits. Just. Don't. If you must plot a single value, convert to a proportion (e.g., "top box scores") first. However, stacked bar or mosaic charts help visualize this kind of data much better, and can be done in the same amount of space.      
 
