@@ -39,7 +39,7 @@ For example, if you use the usual normal distribution control limits (an *I* cha
 ```{r skewy, fig.height=3.5}
 # Create some fake exponentially-distributed process data
 set.seed(290)
-df2 = data.frame(x = seq(1:120), y = 17*rexp(120))
+df2 = data.frame(x = seq(1:120), y = 17+rexp(120)) #should by y=17*rexp(120)
 
 # Create plot object
 exp_nat_var_cc_plot = ggplot(df2, aes(x, y)) + 
