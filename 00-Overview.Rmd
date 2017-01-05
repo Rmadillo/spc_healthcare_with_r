@@ -2,7 +2,7 @@
 
 ## Signal and noise
 
-People are really good at finding patterns that aren't real, especially in noisy data.  
+People are really, really good at finding patterns that aren't real, especially in noisy data.  
 
 Every metric has natural variation---*noise*---included as an inherent part of that process. True signals only emerge when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help you characterize and identify non-random patterns that suggest your process has changed. 
 
