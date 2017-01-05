@@ -63,7 +63,7 @@ grid.arrange(p1, p2, widths = c(0.65, 0.35))
 
 In these plots, consider:  
 
-- The shape of the distribution: symmetrical/skewed, uniform/peaked, whether changes in binwidth show patterning, etc.     
+- The shape of the distribution: symmetrical/skewed, uniform/peaked/multimodal, whether changes in binwidth show patterning, etc.     
 - Whether you see any trending, cycles, or suggestions of autocorrelation.     
 - Whether there are any obvious outliers or inliers.     
 
@@ -102,7 +102,7 @@ For either run or control charts, the data points must be independent for the gu
 
 After considering the context, second way to assess independence is by calculating the autocorrelation function (acf) for the time series. Autocorrelation values over 0.50 generally indicate problems, as do patterns in the autocorrelation function, as seen in [Chapter 1](#timedep). However, *any* significant autocorrelation should be considered carefully relative to the cost of potential false positive or false negative signals. Autocorrelation renders the run and control chart guidelines suspect.   
 
-For control charts, this means that data that are autocorrelated will have control limits that are too small. Data with seasonality (predictable up-and-down patterns) or cycles (irregular up-and-down patterns) with have control limits that are too large. There are diagnostic plots and patterns that help identify each, but the best test is what does it look like? If the trend seems to be going up and down, and the control limits don't, it's probably wrong.  
+For control charts, this means that data that are autocorrelated will have control limits that are too small. Data with seasonality (predictable up-and-down patterns) or cycles (irregular up-and-down patterns) will have control limits that are too large. There are diagnostic plots and patterns that help identify each, but the best test is what does it look like? If the trend seems to be going up and down, and the control limits don't, it's probably wrong.  
 
 Using the `forecast` package's `ggtsdisplay` provides a view of the time series along with the acf and spectral frequency (where frequency is the reciprocal of the time period). Significant autocorrelation is present if there are bars that transgress the blue line. Cycles or seasonality are present if you see a clear peak (or peaks) in the spectrum.  
 
