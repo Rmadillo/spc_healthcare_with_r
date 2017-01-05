@@ -73,7 +73,7 @@ Above all, remember that the decisions you make in constructing SPC charts and a
 
 ## Defining *stability*
 
-It takes time and resources to track new KPIs (collecting the data, developing the dashboards, etc.), so you should take the time to develop them carefully. Specifically, since SPC tools are built upon the fundamental assumption of a *stable* process, you need to be very clear on what the definition of "stability" is in the context of your goals and the metric itself, and make sure these KPIs are actually useful in tracking that stability.
+It is quite common for decision-makers to want to see KPIs displayed using a control chart.  However, control charts are only applicable for KPIs when the business goal is to keep that KPI stable. SPC tools are built upon the fundamental assumption of a *stable* process, and as an analyst you need to be very clear on what the definition of stability is in the context of the goals and the metric itself.  Because it takes time and resources to track KPIs (collecting the data, developing the dashboards, etc) you should take time to develop them carefully and ensure that SPC tools are, in fact, appropriate.
 
 In many cases when folks talk about "stability" they mean "constant", and think of their stability KPI as trying to keep their previous KPI at some fixed value or achieve some fixed target. In many cases this makes sense. However, there are times where stability could have different meanings, particularly in a changing environment. 
 
