@@ -31,15 +31,22 @@ Sometimes, a KPI is based on counts. This is obviously problematic for process m
 
 ``` {r uex, fig.height = 3.5}
 # Generate sample data
-linedays = sample(1000:2000,24)
-infections = rpois(24, 4)
-dates = seq(as.Date("2013/10/1"), by = "month", length.out = 24)
+dates = seq(as.Date("2013/10/1"), by = "day", length.out = 730)
+linedays = sample(30:60,length(dates), replace = TRUE)
+infections = rpois(length(dates), 4/1000*linedays)
+
+months = as.Date(strftime(dates, "%Y-%m-01"))
+
+dfi = data.frame(months, linedays, infections)
+
+infections.agg = aggregate(dfi$infections, by = list(months), FUN = sum, na.rm = TRUE)$x
+linedays.agg = aggregate(dfi$linedays, by = list(months), FUN = sum, na.rm = TRUE)$x
 
 # Calculate u chart inputs
-subgroup.u = dates
-point.u = infections / linedays * 1000
-mean.u = sum(infections) / sum(linedays) * 1000
-sigma.u = sqrt(mean.u / linedays * 1000)
+subgroup.u = unique(months)
+point.u = infections.agg / linedays.agg * 1000
+mean.u = sum(infections.agg) / sum(linedays.agg) * 1000
+sigma.u = sqrt(mean.u / linedays.agg * 1000)
 
 # Plot u chart
 spc.plot(subgroup.u, point.u, mean.u, sigma.u, k = 3, lcl.min  = 0,
@@ -85,6 +92,7 @@ spc.plot(subgroup.p, point.p, mean.p, sigma.p,
 There are some important KPIs in healthcare related to rare events, such as is common in patient safety and infection control. These commonly have 0 values for several subgroups within the process time-period. In these cases, you need to use *g*-charts (discrete time scale, e.g., days between events) or *t*-charts (continuous time scale, e.g., time between events) to evaluate the time between events.  
 
 **WHICH TO PREFER AND WHY?**
+If the time between rare events is best represented by a continuous time scale, use a *t*-chart. If a discrete time scale is reasonable, a *g*-chart may be simpler to implement and easier to interpret without transformation, though a *t*-chart is also acceptable.
 
 ### *g*-chart example
 
@@ -97,19 +105,30 @@ There are some important KPIs in healthcare related to rare events, such as is c
 *Days between infections*    
  
 ``` {r gex, fig.height = 3.5}
-# Generate sample data
-dates = sort(as.Date('2013/01/01') + sort(sample(1:1000, 24)))
+# Generate sample data using u-chart example data
+infections.index = which(infections > 0)[1:30]
+dfind = data.frame(start = head(infections.index, length(infections.index) - 1) + 1, 
+                   end = tail(infections.index, length(infections.index) - 1))
+
+linedays.btwn = matrix( , length(dfind$start))
+
+for (i in 1:length(linedays.btwn)) {
+    sumover = seq(dfind$start[i], dfind$end[i])
+    linedays.btwn[i] = sum(linedays[sumover])
+}
+
 
 # Calculate g chart inputs
-subgroup.g = seq(1, length(dates) - 1)
-point.g = as.double(dates[-1] - head(dates, -1))
+subgroup.g = seq(2, length(infections.index))
+point.g = linedays.btwn
 mean.g = mean(point.g)
 sigma.g = rep(sqrt(mean.g*(mean.g+1)), length(point.g))
 
 # Plot g chart
 spc.plot(subgroup.g, point.g, mean.g, sigma.g, lcl.show = FALSE, 
-         lcl.min  = 0, k = 3, label.x = "Infection number", 
-         label.y = "Days between infections")
+         band.show = FALSE, rule.show = FALSE,
+         lcl.min = 0, k = 3, label.x = "Infection number",
+         label.y = "Line days between infections")
 ```
 
 <br/>   
@@ -125,6 +144,32 @@ spc.plot(subgroup.g, point.g, mean.g, sigma.g, lcl.show = FALSE,
 &nbsp;&nbsp;&nbsp;&nbsp; $MR_{bar}$ = average moving range of *y*s, excluding those > 3.27$MR_{bar}$   
     
 Note: *t* chart mean and limits can be transformed back to the original scale by raising those values to the 3.6 power. In addition, the y axis can be plotted on a log scale to make the display more symmetrical (which can be easier than explaining how the distribution works to a decision maker).   
+
+``` {r tex, fig.height = 3.5}
+# Generate sample data using g-chart example data
+y = linedays.btwn ^ (1/3.6)
+mr = matrix(, length(y) - 1)
+for (i in 1:length(y) - 1) {
+    mr[i] = abs(y[i + 1] - y[i])
+}
+
+## Is this the right way to interpret exclude > 3.27MR? Is this exclusion recursive?
+mr = mr[mr <= 3.27*mean(mr)]  
+
+# Calculate t chart inputs
+subgroup.t = subgroup.g
+point.t = y
+mean.t = mean(y)
+sigma.t = rep(mean(mr), length(point.t))
+
+# Plot t chart
+spc.plot(subgroup.t, point.t, mean.t, sigma.t, lcl.show = FALSE, 
+         band.show = FALSE, rule.show = FALSE,
+         lcl.min = 0, k = 2.66, label.x = "Infection number",
+         label.y = "Line days between infections (transformed)")
+
+
+```
 
 <br/>   
 
