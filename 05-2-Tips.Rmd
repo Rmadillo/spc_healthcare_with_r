@@ -28,6 +28,9 @@ When you have enough data points after the intervention (about 12-20), with no o
 SPC charts are blunt instruments, and are meant to try to detect changes in a process as simply as possible. When there is no clear evidence in SPC charts for a change, more advanced techniques---such as ARIMA models or [intervention/changepoint analysis](#changepoint)---can be used to assess whether there was a change in the statistical process at or near the intervention point.  
 
 
+# CREATE NEW DATASET FOR THIS POINT, AND PUT INTERVENTION WITHIN FIRST TIME PERIOD BECAUSE THAT'S WHEN IT HAPPENED, SHOW THAT'S INVALID
+
+
 ```{r cc_trend, fig.height=3.5}
 qic(point.signal, chart="i", runvals=TRUE, ylab="Value", main="", breaks=22)
 ```

@@ -11,15 +11,15 @@
 
 - For count, rate, or proportion data, carefully define your numerator and denominator. Evaluate each separately over time to see whether there are any unusual features or patterns. Sometimes patterns can occur in one or the other, then disappear or are obscured when coalesced into a rate or proportion.  
 
-- For count data, prefer *u*-charts to *c*-charts. In most cases, we do not have a constant denominator, so c-charts would not be appropriate. Even when we do, using a u-chart helps reduce audience confusion because you are explicitly stating the "per *x*".    
+- For count data, prefer *u*-charts to *c*-charts. In most cases, we do not have a constant denominator, so c-charts would not be appropriate. Even when we do, using a *u*-chart helps reduce audience confusion because you are explicitly stating the "per *x*".    
 
-- For proportion data, prefer *p*-charts to *np*-charts. Again, we almost never have a constant denominator, so np-charts would not be appropriate. Even when we do, using a p-chart helps reduce audience confusion by explicitly stating the "per *x*".   
+- For proportion data, prefer *p*-charts to *np*-charts. Again, we almost never have a constant denominator, so *np*-charts would not be appropriate. Even when we do, using a *p*-chart helps reduce audience confusion by explicitly stating the "per *x*".   
 
 ## *u*-chart example
 
 The majority of healthcare metrics of concern are rates, so the most common control chart is the *u*-chart.  
 
-Sometimes, a KPI is based on counts. This is obviously problematic for process monitoring in most healthcare situations because it ignores the risk exposure. When KPIs are measuring counts with a denominator that is *truly fixed*, technically a *c*-chart can be used. This makes sense in manufacturing, but not so much in healthcare, where the definition of the denominator can be very important. You should always use a context-relevant denominator, so in basically all cases a *u*-chart should be preferred to a *c*-chart.    
+Sometimes, a KPI is based on counts. This is obviously problematic for process monitoring in most healthcare situations because it ignores the risk exposure---for example, counting the number of infections over time is meaningless if you don't account for the change in the number of patients in that same time period. When KPIs are measuring counts with a denominator that is *truly fixed*, technically a *c*-chart can be used. This makes sense in manufacturing, but not so much in healthcare, where the definition of the denominator can be very important. You should always use a context-relevant denominator, so in basically all cases a *u*-chart should be preferred to a *c*-chart.    
 
 **Mean for rates (*u*):** &nbsp;&nbsp; $u = {\frac{c}{n}}$
 
@@ -89,9 +89,8 @@ spc.plot(subgroup.p, point.p, mean.p, sigma.p,
 
 ## Rare events (*g*- and *t*-charts)
 
-There are some important KPIs in healthcare related to rare events, such as is common in patient safety and infection control. These commonly have 0 values for several subgroups within the process time-period. In these cases, you need to use *g*-charts (discrete time scale, e.g., days between events) or *t*-charts (continuous time scale, e.g., time between events) to evaluate the time between events.  
+There are some important KPIs in healthcare related to rare events, such as is common in patient safety and infection control. These commonly have 0 values for several subgroups within the process time-period. In these cases, you need to use *g*-charts (discrete events or time scale, e.g., days between events) or *t*-charts (continuous time scale, e.g., time between events) to evaluate the time between events.  
 
-**WHICH TO PREFER AND WHY?**
 If the time between rare events is best represented by a continuous time scale, use a *t*-chart. If a discrete time scale is reasonable, a *g*-chart may be simpler to implement and easier to interpret without transformation, though a *t*-chart is also acceptable.
 
 ### *g*-chart example

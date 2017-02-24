@@ -14,6 +14,7 @@ library(lubridate)   # for easier date/time casting
 library(forecast)    # for plotting and forecasts
 library(qicharts)    # for simple run and control charts
 library(ggseas)      # for on-the-fly seasonal adjustment plotting
+library(ggExtra)     # for making line+histogram marginal plots
 library(gridExtra)   # for creating multi-graph plots
 ```
 
@@ -28,13 +29,14 @@ df = data.frame(Subgroup = seq(as.Date("2006-01-01"), by = "month", length.out =
                 Value = 18 + rnorm(120))
 
 # Create a time series (`ts`) object from the df data
+# (We'll use this later in the chapter)
 df_ts = ts(df$Value, start = c(2006,01), frequency = 12)
 
 # Create fake process data with an upward trend
 set.seed(81)
 n = 36
-x = seq(1:n)
-mb = data.frame(Subgroup = x, Value = 10000 + (x * 1.25) + (rnorm(n, 0, 5)))
+x = seq(1:n) 
+mb = data.frame(Subgroup = seq(as.Date("2006-01-01"), by = "month", length.out = n), Value = 10000 + (seq(1:n) * 1.25) + (rnorm(n, 0, 5)))
 
 # Create a time series object from the mb data
 mb_ts = ts(mb$Value, start = c(2006,01), frequency = 12)
@@ -55,8 +57,8 @@ p1 = ggplot(df, aes(x = Subgroup, y = Value)) +
 
 # Histogram with density overlay
 p2 = ggplot(df, aes(Value)) + 
-  geom_histogram(aes(y = ..density..), binwidth = 0.5) +
-  geom_density(color="blue")
+  geom_histogram(aes(y = ..density..), binwidth = 0.5, color = "gray95") +
+  geom_density(color = "blue")
 
 grid.arrange(p1, p2, widths = c(0.65, 0.35))
 ```
@@ -65,7 +67,7 @@ In these plots, consider:
 
 - The shape of the distribution: symmetrical/skewed, uniform/peaked/multimodal, whether changes in binwidth show patterning, etc.     
 - Whether you see any trending, cycles, or suggestions of autocorrelation.     
-- Whether there are any obvious outliers or inliers.     
+- Whether there are any obvious outliers or inliers---basically, any points deviating form the expected pattern.     
 
 ## Testing assumptions {#testassumptions}
 
@@ -81,7 +83,7 @@ We don't see that above, in fact, it's really close to entirely flat: a very sta
 # Plot trending data
 ggplot(mb, aes(x = Subgroup, y = Value)) + 
   geom_smooth() + 
-  geom_line(color="gray70") +
+  geom_line(color = "gray70") +
   geom_point() 
 ```
 
@@ -100,9 +102,9 @@ Because trends can sometimes be an indication of special cause variation in a st
 
 For either run or control charts, the data points must be independent for the guidelines to be effective. The first test of that is conceptual---do you expect that one value in this series will influence a subsequent value? For example, the incidence of some hospital-acquired infections can be the result of previous infections---say, one happens at the end of March, and another happens at the start of April in the same unit, and were caused by the same organism, you might suspect that the monthly values would not be independent. 
 
-After considering the context, second way to assess independence is by calculating the autocorrelation function (acf) for the time series. Autocorrelation values over 0.50 generally indicate problems, as do patterns in the autocorrelation function, as seen in [Chapter 1](#timedep). However, *any* significant autocorrelation should be considered carefully relative to the cost of potential false positive or false negative signals. Autocorrelation renders the run and control chart guidelines suspect.   
+After considering the context, second way to assess independence is by calculating the autocorrelation function (acf) for the time series. Autocorrelation values over 0.50 generally indicate problems, as do patterns in the autocorrelation function, as can be seen in [Chapter 8](#timedep). However, *any* significant autocorrelation should be considered carefully relative to the cost of potential false positive or false negative signals. Autocorrelation renders the run and control chart guidelines suspect.   
 
-For control charts, this means that data that are autocorrelated will have control limits that are too small. Data with seasonality (predictable up-and-down patterns) or cycles (irregular up-and-down patterns) will have control limits that are too large. There are diagnostic plots and patterns that help identify each, but the best test is what does it look like? If the trend seems to be going up and down, and the control limits don't, it's probably wrong.  
+For control charts, this means that data that are autocorrelated will have control limits that are too small. Data with seasonality (predictable up-and-down patterns) or cycles (irregular up-and-down patterns) will have control limits that are too large. There are diagnostic plots and patterns that help identify each, but the best test is "what does it look like"? If the trend seems to be going up and down, and the control limits don't, it's probably wrong.  
 
 Using the `forecast` package's `ggtsdisplay` provides a view of the time series along with the acf and spectral frequency (where frequency is the reciprocal of the time period). Significant autocorrelation is present if there are bars that transgress the blue line. Cycles or seasonality are present if you see a clear peak (or peaks) in the spectrum.  
 
@@ -113,14 +115,18 @@ Using the `forecast` package's `ggtsdisplay` provides a view of the time series 
 ggtsdisplay(df_ts, plot.type = "spectrum") 
 ```
 
-These plots show that there is no autocorrelation or seasonality/cyclical patterns in the data. See [Chapter 8](#timedep) for what these plots can look like when you do have time-dependent data.  
+These plots show that there is no autocorrelation or seasonality/cyclical patterns in the data:  there are no obivious patterns nor any bars that cross the blue lines in the acf plot (bottom left), and  there are no peaks in the spectral density plot (bottom right). See [Chapter 8](#timedep) for what these plots can look like when you have time-dependent data.  
 
 When you do have such data, you cannot use standard SPC tools. Generalized additive models (GAMs or GAMMs) can be useful alternatives.  
 
 <br>
+
+***  
 
 ```{r warn_pic, echo=FALSE, fig.align="center"}
 knitr::include_graphics("images/tipicon.png")
 ```
 
 **Understanding your data is a fundamental prerequisite of SPC work. Do *not* move on into SPC work until you have explored your data using the techniques demonstrated above and fully understand whether the data are suitable for SPC tools.**
+
+***  

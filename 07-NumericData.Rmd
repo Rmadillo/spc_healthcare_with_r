@@ -17,6 +17,8 @@
 
 <br/>  
 
+# INTERPRET MR and s charts since they don't follow usual value axis interp
+
 ## *I-MR* chart
 
 When you have a single measurement per subgroup, the *I-MR* combination chart is appropriate. They should always be used together.  

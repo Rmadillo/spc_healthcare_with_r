@@ -8,20 +8,21 @@ Parametric distributions are a *useful fiction*---no data will follow an idealiz
 
 ### Common distributions and their ranges
 
-There are [hundreds of statistical distributions](), but only a handful are used in SPC work:  
+There are [hundreds of statistical distributions](http://vosesoftware.com/knowledgebase/whitepapers/pdf/ebookdistributions.pdf), but only a handful are commonly used in SPC work:  
 
-| Data Type | Distribution | Range | Skew | Examples |
-| --------- | ------------ | ----- | ---- | -------- |
-| Discrete | Binomial | 0, $N$ | Any | SOMETHING | 
-| | Poisson | 0, $\infty$ | Right | SOMETHING | 
+| Data Type | Distribution | Range | Skew | Example |
+| --------- | ------------ | ----- | ---- | ------- |
+| *Discrete* | Binomial | 0, $N$ | Any | SOMETHING | 
+| | Poisson | 0, $\infty$ | Right | Readmit rates | 
 | | Negative binomial | 0, $\infty$ | Right | SOMETHING | 
 | | Geometric | 0, $\infty$ | Right | SOMETHING | 
 | | Beta-binomial | 0, $N$ | Any | SOMETHING | 
-| Continuous | Uniform | 0, 1 | None | SOMETHING |
+| *Continuous* | Uniform | 0, 1 | None | SOMETHING |
 | | Normal | $-\infty$, $\infty$ | None | SOMETHING | 
-| | Gamma | 0, $\infty$ | Right | SOMETHING | 
+| | Gamma | 0, $\infty$ | Right | Waiting times | 
 | | Beta | 0, 1 | Any | SOMETHING | 
-| | Expoential | 0, $\infty$ | Right | SOMETHING | 
+| | Cauchy | $-\infty$, $\infty$ | None | Cost/Effectiveness ratios | 
+| | Exponential | 0, $\infty$ | Right | Time between safety events | 
 | | Lognormal | 0, $\infty$ | Right | SOMETHING | 
 | | Weibull | 0, $\infty$ | Right | SOMETHING | 
 
@@ -34,57 +35,57 @@ When control charts use the mean to create the center line, they use the arithme
 
 Although control charts can sometimes work when you misspecify the mean-variance relationship (they are "robust" to some assumption violations), you won't know unless you explore the differences in implications between the data as-is and that same data transformed to become more in line with the appropriate or expected distribution.  
 
-For example, if you use the usual normal distribution control limits (an *I* chart) on exponentially-distributed data, you get something like this:  
+For example, if you use the usual normal distribution control limits (an *I* chart) on gamma-distributed data, you get something like this:  
 
 ```{r skewy, fig.height=3.5}
-# Create some fake exponentially-distributed process data
-set.seed(290)
-df2 = data.frame(x = seq(1:120), y = 17+rexp(120)) #should by y=17*rexp(120)
+# Create some fake gamma-distributed process data
+set.seed(3)
+df2 = data.frame(x = seq(1:120), y = rgamma(120, shape = 3, rate = 0.8)) 
 
 # Create plot object
 exp_nat_var_cc_plot = ggplot(df2, aes(x, y)) + 
-  ylim(14.75, 24.75) +
-  geom_hline(aes(yintercept=17.88), color="gray", size=1) +
-  geom_hline(aes(yintercept=20.87), color="red") +
-  geom_hline(aes(yintercept=14.88), color="red") +
-  geom_ribbon(aes(ymin = 18.87, ymax = 19.87), alpha = 0.2) +
-  geom_ribbon(aes(ymin = 15.88, ymax = 16.88), alpha = 0.2) +
+  ylim(-3, 11) +
+  geom_hline(aes(yintercept=mean(y)), color="gray", size=1) +
+  geom_hline(aes(yintercept=mean(y)+(3*sd(y))), color="red") +
+  geom_hline(aes(yintercept=mean(y)-(3*sd(y))), color="red") +
+  geom_ribbon(aes(ymin = mean(y)-(2*sd(y)), ymax = mean(y)-(1*sd(y))), alpha = 0.2) +
+  geom_ribbon(aes(ymin = mean(y)+(1*sd(y)), ymax = mean(y)+(2*sd(y))), alpha = 0.2) +
   xlab("Subgroup") + 
   ylab("Value") +
   geom_line() + 
   theme_bw()
 
 # Marginal plot
-ggMarginal(exp_nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.25)
+ggMarginal(exp_nat_var_cc_plot, margins="y", type = "histogram", binwidth=1)
 ```
 
-Clearly something is weird when no points even go below 1 standard deviation. But more importantly, do the points above the upper control limit represent *real* anomalous data points, or are they the result of an improper mean-variance relationship? 
+Clearly something is weird when very few points go below one standard deviation, and none go below two. And do the points above the upper control limit represent *real* anomalous data points, or are they the result of an improper mean-variance relationship? 
 
 Using a Box-Cox transformation to make the distribution more symmetrical, we can see that those seemingly out-of-control points are actually well within both control limits, and the variation we see is more in line with (statistical) expectation. 
 
 ```{r unskewy, fig.height=3.5}
 # Box-Cox tansformation 
-bob = data.frame(MASS::boxcox(df2$y ~ 1, lambda=seq(-20, 5, 0.5), plotit=F))
+bob = data.frame(MASS::boxcox(df2$y ~ 1, lambda=seq(-10, 10, 0.05), plotit=F))
 bobmax = bob[which.max(bob[,2]),1]
 
 # Adjustment to make plotting cleaner
-df2$y2 = (df2$y ^ bobmax) * 10^19
+df2$y2 = (df2$y ^ bobmax) 
 
 # Create plot object
 exp_xform_nat_var_cc_plot = ggplot(df2, aes(x, y2)) + 
-  ylim(-0.06, 0.31) +
-  geom_hline(aes(yintercept=0.128), color="gray", size=1) +
-  geom_hline(aes(yintercept=0.302), color="red") +
-  geom_hline(aes(yintercept=-0.046), color="red") +
-  geom_ribbon(aes(ymin = 0.186, ymax = 0.244), alpha = 0.2) +
-  geom_ribbon(aes(ymin = 0.012, ymax = 0.070), alpha = 0.2) +
+  ylim(0.5, 2.25) +
+  geom_hline(aes(yintercept=mean(y2)), color="gray", size=1) +
+  geom_hline(aes(yintercept=mean(y2)+(3*sd(y2))), color="red") +
+  geom_hline(aes(yintercept=mean(y2)-(3*sd(y2))), color="red") +
+  geom_ribbon(aes(ymin = mean(y2)-(2*sd(y2)), ymax = mean(y2)-(1*sd(y2))), alpha = 0.2) +
+  geom_ribbon(aes(ymin = mean(y2)+(1*sd(y2)), ymax = mean(y2)+(2*sd(y2))), alpha = 0.2) +
   xlab("Subgroup") + 
   ylab("Transformed Value") +
   geom_line() + 
   theme_bw()
 
 # Marginal plot
-ggMarginal(exp_xform_nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.025)
+ggMarginal(exp_xform_nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.125)
 ```
 
 The main drawback is that you now have a chart of essentially uninterptable values---but that's better than assuming a normal distribution will be just fine and being unnecessarily alarmed by false positive signals, wasting time and resources searching for a special cause that doesn't exist.    
@@ -95,7 +96,7 @@ So should you always transform when your data doesn't meet the usual distributio
 
 There are R packages and functions to evaluate your data and show what distribution(s) are most consistent with it. This does *not* tell you that your data does follow a given distribution, only that it's consistent with it. Further analysis is usually required; consult a statistician when you're uncertain.  
 
-As an example, we can use the expoentially-distrubted data created above to show how it works.  
+As an example, we can use the gamma-distrubted data created above to show how it works.  
 
 ```{r fitdist}
 library(fitdistrplus)
@@ -104,17 +105,24 @@ expo_dist = descdist(df2$y, boot = 1000)
 
 <br>  
 
-This chart shows us that data are consistent with a gamma distribution and an exponential distribution. Using `qqPlot` lets us evaluate them both directly:    
+# WHAT DOES THIS KIND OF CHART TELL YOU AND INTERP IT
+
+This chart shows us that data (blue dot) and simuations from that data (orange open circles) are most consistent with a gamma distribution and a perhaps a lognormal distribution. Using `qqPlot` lets us evaluate these two options directly:    
 
 ```{r qqplot, fig.width=3, fig.height=3}
 # Create objects of the two most-likely distributions
-expo = fitdistr(df2$y, "exponential")
+logno = fitdistr(df2$y, "lognormal")
 gammo = fitdistr(df2$y, "gamma")
 
 # The car package has a good quantile-quantile plot function
 library(car)
-qqPlot(df2$y, "exp", rate = expo$estimate); qqPlot(df2$y, "gamma", shape = gammo$estimate[1], rate = gammo$estimate[2])
+qqPlot(df2$y, "lnorm", meanlog = logno$estimate[1], sdlog = logno$estimate[2]); qqPlot(df2$y, "gamma", shape = gammo$estimate[1], rate = gammo$estimate[2])
 ```
+
+Although both distributions fall within the confidence limits (dashed lines), the points fit to a gamma distribution (right) are closer to the line of best fit.  
+
+This is expected, since we created this data from a gamma distribution, but in practice, we don't know what distribution the data comes from---so using this process can help you determine which distributions are most consistent with the data, and help you model and plot it appropriately.  
+
 
 ## Which control chart should I use? {#whichcontrolchart}
 
@@ -123,5 +131,4 @@ The following flow chart can help you determine which kind of control chart you 
 ```{r which_flow, echo = FALSE, fig.align = "center"}
 knitr::include_graphics("images/control_chart_flowchart.png")
 ```
-
 

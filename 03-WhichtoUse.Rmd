@@ -1,6 +1,6 @@
 # Which should I use: a run chart or a control chart? {#which}
 
-Always create a run chart first. Create a control chart only if you meet the necessary conditions, particularly that of monitoring a *stable* process. A run chart can monitor a metric or a process, while a control chart monitors a process.  
+Always create a run chart first. Create a control chart only if you meet the necessary conditions, particularly that of monitoring a *stable* process. 
 
 In both cases, the data points must be independent, that is, the position of one point does not influence the position of another point: there is no (serious) autocorrelation. If the data are autocorrelated, the guidelines for testing run or control charts can be invalid, which can lead to poor decision-making.   
 

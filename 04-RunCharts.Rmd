@@ -21,9 +21,9 @@ qic(point.signal, runvals=TRUE, ylab="Value", main="")
 
 ## Run charts with a trend {#runtrend}
 
-When you have a trend like that seen above, you'll generally wait until the process has settled to a new, stable mean, and reset the central line and control limits accordingly.
+When you have a trend like that seen above, you'll generally wait until the process has settled to a new, stable mean, and reset the central line accordingly.
 
-But sometimes you have a trend that lasts for a long time, or is continuously trending. You can difference the data to remove the trend (create a new dataset by subtracting the value at time *t* from the value at time *t+1*), but that makes it harder to interpret. Perhaps a better idea is use quantile regression to obtain the median line, which allows you to keep the data on the original scale.  
+But sometimes you have a trend that lasts for a long time, or is continuously trending. You can difference the data to remove the trend (create a new dataset by subtracting the value at time *t* from the value at time *t+1*), or you can use regression residuals to show deviations from the trend, but either approach can make it harder to interpret. Perhaps a better idea is use quantile regression to obtain the median line, which allows you to keep the data on the original scale.  
 
 ```{r quantreg, fig.height=3}
 # Generate fake process data with an upward trend
@@ -47,4 +47,6 @@ ggplot(mb, aes(x, y)) +
 **Crossings "test"**: `qbinom(0.05, 33, 0.50)` is `r qbinom(0.05, 33, 0.50)`, the minimum number of crossings we'd expect.  
 
 Both tests suggest there is no non-random variation in this process.  
+
+# CROSSINGS TEST WHAT TO DO WITH POINTS ON MEDIAN THAT DON'T CROSS
 
