@@ -31,7 +31,7 @@ library(gridExtra)
 
 Statistical process control (SPC) was a triumph of manufacturing analytics, and its success spread across a variety of industries---most improbably, into healthcare. 
 
-Healthcare is rarely compatible with the idea of an assembly line, but lean manufacturing thinking ("Lean") has taken over healthcare management around the world, and SPC methods are common tools in Lean. Unlike in manufacturing, stability is an inherently tricky concept in healthcare, so this has led to much *misuse* of these methods. Bad methods lead to bad inferences, and bad inferences can lead to poor decisions. This book aims to help analysts apply SPC methods more accurately in healthcare, using the statistical software *R*.  
+Healthcare is rarely compatible with the idea of an assembly line, but lean manufacturing thinking ("Lean") has taken over healthcare management around the world, and SPC methods are common tools in Lean. Unlike in manufacturing, stability is an inherently tricky concept in healthcare, so this has led to much *misuse* of these methods. Bad methods lead to bad inferences, and bad inferences can lead to poor decisions. This book aims to help analysts apply SPC methods more accurately in healthcare, using the statistical software R.  
 
 ## If you've never used R
 
@@ -50,7 +50,7 @@ library(qicharts)
 data(pcmanufact, package = "qcc")
 
 # Create the u-chart
-qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u", main="Easy u-chart")
+qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u", main = "Easy u-chart")
 ```
 
 <br>  
@@ -82,6 +82,16 @@ install.packages("forecast", "ggExtra", "ggseas", "gridExtra", "tidyverse",
 
 You can submit pull requests for any errors or typos at https://github.com/Rmadillo/spc_healthcare_with_r.  
 
+
+## About
+
+We are all analysts at *Seattle Children's Hospital* in Seattle, Washington, USA.  
+
+\- Dwight Barry is a Lead Data Scientist in *Enterprise Analytics*. Twitter: @healthstatsdude  
+
+\- Andy Cooper is a Lead Data Scientist in *Ambulatory and Medical Specialties*.  
+
+\- Brendan Bettinger is a Senior Analyst in *Infection Prevention*.  
 
 
 ``` {r spccode, echo = FALSE, fig.height = 3.5}

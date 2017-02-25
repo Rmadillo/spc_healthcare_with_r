@@ -10,21 +10,13 @@ Parametric distributions are a *useful fiction*---no data will follow an idealiz
 
 There are [hundreds of statistical distributions](http://vosesoftware.com/knowledgebase/whitepapers/pdf/ebookdistributions.pdf), but only a handful are commonly used in SPC work:  
 
-| Data Type | Distribution | Range | Skew | Example |
-| --------- | ------------ | ----- | ---- | ------- |
-| *Discrete* | Binomial | 0, $N$ | Any | SOMETHING | 
-| | Poisson | 0, $\infty$ | Right | Readmit rates | 
-| | Negative binomial | 0, $\infty$ | Right | SOMETHING | 
-| | Geometric | 0, $\infty$ | Right | SOMETHING | 
-| | Beta-binomial | 0, $N$ | Any | SOMETHING | 
-| *Continuous* | Uniform | 0, 1 | None | SOMETHING |
-| | Normal | $-\infty$, $\infty$ | None | SOMETHING | 
-| | Gamma | 0, $\infty$ | Right | Waiting times | 
-| | Beta | 0, 1 | Any | SOMETHING | 
-| | Cauchy | $-\infty$, $\infty$ | None | Cost/Effectiveness ratios | 
-| | Exponential | 0, $\infty$ | Right | Time between safety events | 
-| | Lognormal | 0, $\infty$ | Right | SOMETHING | 
-| | Weibull | 0, $\infty$ | Right | SOMETHING | 
+| Data Type | Distribution | Range | Skew | Example | SPC chart |
+| --------- | ------------ | ----- | ---- | ------- | --------- |
+| *Discrete* | Binomial | 0, $N$ | Any | Bundle compliance percentage | *p*, *np* | 
+| | Poisson | 0, $\infty$ | Right | Infections per 1,000 line days | *u*, *c* | 
+| | Geometric | 0, $\infty$ | Right | Number of surgeries between complications | *g* | 
+| *Continuous* | Normal | $-\infty$, $\infty$ | None | Patient wait times | *I*, $\bar{x}$, EWMA, CUSUM | 
+| | Weibull | 0, $\infty$ | Right | Time between antibiotic doses | *t* | 
 
 
 ### Mean and variance

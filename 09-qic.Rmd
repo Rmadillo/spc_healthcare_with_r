@@ -1,0 +1,26 @@
+# I need a shortcut
+
+We've [created a function](#ggspc) that highlights points that may indicate special cause variation, as outlined in [Chapter 4](#guidelines).  
+
+Using this function does require some thought about setting up the variables, which was done on purpose---you should put as much care into the construction of run and control charts as your nurses put into patient care. To do any less is a disservice to the decision-makers who would rely on your work and the patients that rely on these decision-makers to provide the conditions that support the best care possible.  
+
+We also know there are realities to timely decision-making, and sometimes you need a chart now. R does have several packages that provide ready-to-use SPC charts; we've shown examples using `qic` in earlier portions of this book, and we think it does a great job providing the basic needs for quick-and-dirty SPC chart making, particularly with its built-in run rules option. One potential trade-off is that you are stuck with the traditional 3$\sigma$ control limits.  
+
+So, if you *always* start with EDA ([Chapter 3](#where)), and *always* consider the appropriateness of SPC chart use for the given problem ([Chapter 4](#guidelines) and [Chapter 5(#which)), and are fine with their built-in assumptions, go ahead and use these packages if they help you do your job better.  
+
+We'll use the data from [Chapter 8's](#attribute) *u*-chart example.  
+
+```{r qic_u_data}
+# this is the same data as used in Chapter 8 for the u chart example
+clabsi = data.frame(Month = seq(as.Date("2013/10/1"), by = "month", length.out = 24),
+                    Infections = infections.agg, Linedays = linedays.agg)
+```
+
+Let's say an intervention was implemented at the end of 20 months of data to meet a target of 1.8 infections per 1,000 line days, and in a hurry to understand whether it works, managers wanted to see a control chart 4 months after the intervention. Clearly the process hasn't changed, and there is no evidence of special cause variation. Many managers might point to the increase in mean; a short-cut toward preventing them from acting on this knee-jerk (but common) reaction is to simply say "That change is not significant."  
+
+```{r qic_u_plot, fig.height = 3.5}
+qic(y = Infections, n = Linedays, data = clabsi, x = Month, multiply = 1000, 
+    chart = "u", runvals = TRUE, xlab = "", ylab = "Infections per 1,000 line days", 
+    x.format = "%b %Y", target = 0.0018, breaks = 20, 
+    main = "Infections per 1000 central line days")
+```

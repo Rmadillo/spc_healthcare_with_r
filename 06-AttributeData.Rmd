@@ -32,9 +32,10 @@ Sometimes, a KPI is based on counts. This is obviously problematic for process m
 
 ``` {r uex}
 # Generate fake infections data
+set.seed(72)
 dates = seq(as.Date("2013/10/1"), by = "day", length.out = 730)
 linedays = sample(30:60,length(dates), replace = TRUE)
-infections = rpois(length(dates), 4/1000*linedays)
+infections = rpois(length(dates), 2/1000*linedays)
 
 months = as.Date(strftime(dates, "%Y-%m-01"))
 

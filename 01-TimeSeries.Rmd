@@ -13,6 +13,7 @@ library(ggplot2)     # for general plotting
 library(lubridate)   # for easier date/time casting
 library(forecast)    # for plotting and forecasts
 library(qicharts)    # for simple run and control charts
+library(seasonal)    # for seasonal adjusment calculations
 library(ggseas)      # for on-the-fly seasonal adjustment plotting
 library(ggExtra)     # for making line+histogram marginal plots
 library(gridExtra)   # for creating multi-graph plots
