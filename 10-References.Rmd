@@ -16,7 +16,7 @@
 
 - Finally, some important warnings about when control charts fail (and a useful alternative, GAMs) can be found in Morton et al. 2009, [*Hospital adverse events and control charts: the need for a new paradigm*](http://www.journalofhospitalinfection.com/article/S0195-6701(09)00340-5/abstract), Journal of Hospital Infection 73(3):225–231, as well as in Morton et al. 2007, [*New control chart methods for monitoring MROs in Hospitals*](https://www.researchgate.net/profile/Edward_Tong2/publication/43477704_New_control_chart_methods_for_monitoring_MROs_in_hospitals/links/5600d22e08aec948c4fa93cd.pdf), Australian Infection Control 12(1):14-18.    
 
-- Wikipedia is a good place to start learning about probability distributions and their mean-variance relationships, e.g., 
+- Wikipedia is a good place to start learning about probability distributions and their mean-variance relationships, e.g., (click the name to go to the link):   
     - [Poisson](https://en.wikipedia.org/wiki/Poisson_distribution)
     - [binomial](https://en.wikipedia.org/wiki/Binomial_distribution)
     - [normal](https://en.wikipedia.org/wiki/Normal_distribution)

@@ -10,7 +10,7 @@ In essence, SPC tools help you evaluate the stability and predictability of a pr
 
 Understanding natural, random variation in time series or sequential data is the essential point of quality assurance or process and outcome improvement efforts. It's a rookie mistake to use SPC tools to focus solely on the values themselves or their central tendency---you need to look at [*all* of the elements](#guidelines) of a run or control chart to understand what it's telling you.  
 
-For example, the graph below shows a process created using random numbers based on a pre-defined normal distribution. The black line is the data itself, the overall mean (18) is represented by the grey line, and the overall distribution is shown in a histogram to the right of the run chart.
+For example, the graph below shows a process created using random numbers based on a pre-defined normal distribution. The black points and line are the data itself, the overall mean (*y* = 18) is represented by the grey line, and the overall distribution is shown in a histogram to the right of the run chart.
 
 The axis labels are traditional SPC labels; the *value* (i.e., metric) we're evaluting is on the *y*-axis, and the *x*-axis are our units of observation, whether in time, in sequence, a sample from a batch, and so on. Traditionally these were called *subgroups* because an observation point involved sampling from a mechnical process, e.g., taking 5 widgets from a production of 500. Many SPC examples  maintain this label regardless of what the *x*-axis is actually measuring for simplicity's sake, and we follow this convention when the focus isn't the data at hand but should be on the SPC chart as a whole.  
 
@@ -23,9 +23,11 @@ df = data.frame(x = seq(1:120), y = 18+rnorm(120))
 nat_var_run_plot = ggplot(df, aes(x, y)) + 
   ylim(14.75, 21.25) +
   geom_hline(aes(yintercept=18), color="gray", size=1) +
+  annotate("text", x = -2, y = 18.15, label = "bar(x)", color = "gray30", parse = TRUE) + 
   xlab("Subgroup") + 
   ylab("Value") +
   geom_line() + 
+  geom_point(size=1) +
   theme_bw()
 
 ggMarginal(nat_var_run_plot, margins="y", type = "histogram", binwidth=0.5)
@@ -53,6 +55,7 @@ nat_var_cc_plot = ggplot(df, aes(x, y)) +
   xlab("Subgroup") + 
   ylab("Value") +
   geom_line() + 
+  geom_point(size=1) +
   theme_bw()
 
 ggMarginal(nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.5)

@@ -10,7 +10,7 @@ There are basically two "tests" for run charts (an astronomical data point or lo
 
 - *Process shift:* A non-random run is a set of $log_2(n) + 3$ consecutive data points (rounded to the nearest integer) that are all above or all below the median line, where *n* is the number of points that do *not* fall directly on the median line. For example, if you have 34 points, and 2 fall on the median, you have 32 observations for *n*. Thus in this case, the longest run should be 8 points.  
 
-- *Number of crossings:* Too many or too few runs---or more simply, median line crossings---suggest a pattern inconsistent with natural variation. You can use the binomial distribution (`qbinom(0.05, n-1, 0.50)` in R for a 5% false positive rate and because we expect 50% of values to lie on each side of the median) or a table (e.g., [Table 1 in Anhøj & Olesen 2014](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0113825#pone-0113825-t001)) to find the minimum number of crossings you would expect. Using the same data as in the example introduced in [Chapter 1](#where), we would expect the time series to cross the median at least 11 times.  
+- *Number of crossings:* Too many or too few runs---or more simply, median line crossings---suggest a pattern inconsistent with natural variation. You can use the binomial distribution (`qbinom(0.05, n-1, 0.50)` in R for a 5% false positive rate and because we expect 50% of values to lie on each side of the median) or a table (e.g., [Table 1 in Anhøj & Olesen 2014](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0113825#pone-0113825-t001)) to find the minimum number of crossings you would expect. Using the same data as in the example introduced in [Chapter 1](#where), we would expect the time series to cross the median entirely at least 11 times (points on the median that return to the same side are not crossings).  
 
 ```{r qichart, fig.width=8, fig.height=3.5}
 # The qic function in the qicharts package creates easy run and control charts
@@ -29,11 +29,13 @@ But sometimes you have a trend that lasts for a long time, or is continuously tr
 # Generate fake process data with an upward trend
 set.seed(81)
 n = 36
-x = seq(1:n)
-mb = data.frame(x = x, y = 10000 + (x * 1.25) + (rnorm(n, 0, 5)))
+x = seq(1:n) 
+mb = data.frame(Subgroup = seq(as.Date("2006-01-01"), by = "month", length.out = n), 
+                Value = 10000 + (seq(1:n) * 1.25) + (rnorm(n, 0, 5)))
+
 
 # Plot with quantile regression for median line
-ggplot(mb, aes(x, y)) + 
+ggplot(mb, aes(Subgroup, Value)) + 
   xlab("Subgroup") + 
   ylab("Value") + 
   geom_line(color="gray70") +
@@ -42,11 +44,10 @@ ggplot(mb, aes(x, y)) +
 ```
 
 
-**Process shift "test"**: $log_2(n) + 3$ where $n$ is 33 points that do not touch the median is `r log2(33) + 3`, so there should be no more than 8 points in any given run.  
+**Process shift "test"**: $log_2(n) + 3$ where $n$ is 33 points that do not touch the median is `r log2(33) + 3`, so there should be no more than 8 points in any given run. The most points in a run in this run chart is five.    
 
-**Crossings "test"**: `qbinom(0.05, 33, 0.50)` is `r qbinom(0.05, 33, 0.50)`, the minimum number of crossings we'd expect.  
+**Crossings "test"**: `qbinom(0.05, 33, 0.50)` is `r qbinom(0.05, 33, 0.50)`, the minimum number of crossings we'd expect. There are 13 crossings in this run chart, as points that fall on the median line and return to the same side are not considered crossings.     
 
 Both tests suggest there is no non-random variation in this process.  
 
-# CROSSINGS TEST WHAT TO DO WITH POINTS ON MEDIAN THAT DON'T CROSS
 

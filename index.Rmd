@@ -83,12 +83,6 @@ install.packages("forecast", "ggExtra", "ggseas", "gridExtra", "tidyverse",
 You can submit pull requests for any errors or typos at https://github.com/Rmadillo/spc_healthcare_with_r.  
 
 
-```{r include = FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'ggplot2', 'knitr', 'qcc', 'qic', 'rmarkdown'
-), 'packages.bib')
-```
 
 ``` {r spccode, echo = FALSE, fig.height = 3.5}
 

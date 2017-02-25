@@ -105,9 +105,9 @@ expo_dist = descdist(df2$y, boot = 1000)
 
 <br>  
 
-# WHAT DOES THIS KIND OF CHART TELL YOU AND INTERP IT
+A Cullen and Frey graph compares your data set and bootstrapped replications of it to common theoretical distributions. You compare your data (blue dot) and the replications (orange open circles) to locations within the plot that represent theoretical distributions. For example, if the blue dot were at or near the \* at the top right, more or less surrounded by the orange open circles, it would imply that our data are most consistent with a normal distribution. Other common distributions are represented in the graph by points (e.g., the exponential distribution), area (e.g., the beta distribution), or by lines (e.g., the gamma distribution).  
 
-This chart shows us that data (blue dot) and simuations from that data (orange open circles) are most consistent with a gamma distribution and a perhaps a lognormal distribution. Using `qqPlot` lets us evaluate these two options directly:    
+This chart shows us that our data (blue dot) and simuations from that data (orange open circles) are most consistent with a gamma distribution and a perhaps a lognormal distribution. Using `qqPlot` lets us evaluate these two options directly:    
 
 ```{r qqplot, fig.width=3, fig.height=3}
 # Create objects of the two most-likely distributions

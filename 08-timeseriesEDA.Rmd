@@ -133,7 +133,7 @@ TSA::periodogram(beer)
 
 ### Decomposition
 
-
+The `decompose` function extracts the major pieces of a time series, while the `autoplot` function presents the results using `ggplot2` for a cleaner look. 
 
 ```{r decomp1}
 autoplot(decompose(df_ts))
@@ -146,8 +146,23 @@ autoplot(decompose(beer))
 
 
 
-### Seasonal adjustment (THIS IS BROKEN RIGHT NOW BECAUSE OF NEW GGPLOT)
+### Seasonal adjustment
 
+The `seasonal` package uses the U.S. Census Bureau's X-13ARIMA-SEATS method to calculate seasonal adjustment. The `seas` function can be used to view or save the results into another object.  
+
+```{r seas}
+# Convert ts to data frame
+beer_df = tsdf(beer)
+
+# Get seasonally-adjusted values and put into data frame
+beer_season = seasonal::seas(beer)
+beer_df$y_seasonal = beer_season$data[,3]
+
+# Show top 6 lines of data frame
+knitr::kable(head(beer_df))
+```
+
+If you just want to plot it on the fly, `ggseas` provides the `stat_seas` function for use with `ggplot2`. As with all ggplots, you need a data frame first, which the `tsdf` function provides.    
 
 ```{r seasonal1, fig.height=3, eval=FALSE}
 # Convert ts to data frame
@@ -160,14 +175,12 @@ ggplot(df_ts_df, aes(x, y)) +
 ```
 
 ```{r seasonal2, fig.height=3, eval=FALSE}
-# Convert ts to data frame
-beer_df = tsdf(beer)
-
 # Plot original and seasonally adjusted data
 ggplot(beer_df, aes(x, y)) + 
   geom_line(color="gray70") +
   stat_seas(color="blue")
 ```
+
 
 ### Residuals 
 
@@ -279,18 +292,21 @@ ggplot(accum_bsi_df, aes(x = cuml_linedays, y = cuml_infections, group = as.fact
 
 ## More on autocorrelation {#moreautocor}
 
-```{r acfplotsfortable, include=FALSE}
-p1 = autoplot(acf(mb_ts, plot = FALSE)) 
-ggsave("images/ac.png") 
 
-p2 = autoplot(acf(df_ts, plot = FALSE))
-ggsave("images/no_ac.png")
+```{r acfplotsfortable, include=FALSE}
+#png("images/ac.png", width = 6, height = 4, units = "in", res = 600) 
+#autoplot(acf(mb_ts))
+#dev.off()
+
+#png("images/no_ac.png", width = 6, height = 4, units = "in", res = 600)
+#autoplot(acf(df_ts, plot = FALSE))
+#dev.off()
 ```
 
 For convenience of comparison, here are autocorrelated and non-autocorrelated data already shown above, shown here side-by-side.  
 
 | Example autocorrelated data | Example non-autocorrelated data |
-| ----------------------------------- | ------------------------------------- |
+| ------ | ------ |
 | ![](images/ac.png) | ![](images/no_ac.png) |
 
 When data are autocorrelated, control limits will be *too small*---and thus an increase in *false* signals of special causes should be expected. In addition, none of the tests for special cause variation remain valid.    

@@ -23,23 +23,40 @@
 
 If you need to determine whether an intervention might have worked soon after or even during the improvement process, you shouldn't be using a standard control chart at all. Use a run chart or an EWMA or CUSUM chart to try to detect early shifts.
 
-When you have enough data points after the intervention (about 12-20), with no other changes to the process, you can "freeze" the median, and/or mean+control limits at the intervention point and recalculate the median and/or mean+limits on the subsequent data. However, by doing so you are *already assuming* that the intervention changed the process. Sometimes that evidence will be there, such as through a variety of signals of special cause variation; other times, that evidence will not be there. If there is no evidence of special cause variation for a while after the intervention, you shouldn't freeze/restart the SPC chart values. 
+When you have enough data points after the intervention (about 12-20), with no other changes to the process, you can "freeze" the median, and/or mean+control limits at the intervention point and recalculate the median and/or mean+limits on the subsequent data. However, by doing so you are *already assuming* that the intervention changed the process. Sometimes that evidence will be there, such as through a variety of signals of special cause variation; other times, that evidence will not be there. If there is no evidence of special cause variation for a while after the intervention, you shouldn't freeze/restart the SPC chart values.  
 
-SPC charts are blunt instruments, and are meant to try to detect changes in a process as simply as possible. When there is no clear evidence in SPC charts for a change, more advanced techniques---such as ARIMA models or [intervention/changepoint analysis](#changepoint)---can be used to assess whether there was a change in the statistical process at or near the intervention point.  
-
-
-# CREATE NEW DATASET FOR THIS POINT, AND PUT INTERVENTION WITHIN FIRST TIME PERIOD BECAUSE THAT'S WHEN IT HAPPENED, SHOW THAT'S INVALID
-
+Say that an intervention happened at the start of year 3, but there was a lag between the intervention and when it actually showed up in the data. 
 
 ```{r cc_trend, fig.height=3.5}
-qic(point.signal, chart="i", runvals=TRUE, ylab="Value", main="", breaks=22)
+# Create fake data with change in process at 28 months
+set.seed(3)
+intervention = data.frame(Date = seq(as.Date("2006-01-01"), by = 'month', 
+  length.out = 48), y = c(rpois(28, 6), rpois(20, 3)), 
+  n = round(rnorm(48, 450, 50)))
+
+# Plot control chart with break at intervention
+qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
+    runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 24)
 ```
 
-Of course, the change point can be placed arbitrarily---with corresponding changes in control limits and what might constitute special cause variation. For example, using the same data as above, compare those results with those when the change point is moved ahead by 6 time steps:
+Of course, the change point can be placed arbitrarily in a `qic` graph---with corresponding changes in control limits and what might constitute special cause variation. For example, using the same data as above, compare those results with those when the change point is moved forward by 2, 4, or 6 time steps (as we're pretending we don't actually know when the process truly changed):
 
 ```{r cc_trend_2, fig.height=3.5}
-qic(point.signal, chart="i", runvals=TRUE, ylab="Value", main="", breaks=28)
+# Plot control chart with break 2 months after intevention
+qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
+    runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 26)
+
+# Plot control chart with break 4 months after intevention
+qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
+    runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 28)
+
+# Plot control chart with break 6 months after intevention
+qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
+    runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 30)
 ```
 
+As you can see, the conclusions you could draw from a single control chart might be different depending on when the breakpoint is set.  
 
 Use common sense and avoid the urge to change medians or means and control limits for every intervention unless evidence is clear that it worked.   
+
+SPC charts are blunt instruments, and are meant to try to detect changes in a process as simply as possible. When there is no clear evidence in SPC charts for a change, more advanced techniques---such as ARIMA models or intervention/changepoint analysis---can be used to assess whether there was a change in the statistical process at or near the intervention point.  
