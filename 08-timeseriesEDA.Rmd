@@ -10,11 +10,11 @@ Because the fake data (`df_ts`) used in previous chapters has no time series pat
 
 ```{r beer_data}
 # Use Australian beer data, trimmed to a 15 year subset
-data(ausbeer, package = "fpp")
+data(ausbeer, package = "fpp2")
 beer = window(ausbeer, start = 1990.00, end = 2005.75)
 ```
 
-For comparison's sake, here are summaries of each time series that show the time series itself, the [autocorrelation function](#acf), and a (simplified) [periodogram](#tsa):  
+For comparison's sake, here are summaries of each time series that show the time series itself, the [autocorrelation function](#acf), and a (simplified) [periodogram](#tsa): 
 
 ```{r tsdisplays, fig.height=3}
 # No temporal patterns in data
@@ -30,7 +30,7 @@ The first thing to look for is whether there is a trend. The simplest way to let
 
 The `autoplot` function in the `forecast` package provides several out-of-the-box plots for time series data, and since it's built over `ggplot2`, it can use those functions as well. 
 
-The `df_ts` time series data set has absolutely no trend at all:
+The `df_ts` time series data set has absolutely no trend at all.
 
 ```{r loess_trend1, fig.height=3}
 autoplot(df_ts) + 
@@ -46,13 +46,13 @@ autoplot(beer) +
 
 ### Seasonplot
 
-The seasonplot places each year as its own line over an x-axis of the sequential frequency, which defaults to the frequency of the time series. When there's no seasonal pattern across or within that frequency, the plot looks like spaghetti as the result of being driven by natural variation:  
+The seasonplot places each year as its own line over an x-axis of the sequential frequency, which defaults to the frequency of the time series. When there's no seasonal pattern across or within that frequency, the plot looks like spaghetti as the result of being driven by natural variation.  
 
 ```{r seasonplot1, fig.height=3}
 ggseasonplot(df_ts)
 ```
 
-When there is a pattern in the time series, patterns emerge. In this case, the fourth quarter increase above the other quarters is quite evident:  
+When there is a pattern in the time series, patterns emerge. In this case, the fourth quarter increase above the other quarters is quite evident.  
 
 ```{r seasonplot2, fig.height=3}
 ggseasonplot(beer)
@@ -68,7 +68,7 @@ Data with no inherent pattern shows up as noise:
 ggmonthplot(df_ts)
 ```
 
-Whereas in a time series with temporal patterns, you can see both the higher levels in Q4 as compared with the other quarters, but you can also see that this quarter's values is declining over the years, a pattern echoed to lesser extent in the early years' values for the other quarters:  
+Whereas in a time series with temporal patterns, you can see both the higher levels in Q4 as compared with the other quarters, but you can also see that this quarter's values is declining over the years, a pattern echoed to lesser extent in the early years' values for the other quarters.  
 
 ```{r monthplot2, fig.height=3}
 ggmonthplot(beer)
@@ -81,34 +81,49 @@ We've touched on autocorrelation in other portions of this book, and will discus
 
 The `acf` function provides a graphical summary of the autocorrelation function, with each data point correlated with a value at increasing lagged distances from itself. Each correlation is plotted as a spike; spikes that go above or below the dashed line suggest that significant positive or negative autocorrelation, respectively, occurs at that lag (at the 95% confidence level). If all spikes occur inside those limits, it's safe to assume that there is no autocorrelation. If only one or perhaps two spikes exceed the limits slightly, it could be due simply to chance. Clear patterns seen in the acf plot can indicate autocorrelation even when the values do not exceed the limits. 
 
-With the `df_ts`, there is no autocorrelation and no obvious pattern:  
+With the `df_ts`, there is no autocorrelation and no obvious pattern, and the correlation values themselves (y-axis) are tiny:  
 
 ```{r acf1, fig.height=3}
 # acf plot using the autoplot function instead of base for the ggplot look
 autoplot(acf(df_ts, plot = FALSE))
 ```
 
-But with the `beer` data, the patterning is obvious, especially at lags 2 (6 months apart) and 4 (1 year apart):  
+But with the `beer` data, the patterning is obvious, especially at lags 2 (6 months apart) and 4 (1 year apart), and the correlation values are quite large.  
 
 ```{r acf2, fig.height=3}
 # acf plot using the autoplot function instead of base for the ggplot look
 autoplot(acf(beer, plot = FALSE))
 ```
   
-The autocorrelation function is most concisely plotted with the approach above, but you can also plot the increasing lags against the data in individual scatterplots. If the points look like a shotgun target, there's no autocorrelation. Patterns in the points indicate autocorrelation in the data. Patterns strung along or perpendicular to the 1:1 dashed line suggest strong positive and negative correlation, respectively, though any sort of pattern is cause for concern.  
+The autocorrelation function is most concisely plotted with the approach above, but you can also plot the increasing lags against an initial value in individual scatterplots. If the points look like a shotgun target, there's no autocorrelation. Patterns in the points indicate autocorrelation in the data. Patterns strung along or perpendicular to the 1:1 dashed line suggest strong positive and negative correlation, respectively, though any sort of pattern is cause for concern.  
 
-The lagplot for the `df_ts` data shows the shotgun target "pattern" that suggests that only random variation is present:   
+The lagplot for the `df_ts` data shows the shotgun target "pattern" that suggests that only random variation is present.   
 
 ```{r lagplot1}
 # Scatterplot of df_ts autocorrelation through first 12 lags
 lag.plot(df_ts, lags = 12, do.lines = FALSE)
 ```
 
-But clear patterns emerge---especially at lag 4 (1 year apart)---in the lagplot for the `beer` data:  
+But clear patterns emerge---especially at lag 4 (1 year apart)---in the lagplot for the `beer` data.  
 
 ```{r lagplot2}
 # Scatterplot of beer data autocorrelation through first 8 lags
 lag.plot(beer, lags = 8, do.lines = FALSE)
+```
+
+The `pacf` function gives you a partial autocorrelation plot, which is the correlation between the first value and each individual lag. It's the same information provided by the lag plot, only more compact as it only displays the correlation value itself. This can be quite useful in identifying cycles in data. 
+
+A `pacf` plot for `df_ts` data shows the random noise we'd expect, as well as tiny correlation values.
+
+```{r}
+autoplot(pacf(df_ts))
+```
+
+
+Using the `beer` data shows the partial autocorreltaion pattern. The spike at the second line indicates that there is a moderate negative relationship in values 6 months apart, and the spike at the fourth line shows there's a strong positive relationship in values 1 year (4 months) apart.  
+
+```{r fig.height=3}
+autoplot(pacf(beer))
 ```
 
 

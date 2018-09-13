@@ -75,7 +75,7 @@ This book was created using R version 3.4.3 and RStudio 1.0.153. Code was tested
 Open RStudio and install the packages used in this book by copying and pasting this code into the **Console**:  
 
 ```{r install_packs, eval=FALSE}
-install.packages("forecast", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
+install.packages("forecast", "fpp2", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
                  "qcc", "qicharts2", "scales", dependencies = TRUE)
 ```
 
