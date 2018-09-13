@@ -38,16 +38,19 @@ Healthcare is rarely compatible with the idea of an assembly line, but lean manu
 Some BI analysts are apprehensive about getting into R, but if you've ever written a line of SQL or created a formula in an Excel cell, this is no different in concept. Yes, the R language is full of idiosyncracies and outright annoyances, but when you need to accomplish particular goals, it can be fairly easy.   
 
 
-For example, you can create a *u*-chart with only three lines of code, start to finish:  
+For example, you can create a *u*-chart with only three lines of code, start to finish--load the package, load the data, create the plot:  
 
 <br>  
 
 ```{r intro_example, fig.height=3, fig.width=6}
 # Load the qicharts package, a simple interface to SPC charts
-library(qicharts)
+library(qicharts2)
 
 # Load some example data from another R package as an example
 data(pcmanufact, package = "qcc")
+
+# You can look at the data by clicking on the spreadsheet button in the Environment tab,
+# or by running `View(pcmanufact)` in the console
 
 # Create the u-chart
 qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u", main = "Easy u-chart")
@@ -55,26 +58,25 @@ qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u", main = "Easy u-chart")
 
 <br>  
 
-You can find help using `?`, followed by the function name, e.g.,  
+You can find help in R using `?`, followed by the function name, e.g.,  
 
 ```{r help, eval=FALSE}
 ?qic
 ```
 
-- You can download R from [https://cran.r-project.org/](https://cran.r-project.org/).  
-
-- You can download RStudio from [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/).  
-
 
 ## What you need
 
-This book was created using R version 3.3.2 and RStudio 1.0.44. Code was tested on Mac OS 10.10.5 (aka Yosemite), Ubuntu 14.04 (aka Trusty Tahr), and Windows Server 2008 R2 (aka piece of shit OS that crashes RStudio when you try to use the Save button).    
+This book was created using R version 3.4.3 and RStudio 1.0.153. Code was tested on Mac OS 10.12.6 (aka Sierra).    
+- You can download R from [https://cran.r-project.org/](https://cran.r-project.org/).  
+
+- You can download RStudio from [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/).  
 
 Open RStudio and install the packages used in this book by copying and pasting this code into the **Console**:  
 
 ```{r install_packs, eval=FALSE}
 install.packages("forecast", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
-                 "qcc", "qicharts", "scales", dependencies = TRUE)
+                 "qcc", "qicharts2", "scales", dependencies = TRUE)
 ```
 
 
@@ -87,9 +89,9 @@ You can submit pull requests for any errors or typos at https://github.com/Rmadi
 
 We are all analysts at *Seattle Children's Hospital* in Seattle, Washington, USA.  
 
-\- Dwight Barry is a Lead Data Scientist in *Enterprise Analytics*. Twitter: @healthstatsdude  
+\- Dwight Barry is a Principal Data Scientist in *Enterprise Analytics*. Twitter: @healthstatsdude  
 
-\- Andy Cooper is a Lead Data Scientist in *Ambulatory and Medical Specialties*.  
+\- Andy Cooper is a Lead Data Scientist in *Enterprise Analytics*. Twitter: @healthstatsdude    
 
 \- Brendan Bettinger is a Senior Analyst in *Infection Prevention*.  
 
