@@ -118,7 +118,7 @@ ggtsdisplay(df_ts, plot.type = "spectrum")
 
 These plots show that there is no autocorrelation or seasonality/cyclical patterns in the data:  there are no obivious patterns nor any bars that cross the blue lines in the acf plot (bottom left), and  there are no peaks in the spectral density plot (bottom right). See [Chapter 8](#timedep) for what these plots can look like when you have time-dependent or otherwise autocorrelated data.  
 
-When you do have such data, you cannot use standard SPC tools. Generalized additive models (GAMs or GAMMs) can be useful alternatives, as decribed by Morton and colleagues (2007, 2009); see [*Useful References*](#useful) for links.  
+When you do have such data, you cannot use standard SPC tools. Generalized additive models (GAMs or GAMMs) can be useful alternatives; see [Chapter 13](#useful) for some good initial references.  
 
 <br>
 
