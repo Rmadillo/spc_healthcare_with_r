@@ -10,7 +10,7 @@ In both cases, the data points must be independent, that is, the position of one
 |  |  | 
 | You have little control over or cannot control the metric (e.g., ED volume/acuity). | You have the potential to control the process driving the metric (e.g., ED wait times). | 
 |  |  | 
-| You want to monitor the behavior of individual or groups of data points to a reference, target, or goal level. | You want to monitor the "average" of the system's behavior (i.e., the underlying statistical process)---deviations from expectations. | 
+| You want to monitor the behavior of individual or groups of data points to a reference, target, or goal level. | You want to monitor the "average" of the system's behavior (i.e., the underlying statistical process)---its deviations from expectation. | 
 |  |  | 
 | You are monitoring a metric or process that is generally trending or contains seasonality or other cycles of known cause, as long as you are able to adjust for any seasonality as well as able calculate an appropriate median line (e.g., via quantile regression for trending data). | You are monitoring a *stable* statistical process (there is no trend in the time series, or you have made the appropriate corrections to account or adjust for trends or seasonality). |
 |  |  | 
@@ -18,7 +18,7 @@ In both cases, the data points must be independent, that is, the position of one
 |  |  | 
 | You do not need to account for the inherent natural variation in the system. | You need to understand and account for the inherent natural variation ("noise") in the system. | 
 |  |  | 
-| You have at least 12 data points. (Fewer than 12? Just make line chart, or use an EWMA chart. Run chart guidelines may not be valid.) | You have 20 or more data points that are in a stable statistical process, or you have performed a power analysis that provides the appropriate n for the appropriate time interval. | 
+| You have at least 12 data points. (Fewer than 12? Just make line chart, or use an EWMA chart. Run chart guidelines may not be valid.) | You have 20 or more data points that are in a stable statistical process, or you have performed a power analysis that provides the appropriate *n* for the appropriate time interval(s). | 
 |  |  | 
 | You do not understand one or more of the statistical issues discussed in the control chart column. | You understand the practical trade-offs between the sensitivity and specificity of the control limits relative to your need to investigate or act. |
 |  |  | 
