@@ -12,7 +12,7 @@ This book uses the following R packages:
 library(ggplot2)     # for general plotting
 library(lubridate)   # for easier date/time casting
 library(forecast)    # for plotting and forecasts
-library(qicharts)    # for simple run and control charts
+library(qicharts2)    # for simple run and control charts
 library(seasonal)    # for seasonal adjusment calculations
 library(ggseas)      # for on-the-fly seasonal adjustment plotting
 library(ggExtra)     # for making line+histogram marginal plots
@@ -97,17 +97,17 @@ The Mann-Kendall trend test is often used as well, a non-parametric test that ca
 trend::mk.test(mb_ts)
 ```
 
-Because trends can sometimes be an indication of special cause variation in a stable process, standard control limits don't make sense around long-trending data, and calculation of center lines and control limits will be incorrect. **Thus, tests for special causes other than trending will also be invalid over long-trending data.** Use a run chart with an appropriate median instead, e.g., via quantile regression (as seen in [Chapter 6](#runtrend)).  
+Because trends can sometimes be an indication of special cause variation in a stable process, standard control limits don't make sense around long-trending data, and calculation of center lines and control limits will be incorrect. **Thus, any SPC tests for special causes other than trending will *also* be invalid over long-trending data.** Use a run chart with a median slope instead, e.g., via quantile regression (as seen in [Chapter 6](#runtrend)).  
 
 ### Independence and autocorrelation
 
 For either run or control charts, the data points must be independent for the guidelines to be effective. The first test of that is conceptual---do you expect that one value in this series will influence a subsequent value? For example, the incidence of some hospital-acquired infections can be the result of previous infections---say, one happens at the end of March, and another happens at the start of April in the same unit, and were caused by the same organism, you might suspect that the monthly values would not be independent. 
 
-After considering the context, second way to assess independence is by calculating the autocorrelation function (acf) for the time series. Autocorrelation values over 0.50 generally indicate problems, as do patterns in the autocorrelation function, as can be seen in [Chapter 8](#timedep). However, *any* significant autocorrelation should be considered carefully relative to the cost of potential false positive or false negative signals. Autocorrelation renders the run and control chart guidelines suspect.   
+After considering the context, second way to assess independence is by calculating the autocorrelation function (acf) for the time series. Autocorrelation values over 0.50 generally indicate problems, as do patterns in the autocorrelation function, as can be seen in [Chapter 8](#timedep). However, *any* significant autocorrelation should be considered carefully relative to the cost of potential false positive or false negative signals. Autocorrelation means that the run and control chart interpretation guidelines will be wrong.   
 
 For control charts, this means that data that are autocorrelated will have control limits that are too small. Data with seasonality (predictable up-and-down patterns) or cycles (irregular up-and-down patterns) will have control limits that are too large. There are diagnostic plots and patterns that help identify each, but the best test is "what does it look like"? If the trend seems to be going up and down, and the control limits don't, it's probably wrong.  
 
-Using the `forecast` package's `ggtsdisplay` provides a view of the time series along with the acf and spectral frequency (where frequency is the reciprocal of the time period). Significant autocorrelation is present if there are bars that transgress the blue line. Cycles or seasonality are present if you see a clear peak (or peaks) in the spectrum.  
+Using the `forecast` package's `ggtsdisplay` provides a view of the time series along with the acf and spectral frequency (where frequency is the reciprocal of the time period). Significant autocorrelation is present if there are bars that transgress the blue dashed line in the ACF plot (bottom left). Cycles or seasonality are present if you see a clear peak (or peaks) in the spectrum plot (bottom right).  
 
 <br>  
 
@@ -116,9 +116,9 @@ Using the `forecast` package's `ggtsdisplay` provides a view of the time series 
 ggtsdisplay(df_ts, plot.type = "spectrum") 
 ```
 
-These plots show that there is no autocorrelation or seasonality/cyclical patterns in the data:  there are no obivious patterns nor any bars that cross the blue lines in the acf plot (bottom left), and  there are no peaks in the spectral density plot (bottom right). See [Chapter 8](#timedep) for what these plots can look like when you have time-dependent data.  
+These plots show that there is no autocorrelation or seasonality/cyclical patterns in the data:  there are no obivious patterns nor any bars that cross the blue lines in the acf plot (bottom left), and  there are no peaks in the spectral density plot (bottom right). See [Chapter 8](#timedep) for what these plots can look like when you have time-dependent or otherwise autocorrelated data.  
 
-When you do have such data, you cannot use standard SPC tools. Generalized additive models (GAMs or GAMMs) can be useful alternatives.  
+When you do have such data, you cannot use standard SPC tools. Generalized additive models (GAMs or GAMMs) can be useful alternatives, as decribed by Morton and colleagues (2007, 2009); see [*Useful References*](#useful) for links.  
 
 <br>
 
