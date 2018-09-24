@@ -120,7 +120,7 @@ autoplot(pacf(df_ts))
 ```
 
 
-Using the `beer` data shows the partial autocorreltaion pattern. The spike at the second line indicates that there is a moderate negative relationship in values 6 months apart, and the spike at the fourth line shows there's a strong positive relationship in values 1 year (4 months) apart.  
+Using the `beer` data shows the partial autocorrelation pattern. The spike at the second line indicates that there is a moderate negative relationship in values 6 months (2 quarters) apart, and the spike at the fourth line shows there's a strong positive relationship in values 1 year (4 quarters) apart.  
 
 ```{r fig.height=3}
 autoplot(pacf(beer))
