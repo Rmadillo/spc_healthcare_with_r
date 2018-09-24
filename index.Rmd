@@ -66,8 +66,9 @@ You can find help in R using `?`, followed by the function name, e.g.,
 
 
 ## What you need
-
-This book was created using R version 3.4.3 and RStudio 1.0.153. Code was tested on Mac OS 10.12.6 (aka Sierra).    
+  
+We assume you already have a basic understanding of SPC approaches and analytics, such as knowing the difference between special cause and common cause variation, and know generally what a control chart is meant to do. We don't cover these concepts except in cases where there is often misunderstandings and bad advice; see the chapter on (Useful References)[#useful] for books and papers that can provide introductory ideas as well as advanced practices.   
+  
 - You can download R from [https://cran.r-project.org/](https://cran.r-project.org/).  
 
 - You can download RStudio from [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/).  
@@ -78,6 +79,8 @@ Open RStudio and install the packages used in this book by copying and pasting t
 install.packages("forecast", "fpp2", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
                  "qcc", "qicharts2", "scales", dependencies = TRUE)
 ```
+
+This book was created using R version 3.5.1 and RStudio 1.1.456. Code was tested on Mac OS 10.12.6 (aka Sierra).  
 
 
 ## Book repo
@@ -91,7 +94,7 @@ We are all analysts at *Seattle Children's Hospital* in Seattle, Washington, USA
 
 \- Dwight Barry is a Principal Data Scientist in *Enterprise Analytics*. Twitter: @healthstatsdude  
 
-\- Andy Cooper is a Lead Data Scientist in *Enterprise Analytics*. Twitter: @healthstatsdude    
+\- Andy Cooper is a Lead Data Scientist in *Enterprise Analytics*. Twitter: @DataSciABC    
 
 \- Brendan Bettinger is a Senior Analyst in *Infection Prevention*.  
 
