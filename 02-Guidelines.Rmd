@@ -59,9 +59,9 @@ ggsave("images/example_run_chart.png")
 |  |  | 
 | *Process shift:* $log_2(n) + 3$ data points are all above or all below the median line. | *Process shift:* $log_2(n) + 3$ data points are all above or all below the mean line. |
 |  |  | 
-| *Number of crossings:* Too many or too few median line crossings suggest a pattern inconsistent with natural variation [see Chapter 6.1] (LINK ME). | *Number of crossings:* Too many or too few center line crossings suggest a pattern inconsistent with natural variation (**[see Chapter 6.1] (LINK ME)).** | 
+| *Number of crossings:* Too many or too few median line crossings suggest a pattern inconsistent with natural variation [see Chapter 6.1](#runcharts). | *Number of crossings:* Too many or too few center line crossings suggest a pattern inconsistent with natural variation ([see Chapter 6.1](#runcharts)). | 
 |  |  | 
-| *Trend:* Seven or more consecutive points all increasing or all decreasing (though this can be an ineffective indicator [[@AnhøjOlesen2014]]). | *Trend:* Seven or more consecutive points all increasing or all decreasing (though this can be an ineffective indicator [[@AnhøjOlesen2014]]).  | 
+| *Trend:* Seven or more consecutive points all increasing or all decreasing (though this can be an ineffective indicator\*). | *Trend:* Seven or more consecutive points all increasing or all decreasing (though this can be an ineffective indicator\*).  | 
 |  |  | 
 | *Cycles:* There are obvious cycles that are not linked to known causes such as seasonality. | *Cycles:* There are obvious cycles of any sort. | 
 |  |  | 
