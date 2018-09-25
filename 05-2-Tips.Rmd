@@ -35,7 +35,7 @@ intervention = data.frame(Date = seq(as.Date("2006-01-01"), by = 'month',
   n = round(rnorm(48, 450, 50)))
 
 # Plot control chart with break at intervention
-qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
+qicharts::qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
     runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 24)
 ```
 
@@ -43,15 +43,15 @@ Of course, the change point can be placed arbitrarily in a `qic` graph---with co
 
 ```{r cc_trend_2, fig.height=3.5}
 # Plot control chart with break 2 months after intevention
-qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
+qicharts::qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
     runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 26)
 
 # Plot control chart with break 4 months after intevention
-qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
+qicharts::qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
     runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 28)
 
 # Plot control chart with break 6 months after intevention
-qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
+qicharts::qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, chart = "u", 
     runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 30)
 ```
 
