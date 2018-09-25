@@ -36,6 +36,8 @@ example_cc = spc.plot(subgroup.signal, point.signal, mean.signal, sigma.signal) 
 
 ggsave("images/example_control_chart.png")
 
+# Do we want to make the y-axes the same range and line up?
+
 example_rc = spc.plot(subgroup.signal, point.signal, median.signal, sigma.signal, band.show = FALSE, ucl.show = FALSE, lcl.show = FALSE) +
     geom_curve(x = 10, xend = 12, y = 3.2, yend = 3.2, curvature = -1, linetype = 2) +
     annotate('text', x = 9.5, y = 3.4, label = 'Astronomical data point', hjust = 1) +
@@ -57,7 +59,7 @@ ggsave("images/example_run_chart.png")
 |  |  | 
 | *"Astronomical" data point:* a point so different from the rest that anyone would agree that the value is unusual. | *One or more points fall outside the control limit:* if the data are distributed according to the given control chart's assumptions, the probability of seeing a point outside the control limits when the process has not changed is very low. |
 |  |  | 
-| *Process shift:* $log_2(n) + 3$ data points are all above or all below the median line. | *Process shift:* $log_2(n) + 3$ data points are all above or all below the mean line. |
+| *Process shift:* $log_2(n) + 3$ data points are all above or all below the median line, where $n$ is the total number of points that do $not$ fall directly on the median line. | *Process shift:* $log_2(n) + 3$ data points are all above or all below the mean line, where $n$ is the total number of points that do $not$ fall directly on the mean(?) line. |
 |  |  | 
 | *Number of crossings:* Too many or too few median line crossings suggest a pattern inconsistent with natural variation [see Chapter 6.1](#runcharts). | *Number of crossings:* Too many or too few center line crossings suggest a pattern inconsistent with natural variation ([see Chapter 6.1](#runcharts)). | 
 |  |  | 

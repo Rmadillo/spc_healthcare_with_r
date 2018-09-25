@@ -8,7 +8,7 @@ Run charts typically employ the median for the reference line. Run charts help y
 
 There are basically two "tests" for run charts (an astronomical data point or looking for cycles aren't tests *per se*):  
 
-- *Process shift:* A non-random run is a set of $log_2(n) + 3$ consecutive data points (rounded to the nearest integer) that are all above or all below the median line, where *n* is the number of points that do *not* fall directly on the median line. For example, if you have 34 points, and 2 fall on the median, you have 32 observations for *n*. Thus in this case, the longest run should be 8 points.  
+- *Process shift:* A non-random run is a set of $log_2(n) + 3$ consecutive data points (rounded to the nearest integer) that are all above or all below the median line, where *n* is the number of points that do *not* fall directly on the median line. For example, if you have 34 points, and 2 fall on the median, you have 32 observations for *n*. Thus in this case, the longest run should be no more than 8 points.  
 
 - *Number of crossings:* Too many or too few runs---or more simply, median line crossings---suggest a pattern inconsistent with natural variation. You can use the binomial distribution (`qbinom(0.05, n-1, 0.50)` in R for a 5% false positive rate and because we expect 50% of values to lie on each side of the median) or a table (e.g., [Table 1 in Anhøj & Olesen 2014](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0113825#pone-0113825-t001)) to find the minimum number of crossings you would expect. Using the same data as in the example introduced in [Chapter 1](#where), we would expect the time series to cross the median entirely at least 11 times (points on the median that return to the same side are not crossings).  
 
@@ -27,6 +27,11 @@ But sometimes you have a trend that lasts for a long time, or is continuously tr
 
 ```{r quantreg, fig.height=3}
 # Generate fake process data with an upward trend
+
+# Do we need to repeat this since we made it before?
+# Might serve as a good reminder, or maybe just delete the first
+# instance of it to save space.
+
 set.seed(81)
 n = 36
 x = seq(1:n) 

@@ -42,7 +42,7 @@ ggMarginal(nat_var_run_plot, margins="y", type = "histogram", binwidth=0.5)
 
 <br>  
 
-Figure 2 shows control limits and 1-2$\sigma$ bands for reference, which are important pieces of SPC control charts. Alongside an understanding of the metric and its measurement and operational context, we can use [guidelines](#guidelines) developed from statistics and probability to evaluate the statistical process of a metric in more detail. This ultimately helps us determine whether we should investigate the process for special cause variation.      
+Figure 2 shows control limits and 1-2$\sigma$ bands (Not sure I understand this notation without looking at the graph and thinking about it. E.g., One band is between 1$\sigma$ and 2$\sigma$ above the mean; the other is between 1$\sigma$ and 2$\sigma$ below the mean. Do we need to define sigma for the readers?) for reference, which are important pieces of SPC control charts. Alongside an understanding of the metric and its measurement and operational context, we can use [guidelines](#guidelines) developed from statistics and probability to evaluate the statistical process of a metric in more detail. This ultimately helps us determine whether we should investigate the process for special cause variation.      
 
 <br>  
 
@@ -72,7 +72,7 @@ ggMarginal(nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.5)
 
 <br>  
 
-Note that some of the control chart guidelines for detecting special causes suggest that some special cause variation has occurred in this data (those guidelines can be seen in [Chapter 3](#guidelines)). Since this dataset was generated using random numbers from a known normal distribution, these are *False Positives*: the control chart suggests something has changed when in reality it hasn't. 
+Note that some of the control chart guidelines for detecting special causes suggest that some special cause variation has occurred in this data (those guidelines can be seen in [Chapter 3](#guidelines)). Since this dataset was generated using random numbers from a known, stable, normal distribution, these are *False Positives*: the control chart suggests something has changed when in reality it hasn't. 
 
 There is always a chance for *False Negatives*, as well, where something actually happened but the control chart didn't alert you to special cause variation. Consider the matrix of possible outcomes for any given point in an SPC chart:  
 
