@@ -19,7 +19,7 @@ clabsi = data.frame(Month = seq(as.Date("2013/10/1"), by = "month", length.out =
 Let's say an intervention was implemented at the end of 20 months of data to meet a target of 1.8 infections per 1,000 line days, and in a hurry to understand whether it works, managers wanted to see a control chart 4 months after the intervention. Clearly the process hasn't changed, and there is no evidence of special cause variation. Many managers might point to the increase in mean; a short-cut toward preventing them from acting on this knee-jerk (but common) reaction is to simply say "That change is not significant."  
 
 ```{r qic_u_plot, fig.height = 3.5}
-qicharts::qic(y = Infections, n = Linedays, data = clabsi, x = Month, multiply = 1000, 
+qic(y = Infections, n = Linedays, data = clabsi, x = Month, multiply = 1000, 
     chart = "u", runvals = TRUE, xlab = "", ylab = "Infections per 1,000 line days", 
     x.format = "%b %Y", target = 0.0018, breaks = 20, 
     main = "Infections per 1000 central line days")

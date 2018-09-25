@@ -44,7 +44,7 @@ exp_nat_var_cc_plot = ggplot(df2, aes(x, y)) +
   geom_ribbon(aes(ymin = mean(y)+(1*sd(y)), ymax = mean(y)+(2*sd(y))), alpha = 0.2) +
   xlab("Subgroup") + 
   ylab("Value") +
-  geom_line() + geom_point() + 
+  geom_line() + 
   theme_bw()
 
 # Marginal plot
@@ -73,7 +73,7 @@ exp_xform_nat_var_cc_plot = ggplot(df2, aes(x, y2)) +
   geom_ribbon(aes(ymin = mean(y2)+(1*sd(y2)), ymax = mean(y2)+(2*sd(y2))), alpha = 0.2) +
   xlab("Subgroup") + 
   ylab("Transformed Value") +
-  geom_line() + geom_point() +
+  geom_line() + 
   theme_bw()
 
 # Marginal plot

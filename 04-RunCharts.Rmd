@@ -15,7 +15,7 @@ There are basically two "tests" for run charts (an astronomical data point or lo
 ```{r qichart, fig.width=8, fig.height=3.5}
 # The qic function in the qicharts package creates easy run and control charts
 # The runvals option shows the test results on the plot
-qicharts::qic(point.signal, runvals=TRUE, ylab="Value", main="")
+qic(point.signal, runvals=TRUE, ylab="Value", main="")
 ```
 
 

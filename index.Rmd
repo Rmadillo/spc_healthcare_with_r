@@ -53,7 +53,7 @@ data(pcmanufact, package = "qcc")
 # or by running `View(pcmanufact)` in the console
 
 # Create the u-chart
-qicharts::qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u", main = "Easy u-chart")
+qic(y = pcmanufact$x, n = pcmanufact$size, chart = "u", main = "Easy u-chart")
 ```
 
 <br>  
