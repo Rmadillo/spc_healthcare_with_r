@@ -14,7 +14,7 @@
 
 - In the rare cases you may need an individual chart, do *not* use 3$\sigma$ for the control limits; you must use 2.66$MR_{bar}$ instead to ensure the limits are presented correctly.  
 
-- Note: EWMA and CUSUM charts aren't "standard" control charts in that the only guideline for detecting special cause variation is a point outside the limits. So while they can't detect special cause variation like control charts, they *can* detect shifts in mean with fewer points than a standard control chart.     
+- Note: EWMA and CUSUM charts aren't "standard" control charts in that the only guideline for detecting special cause variation is a point outside the limits. So while they can't detect special cause variation like control charts, they *can* detect shifts in mean with fewer points than a standard control chart.  "MAY" DETECT SHIFTS?  LOOK AT THE X-BAR S CHARTS FOR WAIT TIMES VERSUS THE EWMA CHART FOR WAIT TIMES.  
 
 <br/>  
 
@@ -29,7 +29,9 @@ When you have a single measurement per subgroup, the *I-MR* combination chart is
 &nbsp;&nbsp;&nbsp;&nbsp; $MR_{bar}$ = average moving range of *x*s, excluding those > 3.27$MR_{bar}$   
 
 <br/>  
-    
+ 
+ I DON'T SEE WHERE YOU'RE EXCLUDING VALUES OVER 3.27*MR OR IS THAT WHAT THE K DOES IN THE FIRST PLOT?
+ 
 *Lab results turnaround time*
     
 ```{r IMR_data}
@@ -61,7 +63,8 @@ sigma.mr = rep(mean.mr, length(subgroup.mr))
 
 Unlike the attribute control charts, the *I-MR* chart requires a little intepretation. The *I* portion is the data itself, but the *MR* part shows the variation over time, specifically, the range between successive data points.  
 
-Look at the *MR* part first; if it's in control, then any special cause variation in the *I* portion can be attributed to a change in process. If it's out of control, the control limits for the *I* portion will be wrong, and should not be interpreted.  
+Look at the *MR* part first; if it's in control, then any special cause variation in the *I* portion can be attributed to a change in process. If it's out of control, the control limits for the *I* portion will be wrong, and should not be interpreted.  ISN'T THIS THE CASE BELOW?
+
 
 ```{r MR_chart, fig.height = 3.5}
 # Plot MR chart
@@ -207,7 +210,7 @@ sigma.cusum = rep(1, length(subgroup.cusum))
 # Plot CUSUM chart
 lower.plot = spc.plot(subgroup.cusum, point.cusuml, mean.cusum, sigma.cusum, 
         k = 5, band.show = FALSE, rule.show = FALSE, 
-        label.y = "Cumulative sum")
+        label.y = "Wait Times? Cumulative sum")
 
 lower.plot + geom_line(aes(y = point.cusumh), col = "royalblue3") +
     geom_point(aes(y = point.cusumh), col = "royalblue3")
@@ -242,14 +245,17 @@ for (i in 1:length(y) - 1) {
 
 #==================================================================================
 # Is this the right way to interpret exclude > 3.27MR? Is this exclusion recursive?
+
+#According to Provost and Murray (https://books.google.com/books?id=pRLcaOkswQsC) you first calculate MRbar, then remove all points that greater than 3.27*MRbar, then  recalculate MRbar and use that recalculated MRbar for the UL and LL. which is what you seem to do.  Made some edits to make this clear...maybe? I think?
 #==================================================================================
 mr = mr[mr <= 3.27*mean(mr)]  
+mr_prime = mean(mr)
 
 # Calculate t chart inputs
 subgroup.t = subgroup.g
 point.t = y
 central.t = mean(y)
-sigma.t = rep(mean(mr), length(point.t))
+sigma.t = rep(mr_prime, length(point.t))
 ```
 
 ```{r t_chart, fig.height = 3.5}
