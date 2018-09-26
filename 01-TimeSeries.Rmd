@@ -37,7 +37,8 @@ df_ts = ts(df$Value, start = c(2006,01), frequency = 12)
 set.seed(81)
 n = 36
 x = seq(1:n) 
-mb = data.frame(Subgroup = seq(as.Date("2006-01-01"), by = "month", length.out = n), Value = 10000 + (seq(1:n) * 1.25) + (rnorm(n, 0, 5)))
+mb = data.frame(Subgroup = seq(as.Date("2006-01-01"), by = "month", length.out = n), 
+            Value = 10000 + (seq(1:n) * 1.25) + (rnorm(n, 0, 5)))
 
 # Create a time series object from the mb data
 mb_ts = ts(mb$Value, start = c(2006,01), frequency = 12)
@@ -76,7 +77,7 @@ In these plots, consider:
 
 You can test whether a process is trending first by eye: does it look like it's trending over a large span of the time series? Then it probably is.  
 
-We don't see that above, in fact, it's really close to entirely flat: a very stable process in spite of the noise. For comparison, here's an example of assessing the trend on data that is actually trending.  
+We don't see that in the above example, in fact, it's really close to entirely flat: a very stable process in spite of the noise. For comparison, below is an example of assessing the trend on data that is actually trending.  
 
 <br>  
 

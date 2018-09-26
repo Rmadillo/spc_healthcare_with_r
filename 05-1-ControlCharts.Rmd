@@ -8,7 +8,7 @@ Parametric distributions are a *useful fiction*---no data will follow an idealiz
 
 ### Common distributions and their ranges
 
-There are [hundreds of statistical distributions](http://vosesoftware.com/knowledgebase/whitepapers/pdf/ebookdistributions.pdf), but only a handful are commonly used in SPC work:  
+There are [hundreds of statistical distributions](http://vosesoftware.com/knowledgebase/whitepapers/pdf/ebookdistributions.pdf) DO WE NEED TO WORRY ABOUT COPYRIGHT? MAYBE LINK TO https://en.wikipedia.org/wiki/List_of_probability_distributions?, but only a handful are commonly used in SPC work:  
 
 | Data Type | Distribution | Range | Skew | Example | SPC chart |
 | --------- | ------------ | ----- | ---- | ------- | --------- |
@@ -82,7 +82,7 @@ ggMarginal(exp_xform_nat_var_cc_plot, margins="y", type = "histogram", binwidth=
 
 The main drawback is that you now have a chart of essentially uninterptable values---but that's better than assuming a normal distribution will be just fine and being unnecessarily alarmed by false positive signals, wasting time and resources searching for a special cause that doesn't exist.    
 
-So should you always transform when your data doesn't meet the usual distributions common in control charts? Not necessarily. For more information, see, for example, *The arcsine is asinine* [@WartonHui2016] and *Do not log-transform count data* [@OharaKotze2010]. Consult a statistician if you aren't sure how to proceed.  
+So should you always transform when your data doesn't meet the usual distributions common in control charts? Not necessarily. For more information, see, for example, *The arcsine is asinine* [@WartonHui2016] and *Do not log-transform count data* [@OharaKotze2010]. DO YOU HAVE A LINK FOR THESE OR A CITATION? Consult a statistician if you aren't sure how to proceed.  
 
 ### What *is* the distribution?
 
@@ -97,7 +97,7 @@ expo_dist = descdist(df2$y, boot = 1000)
 
 <br>  
 
-A Cullen and Frey graph compares your data set and bootstrapped replications of it to common theoretical distributions. You compare your data (blue dot) and the replications (orange open circles) to locations within the plot that represent theoretical distributions. For example, if the blue dot were at or near the \* at the top right, more or less surrounded by the orange open circles, it would imply that our data are most consistent with a normal distribution. Other common distributions are represented in the graph by points (e.g., the exponential distribution), area (e.g., the beta distribution), or by lines (e.g., the gamma distribution).  
+A Cullen and Frey graph compares your data set and bootstrapped replications of it to common theoretical distributions. You compare your data (blue dot) and the replications (orange open circles) to locations within the plot that represent theoretical distributions. For example, if the blue dot were at or near the \* at the top left and more or less surrounded by the orange open circles, it would imply that our data are most consistent with a normal distribution. Other common distributions are represented in the graph by points (e.g., the exponential distribution), area (e.g., the beta distribution), or by lines (e.g., the gamma distribution).  
 
 This chart shows us that our data (blue dot) and simuations from that data (orange open circles) are most consistent with a gamma distribution and a perhaps a lognormal distribution. Using `qqPlot` lets us evaluate these two options directly:    
 
@@ -108,10 +108,11 @@ gammo = fitdistr(df2$y, "gamma")
 
 # The car package has a good quantile-quantile plot function
 library(car)
-qqPlot(df2$y, "lnorm", meanlog = logno$estimate[1], sdlog = logno$estimate[2]); qqPlot(df2$y, "gamma", shape = gammo$estimate[1], rate = gammo$estimate[2])
+qqPlot(df2$y, "lnorm", meanlog = logno$estimate[1], sdlog = logno$estimate[2], id=FALSE);
+qqPlot(df2$y, "gamma", shape = gammo$estimate[1], rate = gammo$estimate[2],id=FALSE)
 ```
 
-Although both distributions fall within the confidence limits (dashed lines), the points fit to a gamma distribution (right) are closer to the line of best fit.  
+Although both distributions fall within the confidence limits (dashed lines), the points fit to a gamma distribution (right) DOUBLE-CHECK ORIENTATION are closer to the line of best fit.  
 
 This is expected, since we created this data from a gamma distribution, but in practice, we don't know what distribution the data comes from---so using this process can help you determine which distributions are most consistent with the data, and help you model and plot it appropriately.  
 

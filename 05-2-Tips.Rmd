@@ -2,7 +2,7 @@
 
 ## READ ME (or else)
 
-- The definition of your control limits depends on the trade-off between sensitivity and specificity for the question at hand. Typical control charts are built on 3$\sigma$ limits, which provides the optimal trade-off between sensitivity and specificity, that is, between under- and over-alerting to an indication of special cause variation. When you need to err on the side of caution---for example, in patient safety applications---2$\sigma$ limits may be more appropriate, while understanding that false positives will be higher. If you need to err on the side of certainty, 4-6$\sigma$ limits may be more useful.   
+- The definition of your control limits depends on the trade-off between sensitivity and specificity for the question at hand. Typical control charts are built on 3$\sigma$ limits, which provides a balanced trade-off between sensitivity and specificity, that is, between under- and over-alerting to an indication of special cause variation. When you need to err on the side of caution---for example, in patient safety applications---2$\sigma$ limits may be more appropriate, while understanding that false positives will be higher. If you need to err on the side of certainty, 4-6$\sigma$ limits may be more useful.   
 
 - With fewer than 20 observations, there is an increased chance of missing special cause variation. With more than 30 observations, there's an increased chance of detecting special cause variation that is really just chance. Knowing these outcomes are possible is useful to help facilitate careful thinking when control charts indicate special cause variation.       
 
@@ -16,7 +16,7 @@
 
 - A control chart should measure one defined process, so you may need to create multiple charts stratified by patient population, unit, medical service, time of day, etc. to avoid mixtures of processes.       
 
-- With very large sample or subgroup sizes, control limits will be too small, and the false positive rate will skyrocket. Use [prime charts](#prime) instead.      
+- With very large sample or subgroup sizes, control limits will be too small, and the false positive rate will skyrocket. Use [prime charts](#prime) THIS LINK DOESN'T GO ANYWHERE instead.      
 
 
 ## When to revise control limits
@@ -57,6 +57,6 @@ qicharts::qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, char
 
 As you can see, the conclusions you could draw from a single control chart might be different depending on when the breakpoint is set.  
 
-Use common sense and avoid the urge to change medians or means and control limits for every intervention unless evidence is clear that it worked.   
+Use common sense and avoid the urge to change medians or means and control limits for every intervention unless evidence is clear that it worked.   DO WE WANT TO TALK ABOUT USING THE LOG2(n) + 3 RULE OR THE CROSSINGS RULE TO CHOOSE THE CUT-POINT?
 
 SPC charts are blunt instruments, and are meant to try to detect changes in a process as simply as possible. When there is no clear evidence in SPC charts for a change, more advanced techniques---such as ARIMA models or intervention/changepoint analysis---can be used to assess whether there was a change in the statistical process at or near the intervention point.  

@@ -3,9 +3,9 @@
 | If your data involve... | use a ... | based on the ... distribution. | 
 | -------------------------------------- | --------- | ------------------------ | 
 | Rates  | *u* chart | Poisson | 
-| Counts (with equal opportunity) | *c* chart | Poisson |
+| Counts (with equal sampling units) | *c* chart | Poisson |
 | Proportions  | *p* chart | binomial |
-| Proportions (with equal opportunity) | *np* chart | binomial | 
+| Proportions (with equal denominators) | *np* chart | binomial | 
 | Rare events | *g* chart | geometric | 
 
 - For count, rate, or proportion data, carefully define your numerator and denominator. Evaluate each separately over time to see whether there are any unusual features or patterns. Sometimes patterns can occur in one or the other, then disappear or are obscured when coalesced into a rate or proportion.  
@@ -55,7 +55,7 @@ sigma.u = sqrt(central.u / linedays.agg * 1000)
 spc.plot(subgroup.u, point.u, central.u, sigma.u, k = 3, lcl.min  = 0,
          label.x = "Month", label.y = "Infections per 1000 line days")
 ```
-
+See Appendix for details of the spc.plots() function.
 
 <br/>  
 
