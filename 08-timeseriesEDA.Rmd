@@ -6,7 +6,7 @@
 
 There is usually far more information in a time series than is typically explored with basic SPC methods. You can create a variety of exploratory and diagnostic plots that help you understand the data more thoroughly. 
 
-Because the fake data (`df_ts`) used in previous chapters has no time series patterns, we'll use it alongside a data set with clear patterns (`beer`) so we can explore what these EDA tools show with and without time-related patterns.  
+Because the fake data (`df_ts`) used in previous chapters has no time series patterns, we'll use it alongside a data set with clear patterns (`beer`) so we can explore what these EDA tools show with and without time-related patterns. Note the `beer` data is measured quarterly whereas the `df_ts` data is measured monthly.
 
 ```{r beer_data}
 # Use Australian beer data, trimmed to a 15 year subset
@@ -163,7 +163,7 @@ autoplot(decompose(beer))
 
 ### Seasonal adjustment
 
-The `seasonal` package uses the U.S. Census Bureau's X-13ARIMA-SEATS method to calculate seasonal adjustment. The `seas` function can be used to view or save the results into another object.  
+The `seasonal` package uses the U.S. Census Bureau's X-13ARIMA-SEATS method to calculate seasonal adjustment. The `seas` function can be used to view or save the results into another object.  WHAT EXACTLY IS A SEASONAL ADJUSTMENT? WHAT IS IT USED FOR?
 
 ```{r seas}
 # Convert ts to data frame
@@ -225,6 +225,9 @@ beer_df_rand = tsdf(decompose(beer)$random)
 beer_df_rand$qtr = factor(quarter(date_decimal(beer_df_rand$x)))
 
 # Plot residuals, with custom colors
+
+#LOOKS LIKE THERE MIGHT BE A PATTERN.  MAYBE?
+
 ggplot(beer_df_rand, aes(x, y)) + 
   geom_hline(yintercept=0, linetype="dotted") +
   geom_smooth(color = "gray70", alpha = 0.2) +
@@ -237,6 +240,9 @@ ggplot(beer_df_rand, aes(x, y)) +
 ```{r residuals_faceted_df_ts}
 # Residuals faceted by month
 # Is December weird? Rest seem ok
+
+# DO WE WANT TO SAY SOMETHING ABOUT HOW THESE RESIDUAL PLOTS TRACK THE WITHIN-MONTH PATTERNS WE SAW IN THE MONTHPLOTS? OR IS THAT JUST A COINCIDENCE?
+
 ggplot(df_ts_df_rand, aes(x, y)) + 
   geom_hline(yintercept = 0, linetype = "dotted") +
   geom_smooth(color = "gray70", alpha = 0.2) +

@@ -1,5 +1,7 @@
 # I need a shortcut
 
+I'M NOT SURE WHAT THIS SECTION IS SUPPOSED TO BE DOING.
+
 We've [created a function](#ggspc) that highlights points that may indicate special cause variation, as outlined in [Chapter 4](#guidelines).  
 
 Using this function does require some thought about setting up the variables, which was done on purpose---you should put as much care into the construction of run and control charts as your nurses put into patient care. To do any less is a disservice to the decision-makers who would rely on your work and the patients that rely on these decision-makers to provide the conditions that support the best care possible.  
