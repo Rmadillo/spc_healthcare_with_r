@@ -9,15 +9,13 @@ output:
 
 People are really, really good at finding patterns that aren't real, especially in noisy data.  
 
-Every metric has natural variation---*noise*---included as an inherent part of that process. True signals only emerge when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help you characterize and identify non-random patterns that suggest your process has changed. 
+Every metric has natural variation---*noise*---included as an inherent part of that process. True signals only emerge when you have properly characterized that variation. Statistical process control (SPC) charts---run charts and control charts---help characterize and identify non-random patterns that suggest the process has changed. 
 
-In essence, SPC tools help you evaluate the stability and predictability of a process or its outcomes. Statistical theory provides the basis by which we can evaluate metrics to more confidently detect changes in the underlying process amongst the noise of natural variation. Since it is impossible to know or even measure every single variable that might influence a metric, we can use probability and statistics to evaluate how that metric naturally fluctuates over time (aka common cause variation), and construct guidelines around that fluctuation to help indicate when something in that process has changed (special cause variation). 
+In essence, SPC tools help you evaluate the stability and predictability of a process or its outcomes. Statistical theory provides the basis to evaluate metric stability and more confidently detect changes in the underlying process amongst the noise of natural variation. Since it is impossible to account for every single variable that might influence a metric, we can use probability and statistics to evaluate how that metric naturally fluctuates over time (aka common cause variation), and construct guidelines around that fluctuation to help indicate when something in that process has changed (special cause variation). 
 
-Understanding natural, random variation in time series or sequential data is the essential point of quality assurance or process and outcome improvement efforts. It's a rookie mistake to use SPC tools to focus solely on the values themselves or their central tendency---you need to look at [*all* of the elements](#guidelines) of a run or control chart to understand what it's telling you.  
+Understanding natural, random variation in time series or sequential data is the essential point of quality assurance or process and outcome improvement efforts. It's a rookie mistake to use SPC tools to focus solely on the values themselves or their central tendency---instead evaluate [*all* of the elements](#guidelines) of a run chart or control chart to understand what it's telling you. For example, Figure 1 shows a process created using random numbers based on a pre-defined normal distribution. The black points and line are the data itself, the overall mean (*y* = 18) is represented by the grey line, and the overall distribution is shown in a histogram to the right of the run chart.
 
-For example, Figure 1 shows a process created using random numbers based on a pre-defined normal distribution. The black points and line are the data itself, the overall mean (*y* = 18) is represented by the grey line, and the overall distribution is shown in a histogram to the right of the run chart.
-
-The axis labels are traditional SPC labels; the *value* (i.e., metric) we're evaluting is on the *y*-axis, and the *x*-axis are our units of observation, whether in time, in sequence, a sample from a batch, and so on. Traditionally these were called *subgroups* because an observation point involved sampling from a mechnical process, e.g., taking 5 widgets from a production of 500. Many SPC examples  maintain this label regardless of what the *x*-axis is actually measuring for simplicity's sake, and we follow this convention when the focus isn't the data at hand but should be on the SPC chart as a whole.  
+The axis labels are traditional SPC labels. The *value* (i.e., metric) is on the *y*-axis and the units of observation (traditionally called *subgroups*) are on the *x*-axis. The term subgroup was developed in the context of an observation point involved sampling from a mechnical process, e.g., taking 5 widgets from a production of 500. Many SPC examples  maintain this label regardless of what the *x*-axis is actually measuring for simplicity's sake---we follow this convention where appropriate.
 
 <br>  
 
@@ -42,7 +40,7 @@ ggMarginal(nat_var_run_plot, margins="y", type = "histogram", binwidth=0.5)
 
 <br>  
 
-Figure 2 shows control limits and 1-2$\sigma$ bands (Not sure I understand this notation without looking at the graph and thinking about it. E.g., One band is between 1$\sigma$ and 2$\sigma$ above the mean; the other is between 1$\sigma$ and 2$\sigma$ below the mean. Do we need to define sigma for the readers?) for reference, which are important pieces of SPC control charts. Alongside an understanding of the metric and its measurement and operational context, we can use [guidelines](#guidelines) developed from statistics and probability to evaluate the statistical process of a metric in more detail. This ultimately helps us determine whether we should investigate the process for special cause variation.      
+Figure 2 adds control limits and 1-2$\sigma$ bands (Not sure I understand this notation without looking at the graph and thinking about it. E.g., One band is between 1$\sigma$ and 2$\sigma$ above the mean; the other is between 1$\sigma$ and 2$\sigma$ below the mean. Do we need to define sigma for the readers?), where $\sigma$ is a measure of expected process standard devation, for reference. Guidelines on how to use these elements of SPC charts to evaluate the statistical process of a metric in more detail and determine whether to investigate the process for special cause variation are detailed in [Chapter 4](#guidelines).
 
 <br>  
 
@@ -51,16 +49,21 @@ Figure 2 shows control limits and 1-2$\sigma$ bands (Not sure I understand this 
 ```{r ggmarg_cc, fig.height=3, echo=FALSE}
 nat_var_cc_plot = ggplot(df, aes(x, y)) + 
   ylim(14.75, 21.25) +
-  geom_hline(aes(yintercept=18), color="gray", size=1) +
-  geom_hline(aes(yintercept=20.96), color="red") +
-  geom_hline(aes(yintercept=15.1), color="red") +
+  xlim(-3, 120) +
+  geom_segment(aes(x=1,xend=120,y=18,yend=18), color="gray", size=1) +
+  geom_segment(aes(x=1,xend=120,y=20.96,yend=20.96), color="red") +
+  geom_segment(aes(x=1,xend=120,y=15.1,yend=15.1), color="red") +
   geom_ribbon(aes(ymin = 18.98, ymax = 19.96), alpha = 0.2) +
   geom_ribbon(aes(ymin = 16.04, ymax = 17.02), alpha = 0.2) +
-  annotate("text", x = 0, y = 21.15, label = "UCL", color = "red") +
-  annotate("text", x = -2, y = 19.5, label = as.character(expression("+1-2"~sigma)), color = "gray30", parse = TRUE, angle = 90) + 
-  annotate("text", x = -2, y = 18.15, label = "bar(x)", color = "gray30", parse = TRUE) + 
-  annotate("text", x = -2, y = 16.5, label = as.character(expression("-1-2"~sigma)), color = "gray30", parse = TRUE, angle = 90) + 
-  annotate("text", x = 0, y = 15.3, label = "LCL", color = "red") +
+  annotate("text", x = 1, y = 21.1, label = "UCL", color = "red", hjust = 0, vjust = 0) +
+  annotate("text", x = 0, y = 18.98, label = as.character(expression("+1"~sigma)), color = "gray30", parse = TRUE, hjust = 1) + 
+  annotate("text", x = 0, y = 19.96, label = as.character(expression("+2"~sigma)), color = "gray30", parse = TRUE, hjust = 1) + 
+  annotate("text", x = 0, y = 20.96, label = as.character(expression("+3"~sigma)), color = "gray30", parse = TRUE, hjust = 1) + 
+  annotate("text", x = 0, y = 17.02, label = as.character(expression("-1"~sigma)), color = "gray30", parse = TRUE, hjust = 1) + 
+  annotate("text", x = 0, y = 16.04, label = as.character(expression("-2"~sigma)), color = "gray30", parse = TRUE, hjust = 1) + 
+  annotate("text", x = 0, y = 15.1, label = as.character(expression("-3"~sigma)), color = "gray30", parse = TRUE, hjust = 1) + 
+  annotate("text", x = 0, y = 18.05, label = "bar(x)", color = "gray30", parse = TRUE, hjust = 1) + 
+  annotate("text", x = 1, y = 15, label = "LCL", color = "red", hjust = 0, vjust = 1) +
   xlab("Subgroup") + 
   ylab("Value") +
   geom_line() + 
@@ -72,7 +75,7 @@ ggMarginal(nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.5)
 
 <br>  
 
-Note that some of the control chart guidelines for detecting special causes suggest that some special cause variation has occurred in this data (those guidelines can be seen in [Chapter 3](#guidelines)). Since this dataset was generated using random numbers from a known, stable, normal distribution, these are *False Positives*: the control chart suggests something has changed when in reality it hasn't. 
+Note that the [control chart guidelines](#guidelines) suggest that some special cause variation has occurred in this data. Since this dataset was generated using random numbers from a known, stable, normal distribution, these are *False Positives*: the control chart suggests something has changed when in reality it hasn't. 
 
 There is always a chance for *False Negatives*, as well, where something actually happened but the control chart didn't alert you to special cause variation. Consider the matrix of possible outcomes for any given point in an SPC chart:  
 
@@ -81,21 +84,21 @@ There is always a chance for *False Negatives*, as well, where something actuall
 | **SPC: Alert** | True Positive | *False Positive* | 
 | **SPC: No alert** | *False Negative* | True Negative | 
 
-The *True* diagonal is obviously where you want all your points to lie. The tradeoffs come with the *False* diagonal, and using 3$\sigma$ control limits is meant to balance both categories, that is, you're willing to accept an equal proprotion of *False Negatives* and *False Positives*. However, sometimes you want to err on the side of caution, and have your SPC chart alert when there's even the slightest possibility of special cause variation, such as in monitoring for hospital acquired infections: in this case, you might want to use 2$\sigma$ control limits to be cautious, thus reducing *False Negatives* at the expense of having more *False Positives*. In other cases, you may want to be completely certain things are out of whack, so you might be willing to have many more *False Negatives* by using 4$\sigma$ control limits or larger, knowing you'll get fewer *False Positives*.    
+Using 3$\sigma$ control limits is standard, intended to balance the trade-offs between *False Negatives* and *False Positives*. If you prefer to err on the side of caution for a certain metric (such as in monitoring hospital acquired infections) and are willing to accept more *False Positives* to reduce *False Negatives*, you could use 2$\sigma$ control limits. For other metrics where you prefer to be completely certain things are out of whack before taking action (need example?) and are willing to accept more *False Negatives* you to reduce *False Positives*, you could use 4$\sigma$ control limits. When in doubt, use 3$\sigma$ control limits.
 
-It's important to remember that SPC charts are at heart decision tools, so they can help you decide how to reduce false signals relative to your use case, but *they can never entirely eliminate false signals*. Thus, it's often useful to explicitly explore these trade-offs with decision makers when deciding where and why to set control limits.   
+It's important to remember that SPC charts are at heart decision tools which can help you decide how to reduce false signals relative to your use case, but *they can never entirely eliminate false signals*. Thus, it's often useful to explicitly explore these trade-offs with stakeholders when deciding where and why to set control limits.   
 
 <br>  
 
 ## SPC tools
 
-Run and control charts are the core tools of SPC analysis. Other basic statistical graphs---particularly line charts and histograms---are equally important to SPC work.    
+Run charts and control charts are the core tools of SPC analysis. Other basic statistical graphs---particularly line charts and histograms---are equally important to SPC work.    
 
-Line charts help you monitor any sort of metric, process, or time series data. Run and control charts are meant to help you identify departures from a **stable** process. Each uses a set of guidelines to help you make decisions on whether a process has changed or not. 
+Line charts help you monitor any sort of metric, process, or time series data. Run charts and control charts are meant to help you identify departures from a **stable** process. Each uses a set of guidelines to help you make decisions on whether a process has changed or not. 
 
-In many cases, a run chart may be all you need. In *all* cases, you should [start with a line chart and histogram](#histoline). If---and only if---you need to characterize the limits of natural variation in a stable process, you can move on to using a control chart.  
+In many cases, a run chart is all you need. In *all* cases, you should [start with a line chart and histogram](#histoline). If---and only if---the process is stable and you need to characterize the limits of natural variation, you can move on to using a control chart.  
 
-In addition, *never* rely on a table or year-to-date (YTD) comparisons to evaluate process performance. These approaches ignore the foundational concept of process control: that natural, "common-cause" variation is an essential part of the process, and you can't see natural variation in a table or in YTD comparisons. Tables or YTD values can supplement run or control charts, but should never be used without them. 
+In addition, *never* rely on a table or year-to-date (YTD) comparisons to evaluate process performance. These approaches obscure the foundational concept of process control: that natural, common cause variation is an essential part of the process. Tables or YTD values can supplement run charts or control charts, but should never be used without them. 
 
 Above all, remember that the decisions you make in constructing SPC charts and associated data points (such as YTD figures) *will* impact the interpretation of the results. Bad charts can make for bad decisions. 
 
@@ -103,16 +106,16 @@ Above all, remember that the decisions you make in constructing SPC charts and a
 
 ## Defining *stability*
 
-It's common for decision-makers to want to see KPIs displayed using a control chart. However, control charts are only applicable for KPIs when the business goal is to keep that KPI stable. SPC tools are built upon the fundamental assumption of a *stable* process, and as an analyst you need to be very clear on what the definition of stability is in the context of the goals and the metric itself. Because it takes time and resources to track KPIs (collecting the data, developing the dashboards, etc.) you should take time to develop them carefully by first ensuring that SPC tools are, in fact, an appropriate means to monitor that KPI.  
+It's common for stakeholders to want key performance indicators (KPIs) displayed using a control chart. However, control charts are only applicable when the business goal is to keep that KPI stable. SPC tools are built upon the fundamental assumption of a *stable* process, and as an analyst you need to be very clear on the definition of stability in the context of business goals and the statistical process of the metric itself. Because it takes time and resources to track KPIs (collecting the data, developing the dashboards, etc.) you should take time to develop them carefully by first ensuring that SPC tools are, in fact, an appropriate means to monitor that KPI.  
 
-In many cases when folks talk about "stability" they mean "constant", and they think of the goal behind the KPI as trying to keep the KPI at some fixed value or achieve some fixed target value. In many cases this makes sense, and a control chart would be appropriate. However, there are times where stability could have different meanings, particularly in a changing environment, and the KPI should be defined accordingly if a control chart is to be used. 
+In many cases when folks talk about "stability" they mean "constant", and they think of the goal behind the KPI as trying to keep the KPI at some fixed value or achieve some fixed target value. In many cases this makes sense, and a control chart would be appropriate. However, there are times where stability could have different meanings, particularly in a changing environment, and the KPI should be defined accordingly if a control chart is to be used. (Confused by this paragraph, but think maybe it could be deleted since the next two paragraphs are examples addressing the appropriateness of KPI control charts -BB)
 
-For example, perhaps some outpatient specialties are facing increasing numbers of referrals but are not getting more FTEs. With increasing patient demand and constrained hospital capacity, you would clearly not expect the situation (e.g., wait times for appointments)---and thus the data representing the process---to be constant over time. So, a KPI such as "percent of new patients seen within 2 weeks" might be a goal we care about, but we already expect that value to decline. As such, it is not stable, and placing it in the context of a control chart would be useless. However, if we define the KPI as something like "percent of new patients seen within 2 weeks relative to what we would expect given increased demand and no expansion", we have now placed it into a stable context. Instead of asking if the metric itself is declining, we're asking whether the system is responding as it has in the past. By defining the KPI in terms of something we would want to remain stable, we can now use a control chart to track its performance. 
+For example, perhaps some outpatient specialties are facing increasing numbers of referrals but are not getting more FTEs. With increasing patient demand and constrained hospital capacity, we would not expect the process data (e.g., wait times for appointments) to be constant over time. So, a KPI such as "percent of new patients seen within 2 weeks" might be a goal we care about, but since we expect that value to decline, it is not stable and a control chart is not appropriate. However, if we define the KPI as something like "percent of new patients seen within 2 weeks relative to what we would expect given increased demand and no expansion", we have now placed it into a stable context. Instead of asking if the metric itself is declining, we're asking whether the system is responding as it has in the past. By defining the KPI in terms of something we would want to remain stable, we can now use a control chart to track its performance. 
 
-For another example, perhaps complaints about phone wait time for a call center has led to an increase in FTEs to support call demand. You would expect the call center performance to improve, such as in terms of "percent of calls answered in under 2 minutes". So, what would a "stable” call center KPI look like as they add FTEs and the previously-defined KPI improves over time? Perhaps it would be that the performance of the various teams within the call center become more similar (e.g., decreased variability across teams). Maybe it could be the frequency of catastrophic events (e.g., people waiting longer than X minutes, where X is very large) staying below some threshold---similar to a "downtime" KPI used to track the stability of computer systems. Maybe it could be something along the lines of the percent change in the previously-defined KPI tracking the percent change in FTEs (though we know this relationship is non-linear). The point is, we know performance as previously defined will be improving in the call center, so tracking that in a *control chart* would be useless.  However, we still want to track "stability" of the process in the face of these improvements.  
+For another example, perhaps complaints about phone wait time for a call center has led to an increase in FTEs to support call demand. You would expect the call center performance---perhaps measured in terms of "percent of calls answered in under 2 minutes"---to improve, so a control chart is not appropriate. So, what would a "stable” call center KPI look like as they add FTEs? Maybe it could be the performance of the various teams within the call center become more similar (e.g., decreased variability across teams). Maybe it could be the frequency of catastrophic events (e.g., people waiting longer than *X* minutes, where *X* is very large) staying below some threshold---similar to a "downtime" KPI used to track the stability of computer systems. Maybe it could be the percent change in the previously-defined KPI tracking the percent change in FTEs (though we know this relationship is non-linear).
 
-In both cases, it would not be appropriate to use a control chart for the previously-defined performance metrics, because we do not expect them (or necessarily want them) to be stable.  However, by focusing on the process itself, we can define alternate KPIs that conform to the assumptions of a control chart.
+In both examples, it would not be appropriate to use a control chart for the previously-defined performance metrics, because we do not expect them (or necessarily want them) to be stable.  However, by focusing on the process itself, we can define alternate KPIs that conform to the assumptions of a control chart.
 
-*Stability* means that the system is responding as we would expect to the changing environment and that the system is robust to adverse surprises from the environment. **KPIs meant to evaluate stable proceses should be specifically designed to track whether the system is stable and robust**, rather than focusing strictly on the outcome as defined by existing or previous KPIs. 
+*Stability* means that the system is responding as we would expect to the changing environment and that the system is robust to adverse surprises from the environment. **KPIs meant to evaluate stable processes should be specifically designed to track whether the system is stable and robust**, rather than focusing strictly on the outcome as defined by existing or previous KPIs.
 
 Make sure that metrics meant to measure stability are properly designed from the outset before you spend large amounts of resources to develop and track them. 

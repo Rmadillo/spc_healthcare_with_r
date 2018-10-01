@@ -1,5 +1,7 @@
 # Guidelines for interpreting SPC charts {#guidelines}
 
+(Should Chapter 4 and Chapter 5 be merged, maybe "Chart Selection and Interpretation Basics"? Ideally with a short introduction, then each guide takes up one page -BB)
+
 ``` {r sgnlex, echo = FALSE}
 
 # Example points for signal rules of thumb
