@@ -78,7 +78,7 @@ We don't presume familiarity with R, though of course everything's easier if you
 Open RStudio and install the packages used in this book by copying and pasting this code into the **Console**:  
 
 ```{r install_packs, eval=FALSE}
-install.packages("forecast", "fpp2", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
+install.packages("ggplot2", "forecast", "fpp2", "ggExtra", "ggseas", "gridExtra", "tidyverse", 
                  "qcc", "qicharts2", "scales", dependencies = TRUE)
 ```
 
