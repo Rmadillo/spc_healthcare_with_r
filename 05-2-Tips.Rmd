@@ -23,7 +23,7 @@
 
 If you need to determine whether an intervention might have worked soon after or even during the improvement process, you shouldn't be using a standard control chart at all. Use a run chart or an EWMA or CUSUM chart to try to detect early shifts.
 
-When you have enough data points after the intervention (about 12-20), with no other changes to the process, you can "freeze" the median, and/or mean+control limits at the intervention point and recalculate the median and/or mean+limits on the subsequent data. However, by doing so you are *already assuming* that the intervention changed the process. Sometimes that evidence will be there, such as through a variety of signals of special cause variation; other times, that evidence will not be there. If there is no evidence of special cause variation for a while after the intervention, you shouldn't freeze/restart the SPC chart values.  
+When you have enough data points after the intervention (about 12-20), with no other changes to the process, you can "freeze" the median and/or mean+control limits at the intervention point and recalculate the median and/or mean+limits on the subsequent data. However, by doing so you are *already assuming* that the intervention changed the process. If there is no evidence of special cause variation after the intervention, you shouldn't recalculate the SPC chart values.  
 
 Say that an intervention happened at the start of year 3, but there was a lag between the intervention and when it actually showed up in the data. 
 
@@ -39,7 +39,7 @@ qicharts::qic(y = y, n = n, data = intervention, multiply = 1000, x = Date, char
     runvals = TRUE, ylab = "Value per 1,000", main="", breaks = 24)
 ```
 
-Of course, the change point can be placed arbitrarily in a `qic` graph---with corresponding changes in control limits and what might constitute special cause variation. For example, using the same data as above, compare those results with those when the change point is moved forward by 2, 4, or 6 time steps (as we're pretending we don't actually know when the process truly changed):
+Of course, the change point can be placed arbitrarily in a `qic` graph---with corresponding changes in control limits. For example, using the same data as above, compare those results with those when the change point is moved forward by 2, 4, or 6 time steps (pretending we don't actually know when the process truly changed):
 
 ```{r cc_trend_2, fig.height=3.5}
 # Plot control chart with break 2 months after intevention

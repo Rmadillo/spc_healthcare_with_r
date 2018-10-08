@@ -2,9 +2,9 @@
 
 ## Statistical distributions
 
-The primary distinction between run and control charts is that the latter uses parametric statistics to increase the number of properties of a data-defined process that you can monitor. If a particular statistical distribution---such as normal, binomial, or Poisson---matches the process you wish to measure, you gain a great deal more power to find insights and monitor change than with a line or run chart.  
+The primary distinction between run and control charts is that the latter uses parametric statistics monitor additional properties of a data-defined process. If a particular statistical distribution---such as normal, binomial, or Poisson---matches the process you wish to measure, a control chart ofers a great deal more power to find insights and monitor change than a line or run chart.  
 
-Parametric distributions are a *useful fiction*---no data will follow an idealized distribution, but as long as it's close, it provides some useful shortcuts that allow SPC charts to work *in practice*.   
+Parametric distributions are a *useful fiction*---no data will follow an idealized distribution, but as long as it's close, the distribution properties provide useful shortcuts that allow SPC charts to work *in practice*.   
 
 ### Common distributions and their ranges
 
@@ -25,7 +25,7 @@ When control charts use the mean to create the center line, they use the arithme
 
 ### What happens when you get the mean-variance relationship wrong
 
-Although control charts can sometimes work when you misspecify the mean-variance relationship (they are "robust" to some assumption violations), you won't know unless you explore the differences in implications between the data as-is and that same data transformed to become more in line with the appropriate or expected distribution.  
+Although control charts are "robust" to some assumption violations and can sometimes work when the mean-variance relationship is incorrect, you won't know unless you explore the differences in implications between the data as-is and that same data transformed to become more in line with the appropriate or expected distribution.  
 
 For example, if you use the usual normal distribution control limits (an *I* chart) on gamma-distributed data, you get something like this:  
 
@@ -80,7 +80,7 @@ exp_xform_nat_var_cc_plot = ggplot(df2, aes(x, y2)) +
 ggMarginal(exp_xform_nat_var_cc_plot, margins="y", type = "histogram", binwidth=0.125)
 ```
 
-The main drawback is that you now have a chart of essentially uninterptable values---but that's better than assuming a normal distribution will be just fine and being unnecessarily alarmed by false positive signals, wasting time and resources searching for a special cause that doesn't exist.    
+The main drawback is that you now have a chart of essentially uninterptable values---but that's better than assuming a normal distribution will be just fine and inviting false positive signals, potentially wasting time and resources searching for a special cause that doesn't exist.    
 
 So should you always transform when your data doesn't meet the usual distributions common in control charts? Not necessarily. For more information, see, for example, *The arcsine is asinine* [@WartonHui2016] and *Do not log-transform count data* [@OharaKotze2010]. DO YOU HAVE A LINK FOR THESE OR A CITATION? Consult a statistician if you aren't sure how to proceed.  
 
@@ -97,7 +97,7 @@ expo_dist = descdist(df2$y, boot = 1000)
 
 <br>  
 
-A Cullen and Frey graph compares your data set and bootstrapped replications of it to common theoretical distributions. You compare your data (blue dot) and the replications (orange open circles) to locations within the plot that represent theoretical distributions. For example, if the blue dot were at or near the \* at the top left and more or less surrounded by the orange open circles, it would imply that our data are most consistent with a normal distribution. Other common distributions are represented in the graph by points (e.g., the exponential distribution), area (e.g., the beta distribution), or by lines (e.g., the gamma distribution).  
+A Cullen and Frey graph compares the data set (blue dot) and bootstrapped replications (orange open circles) to common theoretical distributions. For example, if the blue dot were at or near the \* symbol at the top left and more or less surrounded by the orange open circles, it would imply the data are most consistent with a normal distribution. Other common distributions are represented in the graph by points (e.g., the exponential distribution), area (e.g., the beta distribution), or by lines (e.g., the gamma distribution).  
 
 This chart shows us that our data (blue dot) and simuations from that data (orange open circles) are most consistent with a gamma distribution and a perhaps a lognormal distribution. Using `qqPlot` lets us evaluate these two options directly:    
 
@@ -112,9 +112,9 @@ qqPlot(df2$y, "lnorm", meanlog = logno$estimate[1], sdlog = logno$estimate[2], i
 qqPlot(df2$y, "gamma", shape = gammo$estimate[1], rate = gammo$estimate[2],id=FALSE)
 ```
 
-Although both distributions fall within the confidence limits (dashed lines), the points fit to a gamma distribution (right) DOUBLE-CHECK ORIENTATION are closer to the line of best fit.  
+Although both distributions fall within the confidence limits (dashed lines), the points fit to a gamma distribution (right) DOUBLE-CHECK ORIENTATION are closer to the line of best fit. 
 
-This is expected, since we created this data from a gamma distribution, but in practice, we don't know what distribution the data comes from---so using this process can help you determine which distributions are most consistent with the data, and help you model and plot it appropriately.  
+This is expected for this example with data we created from a gamma distribution. But in practice, when you don't know what distribution the data comes from, using this process can help you determine which distributions are most consistent with the data and plot it appropriately.  
 
 
 ## Which control chart should I use? {#whichcontrolchart}

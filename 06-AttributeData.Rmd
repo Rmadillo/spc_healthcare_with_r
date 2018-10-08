@@ -55,6 +55,7 @@ sigma.u = sqrt(central.u / linedays.agg * 1000)
 spc.plot(subgroup.u, point.u, central.u, sigma.u, k = 3, lcl.min  = 0,
          label.x = "Month", label.y = "Infections per 1000 line days")
 ```
+
 See Appendix for details of the spc.plots() function.
 
 <br/>  
@@ -92,7 +93,7 @@ spc.plot(subgroup.p, point.p, central.p, sigma.p,
 
 ## Rare events (*g*-charts) {#gchart}
 
-There are some important KPIs in healthcare related to rare events, such as is common in patient safety and infection control. These commonly have 0 values for several subgroups within the process time-period. In these cases, you need to use *g*-charts (discrete events or time scale, e.g., days between events) or *t*-charts (continuous time scale, e.g., time between events; see the [next Chapter](#tchart)) to evaluate the time between events.  
+There are important KPIs in healthcare related to rare events, such as is common in patient safety and infection control. These commonly have 0 values for several subgroups within the process time-period. In these cases, you need to use *g*-charts for a discrete time scale (e.g., days between events) or *t*-charts for a continuous time scale (e.g., time between events). See [Chapter 10](#tchart)) for details on using *t*-charts to evaluate the time between events.  
 
 ### *g*-chart example
 
