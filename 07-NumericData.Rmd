@@ -24,10 +24,6 @@
 
 When you have a single measurement per subgroup, the *I-MR* combination chart is appropriate. They should always be used together.  
 
-**Mean($\bar{MR}$):** &nbsp;&nbsp; $\bar{MR} = \frac{\sum_{i=2}^{m} MR_{i}}{n}$
-
-**Control 
-
 **Mean($\bar{x}$):** &nbsp;&nbsp; $\bar{x} = \frac{\sum_{x_{i}}}{n}$
 
 **Control limits for normal data (*I*):** 2.66$MR_{bar}$  
