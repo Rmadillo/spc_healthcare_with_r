@@ -63,9 +63,6 @@ for (i in 1:length(point.i) - 1) {
     point.mr[i] = abs(point.i[i + 1] - point.i[i])
 }
 
-mr = mr[mr <= 3.27*mean(mr)]  
-mr_prime = mean(mr)
-
 mean.i = mean(point.i)
 mean.mr0 = mean(point.mr)
 mean.mr = mean(point.mr[point.mr<=3.27*mean.mr0])
