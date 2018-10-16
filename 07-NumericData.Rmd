@@ -20,7 +20,9 @@
 
 ## *I-MR* chart
 
-When you have a single measurement per subgroup, the *I-MR* combination chart is appropriate. They should always be used together.     
+(Think we should move the IMR chart section just above the t-chart section -BB)
+
+When you have a single measurement per subgroup, the *I-MR* combination chart is appropriate. They should always be used together.  
 
 **Mean($\bar{x}$):** &nbsp;&nbsp; $\bar{x} = \frac{\sum_{x_{i}}}{n}$
 
@@ -31,6 +33,8 @@ When you have a single measurement per subgroup, the *I-MR* combination chart is
 <br/>  
  
  I DON'T SEE WHERE YOU'RE EXCLUDING VALUES OVER 3.27*MR OR IS THAT WHAT THE K DOES IN THE FIRST PLOT?
+ 
+ (Does excluding >3.27MR come from the t chart source (Provost and Murray)?  I don't see it excluded in most IMR formulations, but added the exclusion the code below -BB)
  
 *Lab results turnaround time*
     
@@ -56,14 +60,15 @@ for (i in 1:length(point.i) - 1) {
 }
 
 mean.i = mean(point.i)
-mean.mr = mean(point.mr)
+mean.mr0 = mean(point.mr)
+mean.mr = mean(point.mr[point.mr<=3.27*mean.mr0])
 sigma.i = rep(mean.mr, length(subgroup.i))
 sigma.mr = rep(mean.mr, length(subgroup.mr))
 ```
 
 Unlike the attribute control charts, the *I-MR* chart requires a little intepretation. The *I* portion is the data itself, but the *MR* part shows the variation over time, specifically, the range between successive data points.  
 
-Look at the *MR* part first; if it's in control, then any special cause variation in the *I* portion can be attributed to a change in process. If it's out of control, the control limits for the *I* portion will be wrong, and should not be interpreted.  ISN'T THIS THE CASE BELOW?
+Look at the *MR* part first; if it's in control, then any special cause variation in the *I* portion can be attributed to a change in process. If the *MR* chart out of control, the control limits for the *I* portion will be wrong, and should not be interpreted.  ISN'T THIS THE CASE BELOW?
 
 
 ```{r MR_chart, fig.height = 3.5}
@@ -226,7 +231,7 @@ If the time between rare events is best represented by a continuous time scale, 
 **Mean for time between events (*t*)(not shown):** &nbsp;&nbsp; $t = \bar{x}({y_i})$   
 &nbsp;&nbsp;&nbsp;&nbsp; *where*  
 &nbsp;&nbsp;&nbsp;&nbsp; $t$ = time between events, where *t* is always > 0    
-&nbsp;&nbsp;&nbsp;&nbsp; $y = t^{0.2777}$  
+&nbsp;&nbsp;&nbsp;&nbsp; $y = t^{\frac{1}{3.6}}$  
 
 **Control limits for time between events (*t*)(not shown):** &nbsp;&nbsp; 2.66$MR_{bar}$    
 &nbsp;&nbsp;&nbsp;&nbsp; $MR_{bar}$ = average moving range of *y*s, excluding those > 3.27$MR_{bar}$   
